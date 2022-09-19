@@ -1,13 +1,21 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import 'game_round_test.dart';
+
 class Card {}
 
 class CardDeck {
-  CardDeck({int fullLength = 110}) : currentLength = fullLength;
+  CardDeck({
+    GameRound? game,
+    int fullLength = 110,
+  })  : game = game ?? GameRound(),
+        currentLength = fullLength;
 
+  final GameRound game;
   late int currentLength;
 
   List<Card> draw() {
+    assert(game.started);
     if (currentLength == 0) return [];
     currentLength -= 2;
     return [Card(), Card()];
@@ -32,6 +40,14 @@ void main() {
       cards = deck.draw();
       expect(cards.length, 0);
       expect(deck.currentLength, 0);
+    });
+
+    test('Not allow to draw if game has not started yet', () {
+      final game = GameRound();
+      final deck = CardDeck(game: game);
+      expect(() => deck.draw(), throwsAssertionError);
+      game.started = true;
+      deck.draw();
     });
   });
 }
