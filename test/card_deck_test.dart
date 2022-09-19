@@ -3,9 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 class Card {}
 
 class CardDeck {
-  CardDeck({this.fullLength = 110}) : currentLength = fullLength;
+  CardDeck({int fullLength = 110}) : currentLength = fullLength;
 
-  final int fullLength;
   late int currentLength;
 
   List<Card> draw() {
@@ -19,7 +18,7 @@ void main() {
   group('CardDeck test', () {
     test('Deck must have 110 cards at first', () {
       final deck = CardDeck();
-      expect(deck.fullLength, 110);
+      expect(deck.currentLength, 110);
     });
 
     test('Draw 2 cards each turn until no card left', () {
