@@ -1,20 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-
-class Player {}
-
-class GameRound {
-  var started = false;
-  final List<Player> _players = [];
-
-  void start() {
-    assert(_players.length > 1);
-    started = true;
-  }
-
-  void addPlayer(Player player) {
-    _players.add(player);
-  }
-}
+import 'package:monopoly_deal/models/game_round.dart';
+import 'package:monopoly_deal/models/player.dart';
 
 void main() {
   group('GameRound test', () {

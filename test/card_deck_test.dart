@@ -1,26 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-
-import 'game_round_test.dart';
-
-class Card {}
-
-class CardDeck {
-  CardDeck({
-    GameRound? game,
-    int fullLength = 110,
-  })  : game = game ?? GameRound(),
-        currentLength = fullLength;
-
-  final GameRound game;
-  late int currentLength;
-
-  List<Card> draw() {
-    assert(game.started);
-    if (currentLength == 0) return [];
-    currentLength -= 2;
-    return [Card(), Card()];
-  }
-}
+import 'package:monopoly_deal/models/card.dart';
+import 'package:monopoly_deal/models/game_round.dart';
 
 void main() {
   group('CardDeck test', () {
@@ -30,7 +10,10 @@ void main() {
     });
 
     test('Draw 2 cards each turn until no card left', () {
-      final deck = CardDeck(fullLength: 4);
+      final deck = CardDeck(
+        game: GameRound()..started = true,
+        fullLength: 4,
+      );
       var cards = deck.draw();
       expect(cards.length, 2);
       expect(deck.currentLength, 2);
