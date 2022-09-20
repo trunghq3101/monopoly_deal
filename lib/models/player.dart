@@ -1,6 +1,8 @@
 import 'package:monopoly_deal/models/game_round.dart';
 
 class Player {
+  var hand;
+
   Player({required this.game});
 
   final GameRound game;

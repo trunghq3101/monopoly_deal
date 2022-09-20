@@ -1,6 +1,10 @@
 import 'game_round.dart';
 
-class Card {}
+class Card {
+  Card(this.name);
+
+  final String name;
+}
 
 class CardDeck {
   CardDeck({
@@ -16,6 +20,6 @@ class CardDeck {
     assert(game.started);
     if (currentLength == 0) return [];
     currentLength -= 2;
-    return [Card(), Card()];
+    return [Card('1'), Card('2')];
   }
 }
