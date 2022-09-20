@@ -8,9 +8,9 @@ void main() {
       final gameRound = GameRound();
       expect(gameRound.started, false);
       expect(() => gameRound.start(), throwsAssertionError);
-      gameRound.addPlayer(Player());
+      gameRound.addPlayer(Player(game: gameRound));
       expect(() => gameRound.start(), throwsAssertionError);
-      gameRound.addPlayer(Player());
+      gameRound.addPlayer(Player(game: gameRound));
       gameRound.start();
       expect(gameRound.started, true);
     });

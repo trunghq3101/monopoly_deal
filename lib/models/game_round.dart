@@ -1,15 +1,26 @@
+import 'package:monopoly_deal/models/card.dart';
+
 import 'player.dart';
 
 class GameRound {
   var started = false;
-  final List<Player> _players = [];
+  Player? turnOwner;
+  final List<Player> players = [];
+  late CardDeck cardDeck;
+
+  GameRound();
 
   void start() {
-    assert(_players.length > 1);
+    assert(players.length > 1);
     started = true;
+    cardDeck = CardDeck(game: this);
   }
 
   void addPlayer(Player player) {
-    _players.add(player);
+    players.add(player);
+  }
+
+  void turnTo({required Player player}) {
+    turnOwner = player;
   }
 }
