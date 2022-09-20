@@ -18,11 +18,7 @@ class GameRound {
   Steps step = Steps.idle;
 
   GameRound({GameRepository? repository})
-      : _gameRepository = repository ?? GameRepository();
-
-  void start() {
-    assert(players.length > 1);
-    started = true;
+      : _gameRepository = repository ?? GameRepository() {
     cardDeck = CardDeck(game: this);
   }
 

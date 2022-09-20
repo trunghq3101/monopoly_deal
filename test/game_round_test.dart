@@ -18,16 +18,6 @@ void main() {
       gameMachine = GameMachine(game: game, repository: repository);
     });
 
-    test('Must have at least 2 players to start', () {
-      expect(game.started, false);
-      expect(() => game.start(), throwsAssertionError);
-      game.addPlayer(Player(game: game));
-      expect(() => game.start(), throwsAssertionError);
-      game.addPlayer(Player(game: game));
-      game.start();
-      expect(game.started, true);
-    });
-
     test('Show game state based on number of players', () async {
       final machinePlayer = GameMachine.newPlayer(game: game);
       expect(await game.fetchState(), GameState.waiting);
