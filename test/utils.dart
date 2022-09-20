@@ -3,7 +3,7 @@ import 'package:monopoly_deal/models/player.dart';
 
 class TestUtils {
   static GameRound getGame({
-    bool started = false,
+    bool started = true,
   }) {
     final game = GameRound();
     if (!started) return game;

@@ -2,11 +2,15 @@ import 'package:monopoly_deal/models/card.dart';
 
 import 'player.dart';
 
+enum Steps { idle, draw, play, drop, end }
+
 class GameRound {
   var started = false;
   Player? turnOwner;
   final List<Player> players = [];
   late CardDeck cardDeck;
+
+  Steps step = Steps.idle;
 
   GameRound();
 
