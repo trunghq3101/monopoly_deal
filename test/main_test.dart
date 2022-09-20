@@ -5,6 +5,7 @@ import 'package:monopoly_deal/models/player.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
 
 import 'game_machine.dart';
+import 'utils.dart';
 
 abstract class GameMove {
   GameMove({required this.player});
@@ -46,21 +47,18 @@ class EndMove extends GameMove {
   void move() {}
 }
 
-enum GameState { waiting, ready }
-
-class TestGameRepository extends GameRepository {}
-
 void main() {
-  test('Go through the game', () {
-    final game = GameRound(repository: TestGameRepository());
-    final gameMachine = GameMachine(game: game);
+  test('Go through the game', () async {
+    final repository = TestGameRepository();
+    final game = GameRound(repository: repository);
+    final gameMachine = GameMachine(game: game, repository: repository);
     final player = Player(game: game);
     final machinePlayer = GameMachine.newPlayer(game: game);
     GameMove lastMove;
-    game.addPlayer(player);
-    expect(game.fetchState(), GameState.waiting);
-    gameMachine.addPlayer(machinePlayer);
-    expect(game.fetchState(), GameState.ready);
+    await game.addPlayer(player);
+    expect(await game.fetchState(), GameState.waiting);
+    await gameMachine.addPlayer(machinePlayer);
+    expect(await game.fetchState(), GameState.ready);
     expect(game.players.length, 2);
     expect(game.cardDeck, CardDeck());
     expect(player.hand.length, 5);

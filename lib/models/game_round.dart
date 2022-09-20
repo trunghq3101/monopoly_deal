@@ -5,8 +5,11 @@ import 'player.dart';
 
 enum Steps { idle, draw, play, drop, end }
 
+enum GameState { waiting, ready }
+
 class GameRound {
   var started = false;
+  var _playerJoined = false;
   Player? turnOwner;
   final List<Player> players = [];
   late final GameRepository _gameRepository;
@@ -23,15 +26,21 @@ class GameRound {
     cardDeck = CardDeck(game: this);
   }
 
-  void addPlayer(Player player) {
-    players.add(player);
+  Future<void> addPlayer(Player player) async {
+    if (_playerJoined) throw Exception('Already joined this game');
+    await _gameRepository.addPlayer(player);
+    _playerJoined = true;
   }
 
   void turnTo({required Player player}) {
     turnOwner = player;
   }
 
-  fetchState() {}
+  Future<GameState> fetchState() async {
+    final players = await _gameRepository.fetchPlayers();
+    if (players.length > 1) return GameState.ready;
+    return GameState.waiting;
+  }
 
   fetchTurnOwner() {}
 

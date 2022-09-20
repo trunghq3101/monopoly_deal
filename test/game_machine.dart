@@ -1,9 +1,13 @@
 import 'package:monopoly_deal/models/game_round.dart';
+import 'package:monopoly_deal/models/player.dart';
 
 class GameMachine extends GameRound {
   final GameRound game;
 
-  GameMachine({required this.game});
+  GameMachine({
+    required this.game,
+    required super.repository,
+  });
 
-  static newPlayer({required GameRound game}) {}
+  static Player newPlayer({required GameRound game}) => Player(game: game);
 }
