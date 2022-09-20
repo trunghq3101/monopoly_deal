@@ -7,3 +7,4 @@
 - [x] I want to know what is the next step I have to do in my turn
 - [x] Show game state based on number of players
 - [x] Can only add 1 player to a game instance
+- [x] Game players updated when fetching new game state

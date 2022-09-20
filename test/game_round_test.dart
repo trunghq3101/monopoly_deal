@@ -34,5 +34,13 @@ void main() {
         throwsException,
       );
     });
+
+    test('Sync players when fetchState', () async {
+      expect(game.players, []);
+      final player = Player(game: game);
+      await gameMachine.addPlayer(player);
+      await game.fetchState();
+      expect(game.players, [player]);
+    });
   });
 }
