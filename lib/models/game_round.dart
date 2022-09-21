@@ -3,7 +3,7 @@ import 'package:monopoly_deal/models/card.dart';
 import '../repositories/game_repository.dart';
 import 'player.dart';
 
-enum Steps { idle, draw, play, drop, end }
+enum Steps { idle, draw, play, drop }
 
 enum GameState { waiting, ready }
 
@@ -28,10 +28,6 @@ class GameRound {
     _playerJoined = true;
   }
 
-  void turnTo({required Player player}) {
-    turnOwner = player;
-  }
-
   Future<GameState> fetchState() async {
     players = await _gameRepository.fetchPlayers();
     if (players.length > 1) {
@@ -41,9 +37,10 @@ class GameRound {
     return GameState.waiting;
   }
 
-  fetchTurnOwner() {}
-
-  nextStep() {}
+  Steps nextStep() {
+    step = Steps.values[(step.index + 1) % Steps.values.length];
+    return step;
+  }
 
   fetchLastMove() {}
 }

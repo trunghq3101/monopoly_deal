@@ -32,6 +32,7 @@ void main() {
     expect(player.hand.length, 5);
     expect(machinePlayer.hand.length, 5);
     expect(game.turnOwner, player);
+    expect(game.step, Steps.idle);
     expect(
       game.nextStep(),
       Steps.draw,
@@ -58,7 +59,7 @@ void main() {
       game.nextStep(),
       Steps.idle,
     );
-    expect(game.fetchTurnOwner(), machinePlayer);
+    expect(game.turnOwner, machinePlayer);
 
     gameMachine.nextStep();
     expect(
@@ -87,6 +88,6 @@ void main() {
       game.nextStep(),
       Steps.idle,
     );
-    expect(game.fetchTurnOwner(), player);
+    expect(game.turnOwner, player);
   }, skip: true);
 }

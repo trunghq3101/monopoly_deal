@@ -52,5 +52,13 @@ void main() {
       await game.fetchState();
       expect(game.turnOwner, player);
     });
+
+    test('Change steps', () {
+      expect(game.step, Steps.idle);
+      expect(game.nextStep(), Steps.draw);
+      expect(game.nextStep(), Steps.play);
+      expect(game.nextStep(), Steps.drop);
+      expect(game.nextStep(), Steps.idle);
+    });
   });
 }
