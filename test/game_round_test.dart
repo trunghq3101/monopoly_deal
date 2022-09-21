@@ -21,11 +21,14 @@ void main() {
     });
 
     test('Show game state based on number of players', () async {
-      expect(await game.fetchState(), GameState.waiting);
+      await game.syncUp();
+      expect(game.gameState, GameState.waiting);
       await game.addPlayer(player);
-      expect(await game.fetchState(), GameState.waiting);
+      await game.syncUp();
+      expect(game.gameState, GameState.waiting);
       await gameMachine.addPlayer(machinePlayer);
-      expect(await game.fetchState(), GameState.ready);
+      await game.syncUp();
+      expect(game.gameState, GameState.ready);
     });
 
     test('Can only add 1 player to a game instance', () async {
@@ -39,7 +42,7 @@ void main() {
     test('Sync players when fetchState', () async {
       expect(game.players, []);
       await gameMachine.addPlayer(player);
-      await game.fetchState();
+      await game.syncUp();
       expect(game.players, [player]);
     });
 
@@ -47,7 +50,7 @@ void main() {
       expect(game.players, []);
       await game.addPlayer(player);
       await gameMachine.addPlayer(Player());
-      await game.fetchState();
+      await game.syncUp();
       expect(game.turnOwner, player);
     });
 

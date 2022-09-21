@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
     Timer.periodic(
       const Duration(milliseconds: 200),
       (timer) async {
-        final state = await widget.game.fetchState();
+        final state = await widget.game.syncUp();
         switch (state) {
           case GameState.ready:
             _content = "Ready";

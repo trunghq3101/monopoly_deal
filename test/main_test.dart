@@ -21,16 +21,20 @@ void main() {
     final deck = CardDeck(initial: cards);
     GameMove lastMove;
     await game.addPlayer(player);
-    expect(await game.fetchState(), GameState.waiting);
+    await game.syncUp();
+    expect(game.gameState, GameState.waiting);
     await gameMachine.addPlayer(machinePlayer);
-    expect(await game.fetchState(), GameState.ready);
+    await game.syncUp();
+    expect(game.gameState, GameState.ready);
     expect(game.players.length, 2);
-    lastMove = DealMove(player: dealer, deck: deck, players: game.players);
-    lastMove.move();
+    expect(player.hand, []);
+    await game.syncUp();
     expect(
       player.hand,
       [cards[14], cards[12], cards[10], cards[8], cards[6]],
     );
+    expect(machinePlayer.hand, []);
+    await gameMachine.syncUp();
     expect(
       machinePlayer.hand,
       [cards[13], cards[11], cards[9], cards[7], cards[5]],
@@ -80,20 +84,20 @@ void main() {
     lastMove = DrawMove(player: machinePlayer, deck: deck, amount: 2);
     lastMove.move();
     expect(machinePlayer.hand.length, 7);
-    expect(game.fetchLastMove(), lastMove);
+    expect(game.syncUp(), lastMove);
     expect(
       game.nextStep(),
       Steps.play,
     );
     lastMove = PutMove(player: machinePlayer, card: Card('1'));
     expect(machinePlayer.hand.length, 6);
-    expect(game.fetchLastMove(), lastMove);
+    expect(game.syncUp(), lastMove);
     lastMove = PutMove(player: machinePlayer, card: Card('2'));
     expect(machinePlayer.hand.length, 5);
-    expect(game.fetchLastMove(), lastMove);
+    expect(game.syncUp(), lastMove);
     lastMove = PutMove(player: machinePlayer, card: Card('3'));
     expect(machinePlayer.hand.length, 4);
-    expect(game.fetchLastMove(), lastMove);
+    expect(game.syncUp(), lastMove);
     lastMove = EndMove(player: machinePlayer);
     expect(
       game.nextStep(),

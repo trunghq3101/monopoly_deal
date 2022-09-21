@@ -12,6 +12,7 @@ class GameRound {
   var _playerJoined = false;
   Player? turnOwner;
   List<Player> players = [];
+  GameState gameState = GameState.waiting;
   late final GameRepository _gameRepository;
   late CardDeck cardDeck;
 
@@ -28,19 +29,18 @@ class GameRound {
     _playerJoined = true;
   }
 
-  Future<GameState> fetchState() async {
+  Future<void> syncUp() async {
     players = await _gameRepository.fetchPlayers();
     if (players.length > 1) {
       turnOwner = await _gameRepository.fetchTurnOwner();
-      return GameState.ready;
+      gameState = GameState.ready;
+      return;
     }
-    return GameState.waiting;
+    gameState = GameState.waiting;
   }
 
   Steps nextStep() {
     step = Steps.values[(step.index + 1) % Steps.values.length];
     return step;
   }
-
-  fetchLastMove() {}
 }
