@@ -7,7 +7,8 @@ void main() {
   group('DealMove test', () {
     test('deal', () {
       final dealer = Player();
-      final deck = CardDeck();
+      final cards = List.generate(10, (index) => Card('$index'));
+      final deck = CardDeck(initial: cards);
       final players = [
         Player(),
         Player(),
@@ -18,9 +19,9 @@ void main() {
         players: players,
       );
       move.move();
-      expect(players[0].hand.length, 5);
-      expect(players[1].hand.length, 5);
-      expect(deck.currentLength, 100);
+      expect(players[0].hand, cards.reversed.toList().sublist(0, 5));
+      expect(players[1].hand, cards.reversed.toList().sublist(5));
+      expect(deck.remaining, []);
     });
   });
 }

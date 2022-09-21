@@ -9,3 +9,4 @@
 - [x] Can only add 1 player to a game instance
 - [x] Game players updated when fetching new game state
 - [x] After dealing cards, each player's hand has 5 cards
+- [x] After dealing cards, each player's hand has 5 different cards, deck lost 10 cards

@@ -1,27 +1,25 @@
-import 'game_round.dart';
+import 'dart:collection';
 
-class Card {
-  Card(this.name);
+import 'package:equatable/equatable.dart';
+
+class Card extends Equatable {
+  const Card(this.name);
 
   final String name;
+
+  @override
+  List<Object?> get props => [name];
 }
 
 class CardDeck {
-  CardDeck({
-    GameRound? game,
-    int fullLength = 110,
-  })  : game = game ?? GameRound(),
-        currentLength = fullLength;
+  CardDeck({required this.initial}) : remaining = Queue.from(initial);
 
-  final GameRound game;
-  late int currentLength;
+  final List<Card> initial;
+  late Queue<Card> remaining;
 
   void deal() {}
 
-  List<Card> draw() {
-    assert(game.started);
-    if (currentLength == 0) return [];
-    currentLength -= 2;
-    return [Card('1'), Card('2')];
+  Card draw() {
+    return remaining.removeLast();
   }
 }

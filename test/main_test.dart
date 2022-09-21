@@ -19,7 +19,7 @@ void main() {
     final dealer = Player();
     final player = Player();
     final machinePlayer = GameMachine.newPlayer();
-    final deck = CardDeck(game: game);
+    final deck = CardDeck(initial: []);
     GameMove lastMove;
     await game.addPlayer(player);
     expect(await game.fetchState(), GameState.waiting);

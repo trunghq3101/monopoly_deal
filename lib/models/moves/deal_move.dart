@@ -14,9 +14,11 @@ class DealMove extends GameMove {
 
   @override
   void move() {
-    deck.currentLength -= 10;
     for (var player in players) {
-      player.hand.addAll(List.generate(5, (index) => Card('$index')));
+      for (var i = 0; i < 5; i++) {
+        final card = deck.draw();
+        player.add(card);
+      }
     }
   }
 }

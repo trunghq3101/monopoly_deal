@@ -19,7 +19,7 @@ class GameRound {
 
   GameRound({GameRepository? repository})
       : _gameRepository = repository ?? GameRepository() {
-    cardDeck = CardDeck(game: this);
+    cardDeck = CardDeck(initial: []);
   }
 
   Future<void> addPlayer(Player player) async {
