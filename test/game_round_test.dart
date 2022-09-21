@@ -18,8 +18,8 @@ void main() {
       repository = TestGameRepository();
       game = GameRound(repository: repository);
       gameMachine = GameMachine(game: game, repository: repository);
-      player = Player(game: game);
-      machinePlayer = GameMachine.newPlayer(game: game);
+      player = Player();
+      machinePlayer = GameMachine.newPlayer();
     });
 
     test('Show game state based on number of players', () async {

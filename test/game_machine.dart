@@ -9,5 +9,5 @@ class GameMachine extends GameRound {
     required super.repository,
   });
 
-  static Player newPlayer({required GameRound game}) => Player(game: game);
+  static Player newPlayer() => Player();
 }

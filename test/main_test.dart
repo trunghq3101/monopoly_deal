@@ -16,9 +16,9 @@ void main() {
     final repository = TestGameRepository();
     final game = GameRound(repository: repository);
     final gameMachine = GameMachine(game: game, repository: repository);
-    final dealer = Player(game: game);
-    final player = Player(game: game);
-    final machinePlayer = GameMachine.newPlayer(game: game);
+    final dealer = Player();
+    final player = Player();
+    final machinePlayer = GameMachine.newPlayer();
     final deck = CardDeck(game: game);
     GameMove lastMove;
     await game.addPlayer(player);
@@ -26,7 +26,7 @@ void main() {
     await gameMachine.addPlayer(machinePlayer);
     expect(await game.fetchState(), GameState.ready);
     expect(game.players.length, 2);
-    lastMove = DealMove(player: dealer, deck: deck, playerNumber: 2);
+    lastMove = DealMove(player: dealer, deck: deck, players: game.players);
     lastMove.move();
     expect(player.hand.length, 5);
     expect(machinePlayer.hand.length, 5);

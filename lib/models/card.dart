@@ -16,6 +16,8 @@ class CardDeck {
   final GameRound game;
   late int currentLength;
 
+  void deal() {}
+
   List<Card> draw() {
     assert(game.started);
     if (currentLength == 0) return [];
