@@ -1,7 +1,9 @@
 import 'package:monopoly_deal/models/game_round.dart';
 
+import 'card.dart';
+
 class Player {
-  var hand;
+  List<Card> hand = [];
 
   Player({required this.game});
 

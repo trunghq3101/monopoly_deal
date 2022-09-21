@@ -1,67 +1,35 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/models/card.dart';
 import 'package:monopoly_deal/models/game_round.dart';
+import 'package:monopoly_deal/models/moves/deal_move.dart';
+import 'package:monopoly_deal/models/moves/draw_move.dart';
+import 'package:monopoly_deal/models/moves/end_move.dart';
+import 'package:monopoly_deal/models/moves/move.dart';
+import 'package:monopoly_deal/models/moves/put_move.dart';
 import 'package:monopoly_deal/models/player.dart';
-import 'package:monopoly_deal/repositories/game_repository.dart';
 
 import 'game_machine.dart';
 import 'utils.dart';
-
-abstract class GameMove {
-  GameMove({required this.player});
-
-  final Player player;
-  void move();
-}
-
-class DrawMove extends GameMove {
-  DrawMove({
-    required super.player,
-    required this.amount,
-  });
-
-  final int amount;
-
-  @override
-  void move() {}
-}
-
-class PutMove extends GameMove {
-  PutMove({
-    required super.player,
-    required this.card,
-  });
-
-  final Card card;
-
-  @override
-  void move() {}
-}
-
-class EndMove extends GameMove {
-  EndMove({
-    required super.player,
-  });
-
-  @override
-  void move() {}
-}
 
 void main() {
   test('Go through the game', () async {
     final repository = TestGameRepository();
     final game = GameRound(repository: repository);
     final gameMachine = GameMachine(game: game, repository: repository);
+    final dealer = Player(game: game);
     final player = Player(game: game);
     final machinePlayer = GameMachine.newPlayer(game: game);
+    final deck = CardDeck(game: game);
     GameMove lastMove;
     await game.addPlayer(player);
     expect(await game.fetchState(), GameState.waiting);
     await gameMachine.addPlayer(machinePlayer);
     expect(await game.fetchState(), GameState.ready);
     expect(game.players.length, 2);
-    expect(game.cardDeck, CardDeck());
+    lastMove = DealMove(player: dealer, deck: deck, playerNumber: 2);
+    lastMove.move();
     expect(player.hand.length, 5);
+    expect(machinePlayer.hand.length, 5);
     expect(game.fetchTurnOwner(), player);
     expect(
       game.nextStep(),

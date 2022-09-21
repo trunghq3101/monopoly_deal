@@ -11,33 +11,35 @@ void main() {
     late GameRound game;
     late GameMachine gameMachine;
     late GameRepository repository;
+    late Player player;
+    late Player machinePlayer;
 
     setUp(() {
       repository = TestGameRepository();
       game = GameRound(repository: repository);
       gameMachine = GameMachine(game: game, repository: repository);
+      player = Player(game: game);
+      machinePlayer = GameMachine.newPlayer(game: game);
     });
 
     test('Show game state based on number of players', () async {
-      final machinePlayer = GameMachine.newPlayer(game: game);
       expect(await game.fetchState(), GameState.waiting);
-      await game.addPlayer(Player(game: game));
+      await game.addPlayer(player);
       expect(await game.fetchState(), GameState.waiting);
       await gameMachine.addPlayer(machinePlayer);
       expect(await game.fetchState(), GameState.ready);
     });
 
     test('Can only add 1 player to a game instance', () async {
-      await game.addPlayer(Player(game: game));
+      await game.addPlayer(player);
       expect(
-        () async => await game.addPlayer(Player(game: game)),
+        () async => await game.addPlayer(player),
         throwsException,
       );
     });
 
     test('Sync players when fetchState', () async {
       expect(game.players, []);
-      final player = Player(game: game);
       await gameMachine.addPlayer(player);
       await game.fetchState();
       expect(game.players, [player]);
