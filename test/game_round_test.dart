@@ -39,18 +39,21 @@ void main() {
       );
     });
 
-    test('Sync players when fetchState', () async {
-      expect(game.players, []);
-      await gameMachine.addPlayer(player);
-      await game.syncUp();
-      expect(game.players, [player]);
-    });
-
-    test('Sync turnOwner when game ready', () async {
+    test('syncUp', () async {
+      final machinePlayer = Player();
       expect(game.players, []);
       await game.addPlayer(player);
-      await gameMachine.addPlayer(Player());
       await game.syncUp();
+      expect(game.players, [player]);
+      expect(gameMachine.players, []);
+      await gameMachine.syncUp();
+      expect(gameMachine.players, [player]);
+      await gameMachine.addPlayer(machinePlayer);
+      await gameMachine.syncUp();
+      expect(gameMachine.players, [player, machinePlayer]);
+      expect(game.players, [player]);
+      await game.syncUp();
+      expect(game.players, [player, machinePlayer]);
       expect(game.turnOwner, player);
     });
 
