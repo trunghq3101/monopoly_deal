@@ -1,6 +1,5 @@
-import 'package:monopoly_deal/models/game_round.dart';
-import 'package:monopoly_deal/models/player.dart';
-import 'package:monopoly_deal/repositories/game_repository.dart';
+import '../models/player.dart';
+import '../repositories/game_repository.dart';
 
 class TestGameRepository extends GameRepository {
   final List<Player> _players = [];

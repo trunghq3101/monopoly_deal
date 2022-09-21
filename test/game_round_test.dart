@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:monopoly_deal/dev/repositories.dart';
 import 'package:monopoly_deal/models/game_round.dart';
 import 'package:monopoly_deal/models/player.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
 
 import 'game_machine.dart';
-import 'utils.dart';
 
 void main() {
   group('GameRound test', () {

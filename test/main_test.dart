@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:monopoly_deal/dev/repositories.dart';
 import 'package:monopoly_deal/models/card.dart';
 import 'package:monopoly_deal/models/game_round.dart';
 import 'package:monopoly_deal/models/moves/deal_move.dart';
@@ -9,7 +10,6 @@ import 'package:monopoly_deal/models/moves/put_move.dart';
 import 'package:monopoly_deal/models/player.dart';
 
 import 'game_machine.dart';
-import 'utils.dart';
 
 void main() {
   test('Go through the game', () async {
