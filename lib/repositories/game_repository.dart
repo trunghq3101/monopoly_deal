@@ -6,4 +6,8 @@ class GameRepository {
   }
 
   Future<void> addPlayer(Player player) async {}
+
+  Future<Player?> fetchTurnOwner() async {
+    return null;
+  }
 }

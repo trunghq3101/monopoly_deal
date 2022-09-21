@@ -44,5 +44,13 @@ void main() {
       await game.fetchState();
       expect(game.players, [player]);
     });
+
+    test('Sync turnOwner when game ready', () async {
+      expect(game.players, []);
+      await game.addPlayer(player);
+      await gameMachine.addPlayer(Player());
+      await game.fetchState();
+      expect(game.turnOwner, player);
+    });
   });
 }

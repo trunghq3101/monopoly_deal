@@ -14,4 +14,9 @@ class TestGameRepository extends GameRepository {
   Future<void> addPlayer(Player player) async {
     _players.add(player);
   }
+
+  @override
+  Future<Player?> fetchTurnOwner() async {
+    return _players.first;
+  }
 }

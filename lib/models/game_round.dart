@@ -34,7 +34,10 @@ class GameRound {
 
   Future<GameState> fetchState() async {
     players = await _gameRepository.fetchPlayers();
-    if (players.length > 1) return GameState.ready;
+    if (players.length > 1) {
+      turnOwner = await _gameRepository.fetchTurnOwner();
+      return GameState.ready;
+    }
     return GameState.waiting;
   }
 

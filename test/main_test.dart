@@ -31,7 +31,7 @@ void main() {
     lastMove.move();
     expect(player.hand.length, 5);
     expect(machinePlayer.hand.length, 5);
-    expect(game.fetchTurnOwner(), player);
+    expect(game.turnOwner, player);
     expect(
       game.nextStep(),
       Steps.draw,
