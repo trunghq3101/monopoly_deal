@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
             _content = "Ready";
             _buttonText = "Start";
             _onMainBtnPressed = () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => GamePage()));
+                .push(MaterialPageRoute(builder: (_) => const GamePage()));
             timer.cancel();
             break;
           default:
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Spacer(),
+          const Spacer(),
           Expanded(
               child: Text(
             _content,
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
           )),
           Row(
             children: [
-              Spacer(),
+              const Spacer(),
               Expanded(
                 child: ElevatedButton(
                   onPressed: _onMainBtnPressed,
@@ -83,10 +83,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
             ],
           ),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );
