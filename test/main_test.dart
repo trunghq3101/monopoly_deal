@@ -9,16 +9,14 @@ import 'package:monopoly_deal/models/moves/move.dart';
 import 'package:monopoly_deal/models/moves/put_move.dart';
 import 'package:monopoly_deal/models/player.dart';
 
-import 'game_machine.dart';
-
 void main() {
   test('Go through the game', () async {
     final repository = TestGameRepository();
     final game = GameRound(repository: repository);
-    final gameMachine = GameMachine(game: game, repository: repository);
+    final gameMachine = GameRound(repository: repository);
     final dealer = Player();
     final player = Player();
-    final machinePlayer = GameMachine.newPlayer();
+    final machinePlayer = Player();
     final cards = List.generate(15, (index) => Card('$index'));
     final deck = CardDeck(initial: cards);
     GameMove lastMove;

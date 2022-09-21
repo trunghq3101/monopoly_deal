@@ -4,12 +4,10 @@ import 'package:monopoly_deal/models/game_round.dart';
 import 'package:monopoly_deal/models/player.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
 
-import 'game_machine.dart';
-
 void main() {
   group('GameRound test', () {
     late GameRound game;
-    late GameMachine gameMachine;
+    late GameRound gameMachine;
     late GameRepository repository;
     late Player player;
     late Player machinePlayer;
@@ -17,9 +15,9 @@ void main() {
     setUp(() {
       repository = TestGameRepository();
       game = GameRound(repository: repository);
-      gameMachine = GameMachine(game: game, repository: repository);
+      gameMachine = GameRound(repository: repository);
       player = Player();
-      machinePlayer = GameMachine.newPlayer();
+      machinePlayer = Player();
     });
 
     test('Show game state based on number of players', () async {
