@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
             timer.cancel();
             break;
           default:
-            _content = "Waiting";
+            _content = _onMainBtnPressed == null ? "Waiting" : "";
         }
         setState(() {});
       },
@@ -54,14 +54,39 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.amber,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(_content),
-          ElevatedButton(
-            onPressed: _onMainBtnPressed,
-            child: Text(_buttonText),
-          )
+          Spacer(),
+          Expanded(
+              child: Text(
+            _content,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headline2,
+          )),
+          Row(
+            children: [
+              Spacer(),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: _onMainBtnPressed,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      _buttonText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4!
+                          .copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              Spacer(),
+            ],
+          ),
+          Spacer(),
         ],
       ),
     );
