@@ -19,7 +19,7 @@ void main() {
     final dealer = Player();
     final player = Player();
     final machinePlayer = GameMachine.newPlayer();
-    final cards = List.generate(10, (index) => Card('$index'));
+    final cards = List.generate(15, (index) => Card('$index'));
     final deck = CardDeck(initial: cards);
     GameMove lastMove;
     await game.addPlayer(player);
@@ -37,7 +37,7 @@ void main() {
       game.nextStep(),
       Steps.draw,
     );
-    lastMove = DrawMove(player: player, amount: 2);
+    lastMove = DrawMove(player: player, deck: deck, amount: 2);
     lastMove.move();
     expect(player.hand.length, 7);
     expect(game.fetchLastMove(), lastMove);
@@ -66,7 +66,7 @@ void main() {
       game.nextStep(),
       Steps.draw,
     );
-    lastMove = DrawMove(player: machinePlayer, amount: 2);
+    lastMove = DrawMove(player: machinePlayer, deck: deck, amount: 2);
     lastMove.move();
     expect(machinePlayer.hand.length, 7);
     expect(game.fetchLastMove(), lastMove);

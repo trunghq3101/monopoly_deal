@@ -1,9 +1,9 @@
 import 'card.dart';
 
 class Player {
-  List<Card> hand = [];
+  Player({List<Card>? hand}) : hand = List.from(hand ?? []);
 
-  Player();
+  late List<Card> hand;
 
   void add(card) {
     hand.add(card);

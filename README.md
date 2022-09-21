@@ -13,3 +13,4 @@
 - [x] Deal cards by order
 - [x] Sync turnOwner when game ready
 - [x] Change game steps
+- [x] After drawing cards, each player's hand has 2 more cards
