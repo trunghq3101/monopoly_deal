@@ -14,3 +14,4 @@
 - [x] Sync turnOwner when game ready
 - [x] Change game steps
 - [x] After drawing cards, each player's hand has 2 more cards
+- [x] After putting a card, player's hand reduced by 1

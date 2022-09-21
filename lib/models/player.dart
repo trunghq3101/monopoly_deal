@@ -8,4 +8,8 @@ class Player {
   void add(card) {
     hand.add(card);
   }
+
+  void drop(Card card) {
+    hand.remove(card);
+  }
 }

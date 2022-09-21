@@ -29,8 +29,14 @@ void main() {
     expect(game.players.length, 2);
     lastMove = DealMove(player: dealer, deck: deck, players: game.players);
     lastMove.move();
-    expect(player.hand.length, 5);
-    expect(machinePlayer.hand.length, 5);
+    expect(
+      player.hand,
+      [cards[14], cards[12], cards[10], cards[8], cards[6]],
+    );
+    expect(
+      machinePlayer.hand,
+      [cards[13], cards[11], cards[9], cards[7], cards[5]],
+    );
     expect(game.turnOwner, player);
     expect(game.step, Steps.idle);
     expect(
@@ -39,21 +45,28 @@ void main() {
     );
     lastMove = DrawMove(player: player, deck: deck, amount: 2);
     lastMove.move();
-    expect(player.hand.length, 7);
-    expect(game.fetchLastMove(), lastMove);
+    expect(
+      player.hand,
+      [cards[14], cards[12], cards[10], cards[8], cards[6], cards[4], cards[3]],
+    );
+    // expect(game.fetchLastMove(), lastMove);
     expect(
       game.nextStep(),
       Steps.play,
     );
-    lastMove = PutMove(player: player, card: Card('1'));
-    expect(player.hand.length, 6);
-    expect(game.fetchLastMove(), lastMove);
-    lastMove = PutMove(player: player, card: Card('2'));
-    expect(player.hand.length, 5);
-    expect(game.fetchLastMove(), lastMove);
-    lastMove = PutMove(player: player, card: Card('3'));
-    expect(player.hand.length, 4);
-    expect(game.fetchLastMove(), lastMove);
+    lastMove = PutMove(player: player, card: cards[14]);
+    lastMove.move();
+    expect(player.hand,
+        [cards[12], cards[10], cards[8], cards[6], cards[4], cards[3]]);
+    // expect(game.fetchLastMove(), lastMove);
+    lastMove = PutMove(player: player, card: cards[12]);
+    lastMove.move();
+    expect(player.hand, [cards[10], cards[8], cards[6], cards[4], cards[3]]);
+    // expect(game.fetchLastMove(), lastMove);
+    lastMove = PutMove(player: player, card: cards[10]);
+    lastMove.move();
+    expect(player.hand, [cards[8], cards[6], cards[4], cards[3]]);
+    // expect(game.fetchLastMove(), lastMove);
     lastMove = EndMove(player: player);
     expect(
       game.nextStep(),
