@@ -17,8 +17,6 @@ class CardDeck {
   final List<Card> initial;
   late Queue<Card> remaining;
 
-  void deal() {}
-
   Card draw() {
     return remaining.removeLast();
   }
