@@ -19,7 +19,8 @@ void main() {
     final dealer = Player();
     final player = Player();
     final machinePlayer = GameMachine.newPlayer();
-    final deck = CardDeck(initial: []);
+    final cards = List.generate(10, (index) => Card('$index'));
+    final deck = CardDeck(initial: cards);
     GameMove lastMove;
     await game.addPlayer(player);
     expect(await game.fetchState(), GameState.waiting);

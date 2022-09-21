@@ -34,12 +34,7 @@ class GameRound {
 
   Future<GameState> fetchState() async {
     players = await _gameRepository.fetchPlayers();
-    if (players.length > 1) {
-      for (var player in players) {
-        player.hand = List.generate(5, (index) => Card('$index'));
-      }
-      return GameState.ready;
-    }
+    if (players.length > 1) return GameState.ready;
     return GameState.waiting;
   }
 

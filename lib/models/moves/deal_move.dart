@@ -14,11 +14,12 @@ class DealMove extends GameMove {
 
   @override
   void move() {
-    for (var player in players) {
-      for (var i = 0; i < 5; i++) {
-        final card = deck.draw();
-        player.add(card);
-      }
+    assert(deck.initial.length >= players.length * 5);
+    var playerIndex = 0;
+    for (var i = 0; i < players.length * 5; i++) {
+      final card = deck.draw();
+      players[playerIndex].add(card);
+      playerIndex = (playerIndex + 1) % players.length;
     }
   }
 }
