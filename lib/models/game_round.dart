@@ -1,4 +1,5 @@
 import 'package:monopoly_deal/models/card.dart';
+import 'package:monopoly_deal/models/moves/move.dart';
 
 import '../repositories/game_repository.dart';
 import 'player.dart';
@@ -8,20 +9,18 @@ enum Steps { idle, draw, play, drop }
 enum GameState { waiting, ready }
 
 class GameRound {
-  var started = false;
+  late final GameRepository _gameRepository;
+
   var _playerJoined = false;
+
   Player? turnOwner;
   List<Player> players = [];
   GameState gameState = GameState.waiting;
-  late final GameRepository _gameRepository;
-  late CardDeck cardDeck;
-
   Steps step = Steps.idle;
+  List<GameMove> moves = [];
 
   GameRound({GameRepository? repository})
-      : _gameRepository = repository ?? GameRepository() {
-    cardDeck = CardDeck(initial: []);
-  }
+      : _gameRepository = repository ?? GameRepository();
 
   Future<void> addPlayer(Player player) async {
     if (_playerJoined) throw Exception('Already joined this game');
