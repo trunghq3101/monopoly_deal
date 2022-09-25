@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:monopoly_deal/main.dart';
 import 'package:monopoly_deal/models/moves/move_model.dart';
 import 'package:monopoly_deal/models/player_model.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
