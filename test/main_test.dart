@@ -29,8 +29,17 @@ void main() {
       cards[8],
       cards[6]
     ];
+    final machineDealCards = [
+      cards[13],
+      cards[11],
+      cards[9],
+      cards[7],
+      cards[5]
+    ];
     moves.add(DealMove(player: player, cards: playerDealCards));
+    moves.add(DealMove(player: machinePlayer, cards: machineDealCards));
     player = PlayerModel(hand: playerDealCards);
+    machinePlayer = PlayerModel(hand: machineDealCards);
     expect(
       game,
       GameModel(
@@ -40,19 +49,9 @@ void main() {
       ),
     );
     expect(game.gameState, GameState.ready);
+    gameMachine = await gameMachine.syncUp(repository);
+    expect(gameMachine, game);
 
-    // await gameMachine.syncUp();
-    // final machineDealCards = [
-    //   cards[13],
-    //   cards[11],
-    //   cards[9],
-    //   cards[7],
-    //   cards[5]
-    // ];
-    // expect(
-    //   gameMachine.moves.last,
-    //   DealMove(player: machinePlayer, cards: machineDealCards),
-    // );
     // expect(
     //   machinePlayer.hand,
     //   machineDealCards,

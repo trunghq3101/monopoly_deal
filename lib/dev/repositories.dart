@@ -10,6 +10,7 @@ import '../repositories/game_repository.dart';
 
 class TestGameRepository extends GameRepository {
   GameModel _gameModel = GameModel(players: [], step: Steps.idle, moves: []);
+  final _cards = List.generate(15, (index) => CardModel(name: '$index'));
 
   @override
   GameModel get gameModel => _gameModel;
@@ -21,26 +22,34 @@ class TestGameRepository extends GameRepository {
 
   @override
   Future<void> addPlayer(PlayerModel player) async {
-    final newPlayers = UnmodifiableListView([...gameModel.players, player]);
     _gameModel = gameModel.copyWith(
-      players: newPlayers,
+      players: [...gameModel.players, player],
     );
     if (gameModel.gameState == GameState.ready) {
       final player0initialHand = [
-        CardModel(name: '14'),
-        CardModel(name: '12'),
-        CardModel(name: '10'),
-        CardModel(name: '8'),
-        CardModel(name: '6')
+        _cards[14],
+        _cards[12],
+        _cards[10],
+        _cards[8],
+        _cards[6]
+      ];
+      final player1initialHand = [
+        _cards[13],
+        _cards[11],
+        _cards[9],
+        _cards[7],
+        _cards[5]
       ];
       _gameModel = gameModel.copyWith(
         players: [
           gameModel.players[0].copyWith(hand: player0initialHand),
-          gameModel.players[1]
+          gameModel.players[1].copyWith(hand: player1initialHand)
         ],
         moves: [
-          ...gameModel.moves,
-          MoveModel.dealMove(player: player, cards: player0initialHand)
+          MoveModel.dealMove(
+              player: gameModel.players[0], cards: player0initialHand),
+          MoveModel.dealMove(
+              player: gameModel.players[1], cards: player1initialHand)
         ],
       );
     }
