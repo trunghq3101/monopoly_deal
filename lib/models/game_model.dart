@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:monopoly_deal/main.dart';
 import 'package:monopoly_deal/models/moves/move_model.dart';
 import 'package:monopoly_deal/models/player_model.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
@@ -26,20 +27,19 @@ class GameModel with _$GameModel {
 }
 
 extension GameModelMethods on GameModel {
-  Future<void> addPlayer(PlayerModel player, GameRepository repository) async {
-    // if (_playerJoined) throw Exception('Already joined this game');
-    // await repository.addPlayer(player);
-    // _playerJoined = true;
+  GameState get gameState =>
+      players.length > 1 ? GameState.ready : GameState.waiting;
+
+  Future<GameModel> addPlayer(
+    PlayerModel player,
+    GameRepository repository,
+  ) async {
+    await repository.addPlayer(player);
+    return repository.gameModel;
   }
 
-  Future<void> syncUp() async {
-    // players = await _gameRepository.fetchPlayers();
-    // if (players.length > 1) {
-    //   turnOwner = await _gameRepository.fetchTurnOwner();
-    //   gameState = GameState.ready;
-    //   return;
-    // }
-    // gameState = GameState.waiting;
+  Future<GameModel> syncUp(GameRepository repository) async {
+    return repository.gameModel;
   }
 
   // Steps nextStep() {

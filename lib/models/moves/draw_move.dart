@@ -14,10 +14,10 @@ class DrawMove extends GameMove {
 
   @override
   void move() {
-    assert(deck.remaining.length >= amount);
-    for (var i = 0; i < amount; i++) {
-      final card = deck.draw();
-      player.hand.add(card);
-    }
+    // assert(deck.remaining.length >= amount);
+    // for (var i = 0; i < amount; i++) {
+    //   final card = deck.draw();
+    //   player.hand.add(card);
+    // }
   }
 }

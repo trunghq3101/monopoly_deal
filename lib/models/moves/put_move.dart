@@ -11,6 +11,6 @@ class PutMove extends GameMove {
 
   @override
   void move() {
-    player.drop(card);
+    // player.drop(card);
   }
 }

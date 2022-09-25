@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/dev/repositories.dart';
-import 'package:monopoly_deal/models/game_round.dart';
 import 'package:monopoly_deal/models/player.dart';
 
 import 'pages/home_page.dart';
@@ -19,25 +18,25 @@ class DebugApp extends StatelessWidget {
     return MaterialApp(
       home: Row(
         children: [
-          Expanded(
-            child: MaterialApp(
-              home: HomePage(
-                game: GameRound(repository: gameRepository),
-                player: Player(),
-              ),
-            ),
-          ),
-          const VerticalDivider(
-            color: Colors.orange,
-          ),
-          Expanded(
-            child: MaterialApp(
-              home: HomePage(
-                game: GameRound(repository: gameRepository),
-                player: Player(),
-              ),
-            ),
-          ),
+          // Expanded(
+          //   child: MaterialApp(
+          //     home: HomePage(
+          //       game: GameRound(repository: gameRepository),
+          //       player: Player(),
+          //     ),
+          //   ),
+          // ),
+          // const VerticalDivider(
+          //   color: Colors.orange,
+          // ),
+          // Expanded(
+          //   child: MaterialApp(
+          //     home: HomePage(
+          //       game: GameRound(repository: gameRepository),
+          //       player: Player(),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

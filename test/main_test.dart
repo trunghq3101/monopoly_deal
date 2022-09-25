@@ -1,34 +1,27 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/dev/repositories.dart';
-import 'package:monopoly_deal/models/card.dart';
-import 'package:monopoly_deal/models/game_round.dart';
-import 'package:monopoly_deal/models/moves/deal_move.dart';
-import 'package:monopoly_deal/models/moves/draw_move.dart';
-import 'package:monopoly_deal/models/moves/end_move.dart';
-import 'package:monopoly_deal/models/moves/move.dart';
-import 'package:monopoly_deal/models/moves/put_move.dart';
-import 'package:monopoly_deal/models/player.dart';
+import 'package:monopoly_deal/models/card_model.dart';
+import 'package:monopoly_deal/models/game_model.dart';
+import 'package:monopoly_deal/models/moves/move_model.dart';
+import 'package:monopoly_deal/models/player_model.dart';
 
 void main() {
   test('Go through the game', () async {
     final repository = TestGameRepository();
-    final game = GameRound(repository: repository);
-    final gameMachine = GameRound(repository: repository);
-    final dealer = Player();
-    final player = Player();
-    final machinePlayer = Player();
-    final cards = List.generate(15, (index) => Card('$index'));
-    final deck = CardDeck(initial: cards);
-    GameMove lastMove;
+    var game = GameModel(moves: [], players: [], step: Steps.idle);
+    var gameMachine = GameModel(moves: [], players: [], step: Steps.idle);
+    var player = PlayerModel(hand: []);
+    var machinePlayer = PlayerModel(hand: []);
+    final cards = List.generate(15, (index) => CardModel(name: '$index'));
+    List<MoveModel> moves = [];
 
-    await game.addPlayer(player);
+    game = await game.addPlayer(player, repository);
+    expect(game, GameModel(players: [player], step: Steps.idle, moves: []));
+    gameMachine = await gameMachine.syncUp(repository);
+    expect(gameMachine, game);
 
-    await game.syncUp();
-    expect(game.gameState, GameState.waiting);
-
-    await gameMachine.addPlayer(machinePlayer);
-
-    await game.syncUp();
+    gameMachine = await gameMachine.addPlayer(machinePlayer, repository);
+    game = await game.syncUp(repository);
     final playerDealCards = [
       cards[14],
       cards[12],
@@ -36,28 +29,34 @@ void main() {
       cards[8],
       cards[6]
     ];
+    moves.add(DealMove(player: player, cards: playerDealCards));
+    player = PlayerModel(hand: playerDealCards);
+    expect(
+      game,
+      GameModel(
+        players: [player, machinePlayer],
+        step: Steps.idle,
+        moves: moves,
+      ),
+    );
     expect(game.gameState, GameState.ready);
-    expect(game.players.length, 2);
-    expect(game.moves.last, DealMove(player: player, cards: playerDealCards));
-    expect(player.hand, playerDealCards);
-    expect(machinePlayer.hand, []);
 
-    await gameMachine.syncUp();
-    final machineDealCards = [
-      cards[13],
-      cards[11],
-      cards[9],
-      cards[7],
-      cards[5]
-    ];
-    expect(
-      gameMachine.moves.last,
-      DealMove(player: machinePlayer, cards: machineDealCards),
-    );
-    expect(
-      machinePlayer.hand,
-      machineDealCards,
-    );
+    // await gameMachine.syncUp();
+    // final machineDealCards = [
+    //   cards[13],
+    //   cards[11],
+    //   cards[9],
+    //   cards[7],
+    //   cards[5]
+    // ];
+    // expect(
+    //   gameMachine.moves.last,
+    //   DealMove(player: machinePlayer, cards: machineDealCards),
+    // );
+    // expect(
+    //   machinePlayer.hand,
+    //   machineDealCards,
+    // );
     // expect(game.turnOwner, player);
     // expect(game.step, Steps.idle);
     // expect(

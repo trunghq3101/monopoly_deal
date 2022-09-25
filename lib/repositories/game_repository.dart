@@ -1,13 +1,14 @@
+import 'package:monopoly_deal/models/game_model.dart';
+import 'package:monopoly_deal/models/player_model.dart';
+
 import '../models/player.dart';
 
-class GameRepository {
-  Future<List<Player>> fetchPlayers() async {
-    return [];
-  }
+abstract class GameRepository {
+  GameModel get gameModel;
 
-  Future<void> addPlayer(Player player) async {}
+  Future<List<Player>> fetchPlayers();
 
-  Future<Player?> fetchTurnOwner() async {
-    return null;
-  }
+  Future<void> addPlayer(PlayerModel player);
+
+  Future<Player?> fetchTurnOwner();
 }

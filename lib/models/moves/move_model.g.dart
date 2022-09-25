@@ -6,11 +6,15 @@ part of 'move_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_MoveModel _$$_MoveModelFromJson(Map<String, dynamic> json) => _$_MoveModel(
+_$DealMove _$$DealMoveFromJson(Map<String, dynamic> json) => _$DealMove(
       player: PlayerModel.fromJson(json['player'] as Map<String, dynamic>),
+      cards: (json['cards'] as List<dynamic>)
+          .map((e) => CardModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
-Map<String, dynamic> _$$_MoveModelToJson(_$_MoveModel instance) =>
+Map<String, dynamic> _$$DealMoveToJson(_$DealMove instance) =>
     <String, dynamic>{
       'player': instance.player,
+      'cards': instance.cards,
     };

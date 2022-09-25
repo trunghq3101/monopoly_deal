@@ -1,8 +1,8 @@
-import '../player.dart';
+import 'package:monopoly_deal/models/player_model.dart';
 
-abstract class GameMove {
+class GameMove {
   GameMove({required this.player});
 
-  final Player player;
-  void move();
+  final PlayerModel player;
+  void move() {}
 }
