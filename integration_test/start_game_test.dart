@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/dev/repositories.dart';
 
-import 'steps.dart';
+import 'test_driver.dart';
 
 void main() {
   testWidgets('Start game', (tester) async {
