@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:monopoly_deal/main.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 import 'package:monopoly_deal/models/player_model.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
@@ -12,6 +13,10 @@ class TestDriver {
   final GameRepository gameRepository;
   GameModel gameMachine = GameModel(moves: [], players: [], step: Steps.idle);
   PlayerModel machinePlayer = PlayerModel(hand: []);
+
+  Future<void> onHomeScreen() async {
+    await tester.pumpWidget(MainApp(gameRepository: gameRepository));
+  }
 
   Future<void> startGame() async {
     await tester.tap(find.text('Join'));
