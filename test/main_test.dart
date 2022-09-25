@@ -43,6 +43,7 @@ void main() {
     expect(
       game,
       GameModel(
+        turnOwner: player,
         players: [player, machinePlayer],
         step: Steps.idle,
         moves: moves,
@@ -52,12 +53,6 @@ void main() {
     gameMachine = await gameMachine.syncUp(repository);
     expect(gameMachine, game);
 
-    // expect(
-    //   machinePlayer.hand,
-    //   machineDealCards,
-    // );
-    // expect(game.turnOwner, player);
-    // expect(game.step, Steps.idle);
     // expect(
     //   game.nextStep(),
     //   Steps.draw,

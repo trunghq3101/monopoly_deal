@@ -40,11 +40,13 @@ class TestGameRepository extends GameRepository {
         _cards[7],
         _cards[5]
       ];
+      final updatedPlayers = [
+        gameModel.players[0].copyWith(hand: player0initialHand),
+        gameModel.players[1].copyWith(hand: player1initialHand)
+      ];
       _gameModel = gameModel.copyWith(
-        players: [
-          gameModel.players[0].copyWith(hand: player0initialHand),
-          gameModel.players[1].copyWith(hand: player1initialHand)
-        ],
+        turnOwner: updatedPlayers[0],
+        players: updatedPlayers,
         moves: [
           MoveModel.dealMove(
               player: gameModel.players[0], cards: player0initialHand),
