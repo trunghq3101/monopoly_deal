@@ -52,6 +52,7 @@ dev_dependencies:
   json_serializable: ^6.4.0
   integration_test:
     sdk: flutter
+  widgetbook: ^2.4.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
