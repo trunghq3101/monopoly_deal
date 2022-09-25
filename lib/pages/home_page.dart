@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 import 'package:monopoly_deal/models/player_model.dart';
-import 'package:monopoly_deal/pages/game_page.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
+import 'package:monopoly_deal/routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -42,8 +42,8 @@ class _HomePageState extends State<HomePage> {
           case GameState.ready:
             _content = "Ready";
             _buttonText = "Start";
-            _onMainBtnPressed = () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => const GamePage()));
+            _onMainBtnPressed =
+                () => Navigator.of(context).pushNamed(AppRoutes.game);
             timer.cancel();
             break;
           default:

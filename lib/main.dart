@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/dev/repositories.dart';
+import 'package:monopoly_deal/pages/game_page.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
+import 'package:monopoly_deal/routes.dart';
 
 import 'pages/home_page.dart';
 
@@ -19,9 +21,11 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomePage(
-        gameRepository: gameRepository,
-      ),
+      initialRoute: AppRoutes.home,
+      routes: {
+        AppRoutes.home: (_) => HomePage(gameRepository: gameRepository),
+        AppRoutes.game: (_) => GamePage(gameRepository: gameRepository),
+      },
     );
   }
 }

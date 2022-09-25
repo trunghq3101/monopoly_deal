@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../repositories/game_repository.dart';
+
 class GamePage extends StatelessWidget {
-  const GamePage({Key? key}) : super(key: key);
+  const GamePage({
+    Key? key,
+    required this.gameRepository,
+  }) : super(key: key);
+
+  final GameRepository gameRepository;
 
   @override
   Widget build(BuildContext context) {

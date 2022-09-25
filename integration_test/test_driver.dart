@@ -28,4 +28,6 @@ class TestDriver {
     await tester.tap(find.text('Start'));
     await tester.pumpAndSettle();
   }
+
+  Future<void> dealCards() async {}
 }
