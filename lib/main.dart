@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/dev/repositories.dart';
-import 'package:monopoly_deal/models/player.dart';
 
 import 'pages/home_page.dart';
 
@@ -8,7 +7,7 @@ void main() {
   runApp(const DebugApp());
 }
 
-final gameRepository = TestGameRepository();
+final _gameRepository = TestGameRepository();
 
 class DebugApp extends StatelessWidget {
   const DebugApp({Key? key}) : super(key: key);
@@ -18,25 +17,23 @@ class DebugApp extends StatelessWidget {
     return MaterialApp(
       home: Row(
         children: [
-          // Expanded(
-          //   child: MaterialApp(
-          //     home: HomePage(
-          //       game: GameRound(repository: gameRepository),
-          //       player: Player(),
-          //     ),
-          //   ),
-          // ),
-          // const VerticalDivider(
-          //   color: Colors.orange,
-          // ),
-          // Expanded(
-          //   child: MaterialApp(
-          //     home: HomePage(
-          //       game: GameRound(repository: gameRepository),
-          //       player: Player(),
-          //     ),
-          //   ),
-          // ),
+          Expanded(
+            child: MaterialApp(
+              home: HomePage(
+                gameRepository: _gameRepository,
+              ),
+            ),
+          ),
+          const VerticalDivider(
+            color: Colors.orange,
+          ),
+          Expanded(
+            child: MaterialApp(
+              home: HomePage(
+                gameRepository: _gameRepository,
+              ),
+            ),
+          ),
         ],
       ),
     );
