@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'widgetbook.dart';
+import 'package:dashbook/dashbook.dart';
+import 'package:monopoly_deal/widgets/card_deck.dart';
 
-void main(List<String> args) {
-  runApp(const HotReload());
+void main() {
+  final dashbook = Dashbook();
+
+  dashbook
+      .storiesOf('$CardDeck')
+      .decorator(CenterDecorator())
+      .add('default', (ctx) => const CardDeck());
+
+  runApp(dashbook);
 }
