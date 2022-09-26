@@ -9,9 +9,9 @@ void main() {
 
   dashbook.storiesOf('$CardDeck').decorator(CenterDecorator()).add(
       'default',
-      (ctx) => FractionallySizedBox(
-            widthFactor: 0.8,
-            child: const CardDeck(),
+      (ctx) => const FractionallySizedBox(
+            widthFactor: 0.2,
+            child: CardDeck(),
           ));
 
   dashbook.storiesOf('$AppCard').decorator(CenterDecorator()).add(

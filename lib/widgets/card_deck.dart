@@ -9,10 +9,11 @@ class CardDeck extends StatelessWidget {
   Widget build(BuildContext context) {
     const n = 10;
     return LayoutBuilder(builder: (context, constraints) {
+      final w = constraints.maxWidth;
       return Stack(
         children: List.generate(n, (index) {
           return Transform.translate(
-            offset: Offset(2.0 * index, 2.0 * index),
+            offset: Offset(w * 0.01 * index, w * 0.01 * index),
             child: const AppCard(),
           );
         }).reversed.toList(),
