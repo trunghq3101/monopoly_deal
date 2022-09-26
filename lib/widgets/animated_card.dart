@@ -9,7 +9,7 @@ class AnimatedAppCardController extends ChangeNotifier {
 
   void deal({required Offset to, double? angle}) {
     offset = to;
-    this.angle = angle ?? pi + Random().nextInt(4) * pi / 4;
+    this.angle = angle ?? pi + Random().nextInt(300) * pi / 180;
     notifyListeners();
   }
 }

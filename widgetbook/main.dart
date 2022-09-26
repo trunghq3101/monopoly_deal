@@ -6,7 +6,9 @@ import 'package:monopoly_deal/widgets/card.dart';
 import 'package:monopoly_deal/widgets/card_deck.dart';
 
 void main() {
-  final dashbook = Dashbook();
+  final dashbook = Dashbook(
+    theme: ThemeData.dark(),
+  );
 
   dashbook.storiesOf('$CardDeck').decorator(CenterDecorator()).add(
       'default',
