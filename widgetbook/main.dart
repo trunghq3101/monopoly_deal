@@ -7,10 +7,12 @@ import 'package:monopoly_deal/widgets/card_deck.dart';
 void main() {
   final dashbook = Dashbook();
 
-  dashbook
-      .storiesOf('$CardDeck')
-      .decorator(CenterDecorator())
-      .add('default', (ctx) => const CardDeck());
+  dashbook.storiesOf('$CardDeck').decorator(CenterDecorator()).add(
+      'default',
+      (ctx) => FractionallySizedBox(
+            widthFactor: 0.8,
+            child: const CardDeck(),
+          ));
 
   dashbook.storiesOf('$AppCard').decorator(CenterDecorator()).add(
       'default',
