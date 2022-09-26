@@ -11,11 +11,29 @@ void main() {
   );
 
   dashbook.storiesOf('$CardDeck').decorator(CenterDecorator()).add(
-      'default',
-      (ctx) => const FractionallySizedBox(
-            widthFactor: 0.2,
-            child: CardDeck(),
-          ));
+    'default',
+    (ctx) {
+      final cardDeckController = CardDeckController();
+      ctx.action('deal', (_) {
+        cardDeckController.deal(targets: [
+          Offset(0, -300),
+          Offset(0, 310),
+          Offset(0, -320),
+          Offset(0, 330),
+          Offset(0, -310),
+          Offset(0, 320),
+          Offset(0, -330),
+          Offset(0, 300),
+          Offset(0, -320),
+          Offset(0, 310),
+        ]);
+      });
+      return FractionallySizedBox(
+        heightFactor: 0.18,
+        child: CardDeck(cardDeckController: cardDeckController),
+      );
+    },
+  );
 
   dashbook
       .storiesOf('$AppCard')
