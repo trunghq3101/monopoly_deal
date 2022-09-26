@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monopoly_deal/widgets/card_deck.dart';
 
 import '../repositories/game_repository.dart';
 
@@ -22,7 +23,12 @@ class GamePage extends StatelessWidget {
           icon: const Icon(Icons.close),
         ),
       ),
-      body: Container(),
+      body: const Center(
+        child: FractionallySizedBox(
+          widthFactor: 0.2,
+          child: CardDeck(),
+        ),
+      ),
     );
   }
 }
