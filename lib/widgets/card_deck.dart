@@ -43,25 +43,28 @@ class CardDeck extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       final spacing = min(constraints.maxWidth, constraints.maxHeight) * 0.01;
-      return AnimatedBuilder(
-        animation: cardDeckController,
-        builder: (_, child) {
-          return Stack(
-            children: [
-              ...List.generate(cardDeckController.controllers.length, (index) {
-                var offset = spacing * (index - cardDeckController.nextIndex);
-                if (offset < 0) offset = 0;
-                return Transform.translate(
-                  offset: Offset(offset, offset),
-                  child: AnimatedAppCard(
-                    key: cardDeckController.cardKeys[index],
-                    controller: cardDeckController.controllers[index],
-                  ),
-                );
-              }).reversed.toList(),
-            ],
-          );
-        },
+      return RepaintBoundary(
+        child: AnimatedBuilder(
+          animation: cardDeckController,
+          builder: (_, child) {
+            return Stack(
+              children: [
+                ...List.generate(cardDeckController.controllers.length,
+                    (index) {
+                  var offset = spacing * (index - cardDeckController.nextIndex);
+                  if (offset < 0) offset = 0;
+                  return Transform.translate(
+                    offset: Offset(offset, offset),
+                    child: AnimatedAppCard(
+                      key: cardDeckController.cardKeys[index],
+                      controller: cardDeckController.controllers[index],
+                    ),
+                  );
+                }).reversed.toList(),
+              ],
+            );
+          },
+        ),
       );
     });
   }

@@ -23,10 +23,12 @@ class GamePage extends StatelessWidget {
           icon: const Icon(Icons.close),
         ),
       ),
-      body: const Center(
+      body: Center(
         child: FractionallySizedBox(
           widthFactor: 0.2,
-          child: CardDeck(),
+          child: CardDeck(
+            cardDeckController: CardDeckController(),
+          ),
         ),
       ),
     );

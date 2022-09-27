@@ -28,28 +28,30 @@ class AnimatedAppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (_, child) => TweenAnimationBuilder(
-        tween: Tween<Offset>(begin: Offset.zero, end: controller.offset),
-        duration: const Duration(milliseconds: 300),
-        builder: (_, Offset value, child) => Transform.translate(
-          offset: value,
-          child: child,
-        ),
-        child: TweenAnimationBuilder(
-          tween: Tween<double>(begin: 0, end: controller.angle),
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (_, child) => TweenAnimationBuilder(
+          tween: Tween<Offset>(begin: Offset.zero, end: controller.offset),
           duration: const Duration(milliseconds: 300),
-          builder: (_, double value, child) {
-            return Transform.rotate(
-              angle: value,
-              child: child,
-            );
-          },
-          child: child,
+          builder: (_, Offset value, child) => Transform.translate(
+            offset: value,
+            child: child,
+          ),
+          child: TweenAnimationBuilder(
+            tween: Tween<double>(begin: 0, end: controller.angle),
+            duration: const Duration(milliseconds: 300),
+            builder: (_, double value, child) {
+              return Transform.rotate(
+                angle: value,
+                child: child,
+              );
+            },
+            child: child,
+          ),
         ),
+        child: const AppCard(),
       ),
-      child: const AppCard(),
     );
   }
 }
