@@ -27,9 +27,8 @@ class AppCard extends StatelessWidget {
                 ),
               ],
             ),
-            child: ConstraintsTransformBox(
-              constraintsTransform: (constraints) =>
-                  constraints.deflate(EdgeInsets.all(w * 0.1)),
+            child: Padding(
+              padding: EdgeInsets.all(w * 0.1),
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: Colors.blueGrey,
