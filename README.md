@@ -1,17 +1,35 @@
-### TO-DO LIST
+# Monopoly Deal online game
 
-- [x] I want to draw 2 cards each turn until there is no card left
-- [x] A game must have at least 2 players to start
-- [x] I cannot draw cards before the game starts
-- [x] I can only draw cards when it's my turn
-- [x] I want to know what is the next step I have to do in my turn
-- [x] Show game state based on number of players
-- [x] Can only add 1 player to a game instance
-- [x] Game players updated when fetching new game state
-- [x] After dealing cards, each player's hand has 5 cards
-- [x] After dealing cards, each player's hand has 5 different cards, deck lost 10 cards
-- [x] Deal cards by order
-- [x] Sync turnOwner when game ready
-- [x] Change game steps
-- [x] After drawing cards, each player's hand has 2 more cards
-- [x] After putting a card, player's hand reduced by 1
+An online version of the Monopoly Deal card game powered by Flutter and Flame engine.
+
+This is an on-going project. I write step-by-step tutorials on my [Miller Go Dev blog](https://www.millergodev.com)
+
+# Game rules
+
+It strictly follows the rules of the original game documented [here](http://www.monopolydealrules.com/)
+
+# License
+
+```
+MIT License
+
+Copyright (c) 2019 Reza Tavasoli
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
