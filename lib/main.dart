@@ -2,7 +2,6 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/dev/repositories.dart';
 import 'package:monopoly_deal/main_game.dart';
-import 'package:monopoly_deal/pages/game_page.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
 import 'package:monopoly_deal/routes.dart';
 
