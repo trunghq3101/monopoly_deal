@@ -1,5 +1,7 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/dev/repositories.dart';
+import 'package:monopoly_deal/main_game.dart';
 import 'package:monopoly_deal/pages/game_page.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
 import 'package:monopoly_deal/routes.dart';
@@ -24,7 +26,7 @@ class MainApp extends StatelessWidget {
       initialRoute: AppRoutes.home,
       routes: {
         AppRoutes.home: (_) => HomePage(gameRepository: gameRepository),
-        AppRoutes.game: (_) => GamePage(gameRepository: gameRepository),
+        AppRoutes.game: (_) => GameWidget(game: MainGame()),
       },
     );
   }
