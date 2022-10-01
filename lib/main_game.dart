@@ -9,7 +9,7 @@ class PauseBtnComponent extends RiveComponent with Tappable {
   PauseBtnComponent({required super.artboard})
       : super(
           position: Vector2.all(0),
-          size: Vector2.all(100),
+          size: Vector2.all(50),
         );
 
   late final RiveAnimationController _controller;
@@ -34,7 +34,7 @@ class MainGame extends FlameGame with HasTappables {
 
   @override
   Future<void>? onLoad() async {
-    final riveFile = RiveFile.asset('assets/images/btn_pause.riv');
+    final riveFile = RiveFile.asset('assets/images/buttons.riv');
     final artboard = await loadArtboard(
       riveFile,
       artboardName: 'pause-one',
