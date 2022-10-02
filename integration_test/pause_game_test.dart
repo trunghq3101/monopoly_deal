@@ -10,7 +10,7 @@ void main() {
         TestDriver(tester: tester, gameRepository: gameRepository);
     await testDriver.onHomeScreen();
     await testDriver.startGame();
-    await tester.tapAt(Offset(10, 10));
+    await tester.tapAt(const Offset(10, 10));
     await tester.pumpAndSettle();
   });
 }
