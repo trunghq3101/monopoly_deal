@@ -52,11 +52,12 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   build_runner: ^2.2.1
-  freezed: ^2.1.1
+  freezed: 2.1.0+1
   json_serializable: ^6.4.0
   integration_test:
     sdk: flutter
   dashbook: ^0.1.10
+  flame_test: ^1.7.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
