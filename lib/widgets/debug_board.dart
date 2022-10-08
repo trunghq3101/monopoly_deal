@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:monopoly_deal/game_components/card.dart' as card_component;
 import 'package:monopoly_deal/main_game.dart';
 
+import '../game_components/deck.dart';
+
 extension _DebugControl on MainGame {
   Viewfinder get viewfinder =>
       children.query<CameraComponent>().first.viewfinder;
+
+  World get world => children.query<World>().first;
 
   Deck get deck => children.query<World>().first.children.query<Deck>().first;
 }
@@ -36,7 +40,7 @@ class DebugBoard extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 final vSize = mainGame.viewfinder.visibleGameSize!;
-                mainGame.viewfinder.visibleGameSize = vSize * 1.1;
+                mainGame.viewfinder.visibleGameSize = vSize * 1.3;
               },
               child: const Text('Zoom out'),
             ),
@@ -44,11 +48,10 @@ class DebugBoard extends StatelessWidget {
               onPressed: () {
                 mainGame.viewfinder.visibleGameSize =
                     card_component.Card.kCardSize * 1.2;
-                mainGame.children.query<CameraComponent>().first.moveTo(mainGame
-                    .deck.children
-                    .query<card_component.Card>()
+                mainGame.children
+                    .query<CameraComponent>()
                     .first
-                    .position);
+                    .follow(mainGame.deck);
               },
               child: const Text('Reset zoom'),
             ),
@@ -58,10 +61,16 @@ class DebugBoard extends StatelessWidget {
                     .query<card_component.Card>()
                     .first
                     .deal(by: Vector2(0, -4000));
-                Navigator.of(context).pop();
               },
               child: const Text('Deal'),
-            )
+            ),
+            ElevatedButton(
+              onPressed: () {
+                mainGame.deck.removeFromParent();
+                mainGame.world.add(Deck());
+              },
+              child: const Text('Reset deal'),
+            ),
           ],
         ),
       ),

@@ -1,10 +1,9 @@
-import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
-import 'package:flame_svg/flame_svg.dart';
 import 'package:flutter/widgets.dart';
 
 import 'game_components/card.dart';
+import 'game_components/deck.dart';
 import 'game_components/game_assets.dart';
 import 'game_components/pause_button.dart';
 
@@ -31,20 +30,5 @@ class MainGame extends FlameGame with HasTappables {
     await camera.viewport.add(pauseButton);
 
     camera.follow(deck);
-  }
-}
-
-class Deck extends PositionComponent {
-  Deck()
-      : super(
-          position: Vector2(0, 0),
-          size: Card.kCardSize,
-          anchor: Anchor.center,
-        );
-  @override
-  Future<void>? onLoad() async {
-    final card = Card(svg: await Svg.load('card.svg'));
-    children.register<Card>();
-    add(card);
   }
 }
