@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flame_svg/flame_svg.dart';
 import 'package:flutter/material.dart';
 
-class Card extends SvgComponent {
+class Card extends SpriteComponent {
   Card({
-    required super.svg,
+    required super.sprite,
     required super.position,
+    required super.priority,
   }) : super(size: kCardSize, anchor: Anchor.center);
 
   static const kCardWidth = 1120.0;
