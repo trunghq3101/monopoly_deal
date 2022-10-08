@@ -20,7 +20,7 @@ class MainGame extends FlameGame with HasTappables {
     await add(world);
     final camera = CameraComponent(world: world)
       ..viewport.add(pauseIconComponent)
-      ..viewfinder.visibleGameSize = Vector2(1200, 1200)
+      ..viewfinder.visibleGameSize = Card.kCardSize * 1.2
       ..follow(card);
     await add(camera);
   }

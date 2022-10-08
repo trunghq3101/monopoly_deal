@@ -10,6 +10,45 @@ class GamePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Builder(
+        builder: (context) {
+          return FloatingActionButton.small(
+            onPressed: () {
+              showBottomSheet(
+                context: context,
+                builder: (context) {
+                  return FractionallySizedBox(
+                    heightFactor: 0.3,
+                    widthFactor: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Wrap(
+                        runSpacing: 16,
+                        spacing: 16,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Hide'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Deal'),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: const Icon(Icons.bug_report),
+          );
+        },
+      ),
       body: GameWidget(
         game: MainGame(),
         overlayBuilderMap: {

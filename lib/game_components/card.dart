@@ -9,7 +9,7 @@ class Card extends SvgComponent {
           anchor: Anchor.center,
         );
 
-  static const kCardWidth = 280.0;
-  static const kCardHeight = 396.0;
+  static const kCardWidth = 1120.0;
+  static const kCardHeight = 1584.0;
   static final kCardSize = Vector2(kCardWidth, kCardHeight);
 }
