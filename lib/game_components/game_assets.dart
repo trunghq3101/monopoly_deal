@@ -11,3 +11,7 @@ class GameAssets {
 
   RiveFile riveFile(String name) => _riveFiles[name]!;
 }
+
+class Overlays {
+  static const kPauseMenu = 'PauseMenu';
+}
