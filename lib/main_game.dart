@@ -1,8 +1,9 @@
+import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
-import 'package:flame/widgets.dart';
 import 'package:flame_svg/flame_svg.dart';
 import 'package:flutter/widgets.dart';
 
+import 'game_components/card.dart';
 import 'game_components/game_assets.dart';
 import 'game_components/pause_button.dart';
 
@@ -14,14 +15,13 @@ class MainGame extends FlameGame with HasTappables {
   Future<void>? onLoad() async {
     await gameAssets.preCache();
     final pauseIconComponent = PauseBtnComponent();
-    await add(pauseIconComponent);
-    final card = SvgComponent(
-      svg: await Svg.load('card.svg'),
-      position: Vector2.all(300),
-      size: Vector2.all(100),
-      anchor: Anchor.center,
-    );
-    add(card);
-    camera.followComponent(card);
+    final card = Card(svg: await Svg.load('card.svg'));
+    final world = World()..add(card);
+    await add(world);
+    final camera = CameraComponent(world: world)
+      ..viewport.add(pauseIconComponent)
+      ..viewfinder.visibleGameSize = Vector2(1200, 1200)
+      ..follow(card);
+    await add(camera);
   }
 }
