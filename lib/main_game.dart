@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame_svg/flame_svg.dart';
@@ -16,7 +17,7 @@ class MainGame extends FlameGame with HasTappables {
     await gameAssets.preCache();
     final pauseButton = PauseButton();
     final world = World();
-    final card = Card(svg: await Svg.load('card.svg'));
+    final deck = Deck();
     final camera = CameraComponent(world: world);
     camera.viewfinder.visibleGameSize = Card.kCardSize * 1.2;
 
@@ -24,11 +25,26 @@ class MainGame extends FlameGame with HasTappables {
       ..register<World>()
       ..register<CameraComponent>();
     camera.viewport.children.register<PauseButton>();
-    world.children.register<Card>();
+    world.children.register<Deck>();
     await addAll([world, camera]);
-    await world.add(card);
+    await world.add(deck);
     await camera.viewport.add(pauseButton);
 
-    camera.follow(card);
+    camera.follow(deck);
+  }
+}
+
+class Deck extends PositionComponent {
+  Deck()
+      : super(
+          position: Vector2(0, 0),
+          size: Card.kCardSize,
+          anchor: Anchor.center,
+        );
+  @override
+  Future<void>? onLoad() async {
+    final card = Card(svg: await Svg.load('card.svg'));
+    children.register<Card>();
+    add(card);
   }
 }
