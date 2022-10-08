@@ -27,9 +27,17 @@ class PauseBtnComponent extends RiveComponent with Tappable {
 
   @override
   bool onTapDown(TapDownInfo info) {
+    if (findGame()?.paused == true) return true;
     _controller.isActive = true;
-    findGame()?.pauseEngine();
-    findGame()?.overlays.add('PauseMenu');
+    _controller.isActiveChanged.addListener(_pauseGame);
+    findGame()?.overlays.add(Overlays.kPauseMenu);
     return true;
+  }
+
+  void _pauseGame() {
+    if (!_controller.isActive) {
+      findGame()?.pauseEngine();
+      _controller.isActiveChanged.removeListener(_pauseGame);
+    }
   }
 }
