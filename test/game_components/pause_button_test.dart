@@ -21,12 +21,13 @@ void main() {
   game.testGameWidget(
     'pause',
     setUp: (game, _) async {
-      await gameAssets.load();
+      await gameAssets.preCache();
       await game.ensureAdd(PauseBtnComponent());
     },
     verify: (game, tester) async {
       await tester.tapAt(const Offset(10, 10));
       await tester.pump(const Duration(seconds: 1));
+      game.update(1);
       expect(game.overlays.isActive(Overlays.kPauseMenu), true);
       expect(game.paused, true);
     },
