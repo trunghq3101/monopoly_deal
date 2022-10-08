@@ -6,9 +6,9 @@ import 'package:rive/rive.dart';
 
 import 'game_assets.dart';
 
-class PauseBtnComponent extends RiveComponent
+class PauseButton extends RiveComponent
     with Tappable, HasGameRef, ComponentViewportMargin {
-  PauseBtnComponent()
+  PauseButton()
       : super(
           artboard: loadArtboard,
           size: Vector2.all(50),

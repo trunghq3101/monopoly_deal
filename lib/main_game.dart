@@ -14,14 +14,21 @@ class MainGame extends FlameGame with HasTappables {
   @override
   Future<void>? onLoad() async {
     await gameAssets.preCache();
-    final pauseIconComponent = PauseBtnComponent();
+    final pauseButton = PauseButton();
+    final world = World();
     final card = Card(svg: await Svg.load('card.svg'));
-    final world = World()..add(card);
-    await add(world);
-    final camera = CameraComponent(world: world)
-      ..viewport.add(pauseIconComponent)
-      ..viewfinder.visibleGameSize = Card.kCardSize * 1.2
-      ..follow(card);
-    await add(camera);
+    final camera = CameraComponent(world: world);
+    camera.viewfinder.visibleGameSize = Card.kCardSize * 1.2;
+
+    children
+      ..register<World>()
+      ..register<CameraComponent>();
+    camera.viewport.children.register<PauseButton>();
+    world.children.register<Card>();
+    await addAll([world, camera]);
+    await world.add(card);
+    await camera.viewport.add(pauseButton);
+
+    camera.follow(card);
   }
 }

@@ -1,11 +1,20 @@
+import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:monopoly_deal/game_components/card.dart' as card_component;
 import 'package:monopoly_deal/game_components/game_assets.dart';
 import 'package:monopoly_deal/main_game.dart';
 import 'package:monopoly_deal/widgets/pause_menu.dart';
 
-class GamePage extends StatelessWidget {
+class GamePage extends StatefulWidget {
   const GamePage({super.key});
+
+  @override
+  State<GamePage> createState() => _GamePageState();
+}
+
+class _GamePageState extends State<GamePage> {
+  final mainGame = MainGame();
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +43,13 @@ class GamePage extends StatelessWidget {
                           ),
                           ElevatedButton(
                             onPressed: () {
+                              mainGame.children
+                                  .query<World>()
+                                  .first
+                                  .children
+                                  .query<card_component.Card>()
+                                  .first
+                                  .deal();
                               Navigator.of(context).pop();
                             },
                             child: const Text('Deal'),
@@ -50,7 +66,7 @@ class GamePage extends StatelessWidget {
         },
       ),
       body: GameWidget(
-        game: MainGame(),
+        game: mainGame,
         overlayBuilderMap: {
           Overlays.kPauseMenu: (_, MainGame game) => PauseMenu(game: game),
         },

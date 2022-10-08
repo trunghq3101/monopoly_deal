@@ -12,4 +12,8 @@ class Card extends SvgComponent {
   static const kCardWidth = 1120.0;
   static const kCardHeight = 1584.0;
   static final kCardSize = Vector2(kCardWidth, kCardHeight);
+
+  void deal() {
+    print('deal');
+  }
 }

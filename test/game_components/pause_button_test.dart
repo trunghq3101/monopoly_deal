@@ -22,7 +22,7 @@ void main() {
     'pause',
     setUp: (game, _) async {
       await gameAssets.preCache();
-      await game.ensureAdd(PauseBtnComponent());
+      await game.ensureAdd(PauseButton());
     },
     verify: (game, tester) async {
       await tester.tapAt(const Offset(10, 10));
