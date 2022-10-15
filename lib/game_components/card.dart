@@ -9,6 +9,7 @@ class Card extends SvgComponent {
   Card({
     required super.svg,
     required super.position,
+    required super.priority,
   }) : super(size: kCardSize, anchor: Anchor.center);
 
   static const kCardWidth = 1120.0;

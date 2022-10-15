@@ -12,8 +12,18 @@ class Deck extends PositionComponent {
         );
   @override
   Future<void>? onLoad() async {
-    final card = Card(svg: await Svg.load('card.svg'), position: size / 2);
+    final svg = await Svg.load('card.svg');
     children.register<Card>();
-    add(card);
+    final cards = List.generate(
+        143,
+        (index) => Card(
+              svg: svg,
+              position: size / 2 +
+                  (index < 10
+                      ? (Vector2.all(3) * index.toDouble())
+                      : Vector2.all(0)),
+              priority: 142 - index,
+            ));
+    addAll(cards);
   }
 }
