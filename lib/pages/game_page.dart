@@ -2,43 +2,66 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/game_components/game_assets.dart';
 import 'package:monopoly_deal/main_game.dart';
+import 'package:monopoly_deal/models/game_model.dart';
+import 'package:monopoly_deal/repositories/game_repository.dart';
 import 'package:monopoly_deal/widgets/debug_board.dart';
 import 'package:monopoly_deal/widgets/pause_menu.dart';
 
 class GamePage extends StatefulWidget {
-  const GamePage({super.key});
+  const GamePage({super.key, required this.gameRepository});
+
+  final GameRepository gameRepository;
 
   @override
   State<GamePage> createState() => _GamePageState();
 }
 
 class _GamePageState extends State<GamePage> {
-  final mainGame = MainGame();
+  MainGame? mainGame;
+
+  @override
+  void initState() {
+    super.initState();
+
+    GameModel(players: [], step: Steps.idle, moves: [])
+        .syncUp(widget.gameRepository)
+        .then((value) => setState(() {
+              mainGame = MainGame(value);
+            }));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: Builder(
-        builder: (context) {
-          return FloatingActionButton.small(
-            onPressed: () {
-              showBottomSheet(
-                context: context,
-                builder: (context) {
-                  return DebugBoard(mainGame: mainGame);
-                },
-              );
-            },
-            child: const Icon(Icons.bug_report),
+    final game = mainGame;
+    return game == null
+        ? const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          )
+        : Scaffold(
+            floatingActionButton: Builder(
+              builder: (context) {
+                return FloatingActionButton.small(
+                  onPressed: () {
+                    showBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return DebugBoard(mainGame: game);
+                      },
+                    );
+                  },
+                  child: const Icon(Icons.bug_report),
+                );
+              },
+            ),
+            body: GameWidget(
+              game: game,
+              overlayBuilderMap: {
+                Overlays.kPauseMenu: (_, MainGame game) =>
+                    PauseMenu(game: game),
+              },
+            ),
           );
-        },
-      ),
-      body: GameWidget(
-        game: mainGame,
-        overlayBuilderMap: {
-          Overlays.kPauseMenu: (_, MainGame game) => PauseMenu(game: game),
-        },
-      ),
-    );
   }
 }

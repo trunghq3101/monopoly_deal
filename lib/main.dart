@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
       initialRoute: AppRoutes.home,
       routes: {
         AppRoutes.home: (_) => HomePage(gameRepository: gameRepository),
-        AppRoutes.game: (_) => const GamePage(),
+        AppRoutes.game: (_) => GamePage(gameRepository: gameRepository),
       },
     );
   }

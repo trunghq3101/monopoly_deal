@@ -1,6 +1,7 @@
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/widgets.dart';
+import 'package:monopoly_deal/models/game_model.dart';
 
 import 'game_components/card.dart';
 import 'game_components/deck.dart';
@@ -8,6 +9,10 @@ import 'game_components/game_assets.dart';
 import 'game_components/pause_button.dart';
 
 class MainGame extends FlameGame with HasTappables {
+  MainGame(this.gameModel);
+
+  final GameModel gameModel;
+
   @override
   Color backgroundColor() => const Color(0xFFD74E30);
 
