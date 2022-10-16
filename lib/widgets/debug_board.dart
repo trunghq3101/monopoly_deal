@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
