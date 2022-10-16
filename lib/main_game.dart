@@ -1,3 +1,4 @@
+import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/widgets.dart';
@@ -5,6 +6,7 @@ import 'package:monopoly_deal/models/game_model.dart';
 
 import 'game_components/card.dart';
 import 'game_components/deck.dart';
+import 'game_components/effects/visible_game_size_effect.dart';
 import 'game_components/game_assets.dart';
 import 'game_components/pause_button.dart';
 
@@ -12,6 +14,10 @@ class MainGame extends FlameGame with HasTappables {
   MainGame(this.gameModel);
 
   final GameModel gameModel;
+  late final CameraComponent _cameraComponent;
+  Viewfinder get viewfinder => _cameraComponent.viewfinder;
+  World get world => _cameraComponent.world;
+  Vector2 get visibleGameSize => viewfinder.visibleGameSize!;
 
   @override
   Color backgroundColor() => const Color(0xFFD74E30);
@@ -22,18 +28,33 @@ class MainGame extends FlameGame with HasTappables {
     final pauseButton = PauseButton();
     final world = World();
     final deck = Deck();
-    final camera = CameraComponent(world: world);
-    camera.viewfinder.visibleGameSize = Card.kCardSize * 1.2;
+    _cameraComponent = CameraComponent(world: world);
+    viewfinder.visibleGameSize = Card.kCardSize * 1.2;
 
     children
       ..register<World>()
       ..register<CameraComponent>();
-    camera.viewport.children.register<PauseButton>();
+    _cameraComponent.viewport.children.register<PauseButton>();
     world.children.register<Deck>();
-    await addAll([world, camera]);
+    await addAll([world, _cameraComponent]);
     await world.add(deck);
-    await camera.viewport.add(pauseButton);
+    await _cameraComponent.viewport.add(pauseButton);
 
-    camera.follow(deck);
+    _cameraComponent.follow(deck);
+
+    Future.delayed(const Duration(seconds: 1), _deal);
+  }
+
+  void _deal() {
+    viewfinder.add(
+      VisibleGameSizeEffect.to(
+        Vector2(Card.kCardWidth * 3, Card.kCardHeight * 7),
+        EffectController(
+          duration: 1,
+          curve: Curves.easeOutCubic,
+        ),
+      ),
+    );
+    world.children.query<Deck>().first.deal();
   }
 }

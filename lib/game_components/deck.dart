@@ -24,4 +24,8 @@ class Deck extends PositionComponent {
             ));
     addAll(cards);
   }
+
+  void deal() {
+    children.query<Card>().first.deal(by: Vector2(0, -Card.kCardHeight * 2.5));
+  }
 }

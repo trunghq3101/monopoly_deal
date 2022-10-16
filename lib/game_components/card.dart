@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame_svg/flame_svg.dart';
 import 'package:flutter/material.dart';
+import 'package:monopoly_deal/game_components/game_assets.dart';
 
 class Card extends SvgComponent {
   Card({
@@ -17,8 +18,8 @@ class Card extends SvgComponent {
   static final kCardSize = Vector2(kCardWidth, kCardHeight);
 
   void deal({required Vector2 by}) {
-    final rotation = pi * 0.75 +
-        Random(DateTime.now().microsecondsSinceEpoch).nextInt(90) * pi / 180;
+    final rotation =
+        pi * 0.75 + Random(gameAssets.randomSeed).nextInt(90) * pi / 180;
     addAll([
       RotateEffect.by(
         rotation,

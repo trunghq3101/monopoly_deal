@@ -4,6 +4,8 @@ import 'package:rive/rive.dart';
 final gameAssets = GameAssets();
 
 class GameAssets {
+  int get randomSeed => _randomSeed ?? DateTime.now().millisecondsSinceEpoch;
+  int? _randomSeed;
   final Map<String, RiveFile> _riveFiles = {};
 
   Future<void> preCache() async {
@@ -12,6 +14,10 @@ class GameAssets {
   }
 
   RiveFile riveFile(String name) => _riveFiles[name]!;
+
+  void fixRandomSeed(int seed) {
+    _randomSeed = seed;
+  }
 }
 
 class Overlays {
