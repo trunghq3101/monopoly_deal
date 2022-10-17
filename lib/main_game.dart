@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
@@ -41,8 +42,18 @@ class MainGame extends FlameGame with HasTappables {
     await _cameraComponent.viewport.add(pauseButton);
 
     _cameraComponent.follow(deck);
+  }
 
-    Future.delayed(const Duration(seconds: 1), _deal);
+  @override
+  void onMount() {
+    super.onMount();
+    TimerComponent(
+      period: 1.5,
+      onTick: () {
+        _deal();
+      },
+      removeOnFinish: true,
+    ).addToParent(this);
   }
 
   void _deal() {

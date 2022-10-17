@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:monopoly_deal/game_components/card.dart';
+import 'package:monopoly_deal/game_components/deck.dart';
 import 'package:monopoly_deal/game_components/game_assets.dart';
 import 'package:monopoly_deal/main_game.dart';
 import 'package:monopoly_deal/models/game_model.dart';
@@ -27,7 +30,13 @@ void main() {
       await tester.pumpWidget(widget);
 
       // Show deck
-      await tester.pumpFrames(widget, const Duration(milliseconds: 500));
+      for (var i = 0; i < 110; i++) {
+        game.update(0.01);
+        await tester.pump();
+      }
+      expect(
+          game.world.children.query<Deck>().first.children.query<Card>().length,
+          110);
       await expectLater(
         find.byWidget(widget),
         matchesGoldenFile('_goldens/show_deck.png'),
