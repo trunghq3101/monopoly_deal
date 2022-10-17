@@ -221,31 +221,39 @@ packages:
   flame:
     dependency: "direct main"
     description:
-      name: flame
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.0"
+      path: "packages/flame"
+      ref: HEAD
+      resolved-ref: "8aacb5557ac299852530c5023a1ddd2bebbad564"
+      url: "git@github.com:flame-engine/flame.git"
+    source: git
+    version: "1.4.0"
   flame_rive:
     dependency: "direct main"
     description:
-      name: flame_rive
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.5.1"
+      path: "packages/flame_rive"
+      ref: HEAD
+      resolved-ref: "8aacb5557ac299852530c5023a1ddd2bebbad564"
+      url: "git@github.com:flame-engine/flame.git"
+    source: git
+    version: "1.5.2"
   flame_svg:
     dependency: "direct main"
     description:
-      name: flame_svg
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.5.0"
+      path: "packages/flame_svg"
+      ref: HEAD
+      resolved-ref: "8aacb5557ac299852530c5023a1ddd2bebbad564"
+      url: "git@github.com:flame-engine/flame.git"
+    source: git
+    version: "1.6.0"
   flame_test:
     dependency: "direct dev"
     description:
-      name: flame_test
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.7.0"
+      path: "packages/flame_test"
+      ref: HEAD
+      resolved-ref: "8aacb5557ac299852530c5023a1ddd2bebbad564"
+      url: "git@github.com:flame-engine/flame.git"
+    source: git
+    version: "1.8.0"
   flutter:
     dependency: "direct main"
     description: flutter

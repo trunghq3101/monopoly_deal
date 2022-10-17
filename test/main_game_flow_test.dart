@@ -7,9 +7,10 @@ import 'package:monopoly_deal/models/game_model.dart';
 
 void main() {
   late GameModel gameModel;
+  int seed = 0;
 
   setUp(() {
-    gameAssets.fixRandomSeed(1);
+    gameAssets.randomSeed = () => ++seed;
     gameModel = GameModel.fromJson({
       "players": [],
       "step": "idle",
@@ -18,7 +19,7 @@ void main() {
   });
 
   testWidgets(
-    'play util win',
+    'play until win',
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(360, 640));
       final game = MainGame(gameModel);
@@ -33,7 +34,7 @@ void main() {
       );
 
       // Deal 5 cards to each player
-      await tester.pumpFrames(widget, const Duration(seconds: 2));
+      await tester.pumpFrames(widget, const Duration(seconds: 4));
       await expectLater(
         find.byWidget(widget),
         matchesGoldenFile('_goldens/deal_cards.png'),
