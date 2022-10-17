@@ -38,34 +38,34 @@ dependencies:
   json_annotation: ^4.7.0
   flame:
     git:
-      url: git@github.com:flame-engine/flame.git
+      url: https://github.com/flame-engine/flame.git
       path: packages/flame
   flame_svg:
     git:
-      url: git@github.com:flame-engine/flame.git
+      url: https://github.com/flame-engine/flame.git
       path: packages/flame_svg
   flame_rive:
     git:
-      url: git@github.com:flame-engine/flame.git
+      url: https://github.com/flame-engine/flame.git
       path: packages/flame_rive
   rive: ^0.9.1
 
 dependency_overrides:
   flame:
     git:
-      url: git@github.com:flame-engine/flame.git
+      url: https://github.com/flame-engine/flame.git
       path: packages/flame
   flame_svg:
     git:
-      url: git@github.com:flame-engine/flame.git
+      url: https://github.com/flame-engine/flame.git
       path: packages/flame_svg
   flame_rive:
     git:
-      url: git@github.com:flame-engine/flame.git
+      url: https://github.com/flame-engine/flame.git
       path: packages/flame_rive
   flame_test:
     git:
-      url: git@github.com:flame-engine/flame.git
+      url: https://github.com/flame-engine/flame.git
       path: packages/flame_test
 
 dev_dependencies:
@@ -86,7 +86,7 @@ dev_dependencies:
   dashbook: ^0.1.10
   flame_test:
     git:
-      url: git@github.com:flame-engine/flame.git
+      url: https://github.com/flame-engine/flame.git
       path: packages/flame_test
 
 # For information on the generic Dart part of this file, see the

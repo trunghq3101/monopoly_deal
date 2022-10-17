@@ -223,8 +223,8 @@ packages:
     description:
       path: "packages/flame"
       ref: HEAD
-      resolved-ref: "8aacb5557ac299852530c5023a1ddd2bebbad564"
-      url: "git@github.com:flame-engine/flame.git"
+      resolved-ref: "9f3227857327a99730fd4d02f099acef7c57ca67"
+      url: "https://github.com/flame-engine/flame.git"
     source: git
     version: "1.4.0"
   flame_rive:
@@ -232,8 +232,8 @@ packages:
     description:
       path: "packages/flame_rive"
       ref: HEAD
-      resolved-ref: "8aacb5557ac299852530c5023a1ddd2bebbad564"
-      url: "git@github.com:flame-engine/flame.git"
+      resolved-ref: "9f3227857327a99730fd4d02f099acef7c57ca67"
+      url: "https://github.com/flame-engine/flame.git"
     source: git
     version: "1.5.2"
   flame_svg:
@@ -241,8 +241,8 @@ packages:
     description:
       path: "packages/flame_svg"
       ref: HEAD
-      resolved-ref: "8aacb5557ac299852530c5023a1ddd2bebbad564"
-      url: "git@github.com:flame-engine/flame.git"
+      resolved-ref: "9f3227857327a99730fd4d02f099acef7c57ca67"
+      url: "https://github.com/flame-engine/flame.git"
     source: git
     version: "1.6.0"
   flame_test:
@@ -250,8 +250,8 @@ packages:
     description:
       path: "packages/flame_test"
       ref: HEAD
-      resolved-ref: "8aacb5557ac299852530c5023a1ddd2bebbad564"
-      url: "git@github.com:flame-engine/flame.git"
+      resolved-ref: "9f3227857327a99730fd4d02f099acef7c57ca67"
+      url: "https://github.com/flame-engine/flame.git"
     source: git
     version: "1.8.0"
   flutter:
