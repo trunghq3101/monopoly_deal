@@ -1,12 +1,12 @@
-# Monopoly Deal online game
+# Lucky Deal online card game
 
-An online version of the Monopoly Deal card game powered by Flutter and Flame engine.
+A card game powered by Flutter and Flame engine.
 
 This is an on-going project. I write step-by-step tutorials on my [Miller Go Dev blog](https://www.millergodev.com)
 
 # Game rules
 
-It strictly follows the rules of the original game documented [here](http://www.monopolydealrules.com/)
+Updating...
 
 # License
 
