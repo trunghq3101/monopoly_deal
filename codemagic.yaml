@@ -23,17 +23,13 @@ workflows:
           include: true
           source: true
       tag_patterns:
-        - pattern: '*'
+        - pattern: "*"
           include: true
     scripts:
       - |
-        # set up key.properties
-        echo $FCI_KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH
-        cat >> "$FCI_BUILD_DIR/android/key.properties" <<EOF
-        storePassword=$FCI_KEYSTORE_PASSWORD
-        keyPassword=$FCI_KEY_PASSWORD
-        keyAlias=$FCI_KEY_ALIAS
-        storeFile=/tmp/keystore.keystore
+        # extract secret files
+        cd packages/secret_store
+        dart run secret_store.dart de 
         EOF
       - |
         # set up local properties
@@ -53,7 +49,7 @@ workflows:
       - build/**/outputs/bundle/**/*.aab
       - build/**/outputs/**/mapping.txt
       - build/web.zip
-      - '*.snap'
+      - "*.snap"
       - build/windows/**/*.msix
       - flutter_drive.log
     publishing:
