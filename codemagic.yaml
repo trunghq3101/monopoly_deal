@@ -29,8 +29,7 @@ workflows:
       - |
         # extract secret files
         cd packages/secret_store
-        dart run secret_store.dart de 
-        EOF
+        gpg --version
       - |
         # set up local properties
         echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
