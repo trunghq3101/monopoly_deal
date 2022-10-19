@@ -49,6 +49,7 @@ dependencies:
       url: https://github.com/flame-engine/flame.git
       path: packages/flame_rive
   rive: ^0.9.1
+  firebase_core: ^1.24.0
 
 dependency_overrides:
   flame:
