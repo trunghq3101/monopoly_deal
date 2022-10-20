@@ -33,7 +33,9 @@ class MainApp extends StatelessWidget {
 }
 
 final _gameRepository = TestGameRepository();
+
 final _firebaseInit = Firebase.initializeApp(
+  name: 'lucky-deal',
   options: DefaultFirebaseOptions.currentPlatform,
 );
 
@@ -45,6 +47,13 @@ class DebugApp extends StatelessWidget {
     return FutureBuilder<FirebaseApp>(
         future: _firebaseInit,
         builder: (_, snapshot) {
+          if (snapshot.hasError) {
+            return MaterialApp(
+              home: Center(
+                child: Text(snapshot.error.toString()),
+              ),
+            );
+          }
           if (!snapshot.hasData) {
             return const Material(
               child: Center(

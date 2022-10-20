@@ -1,5 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:flame_svg/flame_svg.dart';
 
 import 'card.dart';
 
@@ -15,13 +14,11 @@ class Deck extends PositionComponent {
 
   @override
   Future<void>? onLoad() async {
-    final svg = await Svg.load('card.svg');
     children.register<Card>();
     children.register<TimerComponent>();
     final cards = List.generate(
         kCardAmount,
         (index) => Card(
-              svg: svg,
               position: size / 2 +
                   Vector2.all(1) * (kCardAmount / 2) -
                   Vector2.all(1) * index.toDouble(),

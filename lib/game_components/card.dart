@@ -2,14 +2,12 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flame_svg/flame_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/game_components/effects/priority_effect.dart';
 import 'package:monopoly_deal/game_components/game_assets.dart';
 
-class Card extends SvgComponent {
+class Card extends PositionComponent {
   Card({
-    required super.svg,
     required super.position,
     required super.priority,
   }) : super(size: kCardSize, anchor: Anchor.center);
@@ -17,6 +15,39 @@ class Card extends SvgComponent {
   static const kCardWidth = 1120.0;
   static const kCardHeight = 1584.0;
   static final kCardSize = Vector2(kCardWidth, kCardHeight);
+
+  @override
+  void render(Canvas canvas) {
+    Paint paintStroke = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 120;
+    paintStroke.color = const Color.fromARGB(255, 255, 255, 255);
+    canvas.drawRRect(
+      const RRect.fromLTRBXY(
+        0,
+        0,
+        kCardWidth,
+        kCardHeight,
+        kCardWidth * 0.07,
+        kCardWidth * 0.07,
+      ),
+      paintStroke,
+    );
+
+    Paint paintFill = Paint()..style = PaintingStyle.fill;
+    paintFill.color = const Color(0xffC4C4C4);
+    canvas.drawRRect(
+      const RRect.fromLTRBXY(
+        0,
+        0,
+        kCardWidth,
+        kCardHeight,
+        kCardWidth * 0.07,
+        kCardWidth * 0.07,
+      ),
+      paintFill,
+    );
+  }
 
   void deal({required Vector2 by, double delay = 0, int? priority}) {
     final rotation =
