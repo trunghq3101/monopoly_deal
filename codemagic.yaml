@@ -74,11 +74,11 @@ workflows:
     publishing:
       email:
         recipients:
-          - trunghq3101@eastagile.com
+          - trunghq3101@gmail.com
       firebase:
         firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
         android:
           app_id: 1:148313870143:android:8a81003a8513c81d810d8a
           groups:
             - internal
-          artifact_type: aab
+          artifact_type: apk
