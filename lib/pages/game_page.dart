@@ -1,7 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/game_components/game_assets.dart';
-import 'package:monopoly_deal/main_game.dart';
+import 'package:monopoly_deal/game_components/main_game.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
 import 'package:monopoly_deal/widgets/debug_board.dart';

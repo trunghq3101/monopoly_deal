@@ -5,11 +5,11 @@ import 'package:flame/game.dart';
 import 'package:flutter/widgets.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 
-import 'game_components/card.dart';
-import 'game_components/deck.dart';
-import 'game_components/effects/visible_game_size_effect.dart';
-import 'game_components/game_assets.dart';
-import 'game_components/pause_button.dart';
+import 'card.dart';
+import 'deck.dart';
+import 'effects/visible_game_size_effect.dart';
+import 'game_assets.dart';
+import 'pause_button.dart';
 
 class MainGame extends FlameGame with HasTappables {
   MainGame(this.gameModel);

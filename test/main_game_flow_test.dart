@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game_components/card.dart';
 import 'package:monopoly_deal/game_components/deck.dart';
 import 'package:monopoly_deal/game_components/game_assets.dart';
-import 'package:monopoly_deal/main_game.dart';
+import 'package:monopoly_deal/game_components/main_game.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 
 void main() {
