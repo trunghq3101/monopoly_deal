@@ -1,5 +1,5 @@
 import 'package:flame/components.dart';
-import 'package:flame/input.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame_rive/flame_rive.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
@@ -7,7 +7,7 @@ import 'package:rive/rive.dart';
 import 'game_assets.dart';
 
 class PauseButton extends RiveComponent
-    with Tappable, HasGameRef, ComponentViewportMargin {
+    with TapCallbacks, HasGameRef, ComponentViewportMargin {
   PauseButton()
       : super(
           artboard: loadArtboard,
@@ -29,12 +29,11 @@ class PauseButton extends RiveComponent
   }
 
   @override
-  bool onTapDown(TapDownInfo info) {
-    if (gameRef.paused == true) return true;
+  void onTapDown(TapDownEvent event) {
+    if (gameRef.paused == true) return;
     _controller.isActive = true;
     _controller.isActiveChanged.addListener(_pauseGame);
     gameRef.overlays.add(Overlays.kPauseMenu);
-    return true;
   }
 
   void _pauseGame() {

@@ -11,7 +11,7 @@ import 'effects/visible_game_size_effect.dart';
 import 'game_assets.dart';
 import 'pause_button.dart';
 
-class MainGame extends FlameGame with HasTappables {
+class MainGame extends FlameGame with HasTappableComponents {
   MainGame(this.gameModel);
 
   final GameModel gameModel;
