@@ -57,7 +57,7 @@ workflows:
       - flutter config --enable-web
       - flutter analyze
       - flutter test
-      - flutter build appbundle --release
+      - flutter build apk --release
       - |
         # build web
         flutter build web --release
