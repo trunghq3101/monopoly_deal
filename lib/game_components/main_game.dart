@@ -3,8 +3,8 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/widgets.dart';
-import 'package:monopoly_deal/game_components/deal_region.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
+import 'package:monopoly_deal/game_components/pick_up_region.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 
 import 'card.dart';
@@ -41,10 +41,11 @@ class MainGame extends FlameGame with HasTappableComponents {
     _cameraComponent.viewport.children.register<PauseButton>();
     world.children.register<Deck>();
     await addAll([world, _cameraComponent]);
-    await world.add(deck);
-    await world.add(PickUpRegion(position: Vector2(0, Card.kCardHeight * 2.5)));
-    await world
-        .add(PickUpRegion(position: Vector2(0, Card.kCardHeight * -2.5)));
+    await world.addAll([
+      deck,
+      PickUpRegion(position: Vector2(0, Card.kCardHeight * 2.5)),
+      PickUpRegion(position: Vector2(0, Card.kCardHeight * -2.5))
+    ]);
     await _cameraComponent.viewport.add(pauseButton);
 
     _cameraComponent.follow(deck);
