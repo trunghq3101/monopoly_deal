@@ -1,8 +1,8 @@
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/game.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flame/game.dart' hide Viewport;
+import 'package:flutter/animation.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
 import 'package:monopoly_deal/game_components/pick_up_region.dart';
 import 'package:monopoly_deal/models/game_model.dart';
@@ -17,9 +17,11 @@ class MainGame extends FlameGame with HasTappableComponents {
   MainGame(this.gameModel);
 
   final GameModel gameModel;
-  late final CameraComponent _cameraComponent;
-  Viewfinder get viewfinder => _cameraComponent.viewfinder;
-  World get world => _cameraComponent.world;
+  late final World world;
+  late final CameraComponent cameraComponent;
+  late final Viewfinder viewfinder;
+  late final Viewport viewport;
+  late final Deck deck;
   Vector2 get visibleGameSize => viewfinder.visibleGameSize!;
   bool pickUp = false;
 
@@ -30,25 +32,27 @@ class MainGame extends FlameGame with HasTappableComponents {
   Future<void>? onLoad() async {
     await gameAssets.preCache();
     final pauseButton = PauseButton();
-    final world = World();
-    final deck = Deck();
-    _cameraComponent = CameraComponent(world: world);
+    world = World();
+    deck = Deck();
+    cameraComponent = CameraComponent(world: world);
+    viewport = cameraComponent.viewport;
+    viewfinder = cameraComponent.viewfinder;
     viewfinder.visibleGameSize = Card.kCardSize * 1.2;
 
     children
       ..register<World>()
       ..register<CameraComponent>();
-    _cameraComponent.viewport.children.register<PauseButton>();
+    viewport.children.register<PauseButton>();
     world.children.register<Deck>();
-    await addAll([world, _cameraComponent]);
+    await addAll([world, cameraComponent]);
     await world.addAll([
       deck,
       PickUpRegion(position: Vector2(0, Card.kCardHeight * 2.5)),
       PickUpRegion(position: Vector2(0, Card.kCardHeight * -2.5))
     ]);
-    await _cameraComponent.viewport.add(pauseButton);
+    await viewport.add(pauseButton);
 
-    _cameraComponent.follow(deck);
+    cameraComponent.follow(deck);
   }
 
   @override
@@ -68,7 +72,7 @@ class MainGame extends FlameGame with HasTappableComponents {
     super.update(dt);
     if (pickUp) {
       pickUp = false;
-      world.children.query<Deck>().first.pickUp();
+      deck.pickUp();
       TimerComponent(
         period: 1,
         onTick: () {
@@ -89,6 +93,6 @@ class MainGame extends FlameGame with HasTappableComponents {
         ),
       ),
     );
-    world.children.query<Deck>().first.deal();
+    deck.deal();
   }
 }
