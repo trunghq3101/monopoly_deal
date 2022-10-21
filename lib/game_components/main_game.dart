@@ -3,7 +3,6 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
 import 'package:flutter/animation.dart';
-import 'package:monopoly_deal/game_components/hand.dart';
 import 'package:monopoly_deal/game_components/pick_up_region.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 
@@ -61,20 +60,6 @@ class MainGame extends FlameGame with HasTappableComponents {
       period: 1.5,
       onTick: () {
         _deal();
-      },
-      removeOnFinish: true,
-    ).addToParent(this);
-  }
-
-  void pickUp() {
-    deck.pickUp();
-    TimerComponent(
-      period: 1,
-      onTick: () {
-        world.add(Hand(
-          position: Vector2(0, 2000),
-          size: Vector2(8000, Card.kCardHeight * 4),
-        ));
       },
       removeOnFinish: true,
     ).addToParent(this);
