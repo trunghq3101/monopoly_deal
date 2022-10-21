@@ -23,7 +23,6 @@ class MainGame extends FlameGame with HasTappableComponents {
   late final Viewport viewport;
   late final Deck deck;
   Vector2 get visibleGameSize => viewfinder.visibleGameSize!;
-  bool pickUp = false;
 
   @override
   Color backgroundColor() => const Color(0xFFD74E30);
@@ -67,20 +66,18 @@ class MainGame extends FlameGame with HasTappableComponents {
     ).addToParent(this);
   }
 
-  @override
-  void update(double dt) {
-    super.update(dt);
-    if (pickUp) {
-      pickUp = false;
-      deck.pickUp();
-      TimerComponent(
-        period: 1,
-        onTick: () {
-          world.add(Hand(position: Vector2(0, 1000)));
-        },
-        removeOnFinish: true,
-      ).addToParent(this);
-    }
+  void pickUp() {
+    deck.pickUp();
+    TimerComponent(
+      period: 1,
+      onTick: () {
+        world.add(Hand(
+          position: Vector2(0, 2000),
+          size: Vector2(8000, Card.kCardHeight * 4),
+        ));
+      },
+      removeOnFinish: true,
+    ).addToParent(this);
   }
 
   void _deal() {

@@ -13,6 +13,6 @@ class PickUpRegion extends PositionComponent
 
   @override
   void onTapDown(TapDownEvent event) {
-    game.pickUp = true;
+    game.pickUp();
   }
 }

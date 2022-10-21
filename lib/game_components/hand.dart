@@ -5,7 +5,7 @@ class Hand extends PositionComponent {
   Hand({
     super.position,
     super.size,
-  }) : super(anchor: Anchor.center);
+  }) : super(anchor: Anchor.topCenter);
 
   @override
   void onMount() {
@@ -13,9 +13,9 @@ class Hand extends PositionComponent {
       5,
       (index) => Card(
         id: index,
-        position: Vector2(index * 400, 0),
-        priority: 0,
-        size: Card.kCardSize * 5,
+        position: Vector2((index - 3) * 100, 0),
+        priority: index,
+        size: Vector2(Card.kCardWidth * size.y / Card.kCardHeight, size.y),
       ),
     ));
   }
