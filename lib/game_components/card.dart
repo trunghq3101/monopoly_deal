@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
@@ -54,30 +53,17 @@ class Card extends PositionComponent {
       if (priority != null)
         PriorityEffect.to(
           priority,
-          DelayedEffectController(
-            EffectController(duration: 0.1),
-            delay: delay + 0.1,
-          ),
+          EffectController(duration: 0.1, startDelay: delay + 0.1),
         ),
       RotateEffect.by(
         rotation,
-        DelayedEffectController(
-          EffectController(
-            duration: 0.5,
-            curve: Curves.easeOutCubic,
-          ),
-          delay: delay,
-        ),
+        EffectController(
+            duration: 0.5, curve: Curves.easeOutCubic, startDelay: delay),
       ),
       MoveEffect.by(
         by,
-        DelayedEffectController(
-          EffectController(
-            duration: 0.5,
-            curve: Curves.easeOutCubic,
-          ),
-          delay: delay,
-        ),
+        EffectController(
+            duration: 0.5, curve: Curves.easeOutCubic, startDelay: delay),
       ),
     ]);
   }
