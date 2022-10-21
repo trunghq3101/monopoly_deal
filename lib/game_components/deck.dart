@@ -19,6 +19,7 @@ class Deck extends PositionComponent {
     final cards = List.generate(
         kCardAmount,
         (index) => Card(
+              id: index,
               position: size / 2 +
                   Vector2.all(1) * (kCardAmount / 2) -
                   Vector2.all(1) * index.toDouble(),
@@ -40,10 +41,24 @@ class Deck extends PositionComponent {
 
   void deal() {
     for (var i = 0; i < 10; i++) {
-      children.query<Card>()[kCardAmount - 1 - i].deal(
-          by: Vector2(0, Card.kCardHeight * 2.5 * (i % 2 == 0 ? -1 : 1)),
-          delay: (i + 1) * 0.3,
-          priority: i);
+      children
+          .query<Card>()
+          .singleWhere((c) => c.id == kCardAmount - 1 - i)
+          .deal(
+              by: Vector2(0, Card.kCardHeight * 2.5 * (i % 2 == 0 ? -1 : 1)),
+              delay: (i + 1) * 0.3,
+              priority: i);
+    }
+  }
+
+  void pickUp() {
+    for (var i = 0; i < 10; i++) {
+      if (i % 2 == 1) {
+        children
+            .query<Card>()
+            .singleWhere((c) => c.id == kCardAmount - 1 - i)
+            .flyOut(i - 5);
+      }
     }
   }
 }

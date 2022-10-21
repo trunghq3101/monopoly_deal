@@ -1,6 +1,8 @@
 import 'dart:ui';
 
+import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game_components/card.dart';
 import 'package:monopoly_deal/game_components/deck.dart';
@@ -50,7 +52,15 @@ void main() {
       );
 
       // Show cards of my player
-      // Draw 2 cards
+      game.onTapDown(
+        TapDownEvent(
+          0,
+          TapDownDetails(globalPosition: const Offset(180, 600)),
+        ),
+      );
+      // expect 5 cards in hand
+
+      // Draw 2 cards;
       // Place 3 cards
       // End turn
       // Opponent draw 2 cards
