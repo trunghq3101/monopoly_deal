@@ -76,5 +76,6 @@ void main() {
       // Place 3 cards
       // I win
     },
+    skip: true,
   );
 }

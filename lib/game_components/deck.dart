@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
@@ -5,7 +7,7 @@ import 'package:flutter/animation.dart';
 import 'package:monopoly_deal/game_components/effects/camera_zoom_effect.dart';
 
 import 'card.dart';
-import 'effects/card_deal_effect.dart';
+import 'game_assets.dart';
 
 class Deck extends PositionComponent with HasGameRef {
   Deck({
@@ -22,7 +24,6 @@ class Deck extends PositionComponent with HasGameRef {
   @override
   Future<void>? onLoad() async {
     children.register<Card>();
-    children.register<TimerComponent>();
     final cards = List.generate(
         kCardAmount,
         (index) => Card(
@@ -32,33 +33,24 @@ class Deck extends PositionComponent with HasGameRef {
                   Vector2.all(1) * index.toDouble(),
               priority: index,
             ));
-    // addAll(cards);
-    final init = TimerComponent(
+    TimerComponent(
       period: 0.01,
       repeat: true,
       onTick: () async {
         if (_currentLoadedCardIndex < kCardAmount) {
           add(cards[_currentLoadedCardIndex++]);
         }
-        // if (_currentLoadedCardIndex == kCardAmount - 1) {
-        //   children.query<TimerComponent>().first.removeFromParent();
-        // }
       },
-    )..addToParent(this);
-    TimerComponent(
-      period: 1.3,
-      onTick: () {
-        remove(init);
-      },
-      removeOnFinish: true,
-    ).addToParent(this);
+    )
+      ..add(RemoveEffect(delay: 1.3))
+      ..addToParent(this);
   }
 
   void deal() {
     game.children.query<CameraComponent>().first.add(
           CameraZoomEffect.to(
             Card.kCardSize * 7,
-            EffectController(duration: 1, curve: Curves.easeOutCubic),
+            CurvedEffectController(1, Curves.easeOutCubic),
           ),
         );
     var t = dealTargets.iterator;
@@ -67,13 +59,26 @@ class Deck extends PositionComponent with HasGameRef {
     }
     var c = children.query<Card>().reversed.iterator..moveNext();
     for (var i = 0; i < dealTargets.length * 5; i++) {
-      c.current.add(
-        CardDealEffect(
-          to: t.current.position + (c.current.size / 2),
-          delay: (i + 1) * 0.3,
-          toPriority: i,
+      final d = (i + 1) * 0.3;
+      c.current.addAll([
+        RotateEffect.by(
+          pi * 0.75 + Random(gameAssets.randomSeed()).nextInt(90) * pi / 180,
+          EffectController(
+              duration: 0.5, curve: Curves.easeOutCubic, startDelay: d),
         ),
-      );
+        MoveEffect.to(
+          t.current.position + c.current.size / 2,
+          EffectController(
+              duration: 0.5, curve: Curves.easeOutCubic, startDelay: d),
+        ),
+        TimerComponent(
+          period: d + 0.2,
+          onTick: () {
+            c.current.priority = i;
+          },
+          removeOnFinish: true,
+        ),
+      ]);
       c.moveNext();
       if (!t.moveNext()) {
         t = dealTargets.iterator..moveNext();
