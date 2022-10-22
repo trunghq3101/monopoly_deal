@@ -44,6 +44,11 @@ class Deck extends PositionComponent with HasGameRef {
     )
       ..add(RemoveEffect(delay: 1.3))
       ..addToParent(this);
+
+    priority = 1;
+    for (var d in dealTargets) {
+      d.priority = 0;
+    }
   }
 
   void deal() {
@@ -53,35 +58,45 @@ class Deck extends PositionComponent with HasGameRef {
             CurvedEffectController(1, Curves.easeOutCubic),
           ),
         );
-    var t = dealTargets.iterator;
-    if (!t.moveNext()) {
+    var ti = dealTargets.iterator;
+    if (!ti.moveNext()) {
       return;
     }
-    var c = children.query<Card>().reversed.iterator..moveNext();
+    var ci = children.query<Card>().reversed.iterator..moveNext();
+    final fullDuration = (dealTargets.length * 5 + 1) * 0.3 + 1;
     for (var i = 0; i < dealTargets.length * 5; i++) {
       final d = (i + 1) * 0.3;
-      c.current.addAll([
+      final c = ci.current;
+      final t = ti.current;
+      c.addAll([
         RotateEffect.by(
           pi * 0.75 + Random(gameAssets.randomSeed()).nextInt(90) * pi / 180,
           EffectController(
               duration: 0.5, curve: Curves.easeOutCubic, startDelay: d),
         ),
         MoveEffect.to(
-          t.current.position + c.current.size / 2,
+          t.position + c.size / 2,
           EffectController(
               duration: 0.5, curve: Curves.easeOutCubic, startDelay: d),
         ),
         TimerComponent(
           period: d + 0.2,
           onTick: () {
-            c.current.priority = i;
+            c.priority = i;
           },
           removeOnFinish: true,
         ),
+        TimerComponent(
+          period: fullDuration,
+          onTick: () {
+            c.changeParent(t);
+          },
+          removeOnFinish: true,
+        )
       ]);
-      c.moveNext();
-      if (!t.moveNext()) {
-        t = dealTargets.iterator..moveNext();
+      ci.moveNext();
+      if (!ti.moveNext()) {
+        ti = dealTargets.iterator..moveNext();
       }
     }
   }

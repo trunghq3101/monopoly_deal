@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 
-class Card extends PositionComponent {
+class Card extends PositionComponent with ParentIsA<PositionComponent> {
   Card({
     required this.id,
     required super.position,
@@ -15,6 +15,7 @@ class Card extends PositionComponent {
   static final kCardSize = Vector2(kCardWidth, kCardHeight);
 
   final int id;
+  bool _firstLoaded = true;
 
   @override
   operator ==(other) => other is Card && other.id == id;
@@ -24,6 +25,16 @@ class Card extends PositionComponent {
 
   @override
   String toString() => 'Card $id';
+
+  @override
+  void onMount() {
+    super.onMount();
+    if (_firstLoaded) {
+      _firstLoaded = false;
+      return;
+    }
+    position = parent.size / 2;
+  }
 
   @override
   void render(Canvas canvas) {

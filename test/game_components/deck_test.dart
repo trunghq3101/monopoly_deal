@@ -16,6 +16,7 @@ void main() {
       ];
       final c = Deck(dealTargets: tt)..addToParent(game);
       final cam = CameraComponent(world: World())..addToParent(game);
+      cam.viewfinder.visibleGameSize = Vector2.all(1000);
       await game.ready();
       game.update(1.5);
       await game.ready();
@@ -28,6 +29,11 @@ void main() {
         cc.every((c) => c.firstChild<Effect>() != null),
         true,
       );
+      game.update(10);
+      await game.ready();
+      expect(tt[0].children, [cc[14], cc[11], cc[8], cc[5], cc[2]]);
+      expect(tt[1].children, [cc[13], cc[10], cc[7], cc[4], cc[1]]);
+      expect(tt[2].children, [cc[12], cc[9], cc[6], cc[3], cc[0]]);
     });
   });
 }
