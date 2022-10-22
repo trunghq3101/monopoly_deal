@@ -63,7 +63,7 @@ class Deck extends PositionComponent with HasGameRef {
       return;
     }
     var ci = children.query<Card>().reversed.iterator..moveNext();
-    final fullDuration = (dealTargets.length * 5 + 1) * 0.3 + 1;
+    final fullDuration = dealTargets.length * 5 * 0.3 + 0.5;
     for (var i = 0; i < dealTargets.length * 5; i++) {
       final d = (i + 1) * 0.3;
       final c = ci.current;

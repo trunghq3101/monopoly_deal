@@ -34,13 +34,7 @@ class MainGame extends FlameGame with HasTappableComponents {
         size: Card.kCardSize * 1.5,
         position: Vector2(0, Card.kCardHeight * 2.5),
         anchor: Anchor.center,
-      )..addAll([
-          PositionComponent(),
-          PositionComponent(),
-          PositionComponent(),
-          PositionComponent(),
-          PositionComponent(),
-        ]),
+      ),
       PositionComponent(
         size: Card.kCardSize * 1.5,
         position: Vector2(0, Card.kCardHeight * -2.5),
