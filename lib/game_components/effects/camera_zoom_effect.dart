@@ -2,19 +2,19 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/extensions.dart';
 
-class VisibleGameSizeEffect extends Effect with EffectTarget<Viewfinder> {
-  VisibleGameSizeEffect.by(
+class CameraZoomEffect extends Effect with EffectTarget<CameraComponent> {
+  CameraZoomEffect.by(
     Vector2 size,
     super.controller, {
     super.onComplete,
   }) : _size = size;
 
-  factory VisibleGameSizeEffect.to(
+  factory CameraZoomEffect.to(
     Vector2 size,
     EffectController controller, {
     void Function()? onComplete,
   }) {
-    return _VisibleGameSizeToEffect(
+    return _CameraZoomToEffect(
       size,
       controller,
       onComplete: onComplete,
@@ -26,13 +26,13 @@ class VisibleGameSizeEffect extends Effect with EffectTarget<Viewfinder> {
   @override
   void apply(double progress) {
     final dProgress = progress - previousProgress;
-    target.visibleGameSize!.add(_size * dProgress);
+    target.viewfinder.visibleGameSize!.add(_size * dProgress);
     target.onGameResize(target.findGame()!.size);
   }
 }
 
-class _VisibleGameSizeToEffect extends VisibleGameSizeEffect {
-  _VisibleGameSizeToEffect(
+class _CameraZoomToEffect extends CameraZoomEffect {
+  _CameraZoomToEffect(
     Vector2 size,
     EffectController controller, {
     void Function()? onComplete,
@@ -43,6 +43,6 @@ class _VisibleGameSizeToEffect extends VisibleGameSizeEffect {
 
   @override
   void onStart() {
-    _size = _destinationSize - target.visibleGameSize!;
+    _size = _destinationSize - target.viewfinder.visibleGameSize!;
   }
 }

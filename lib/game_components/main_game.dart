@@ -1,5 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
 import 'package:flutter/animation.dart';
@@ -8,7 +7,6 @@ import 'package:monopoly_deal/models/game_model.dart';
 
 import 'card.dart';
 import 'deck.dart';
-import 'effects/visible_game_size_effect.dart';
 import 'game_assets.dart';
 import 'pause_button.dart';
 
@@ -31,7 +29,25 @@ class MainGame extends FlameGame with HasTappableComponents {
     await gameAssets.preCache();
     final pauseButton = PauseButton();
     world = World();
-    deck = Deck();
+    final dealRegions = [
+      PickUpRegion(
+        size: Card.kCardSize * 1.5,
+        position: Vector2(0, Card.kCardHeight * 2.5),
+        anchor: Anchor.center,
+      )..addAll([
+          PositionComponent(),
+          PositionComponent(),
+          PositionComponent(),
+          PositionComponent(),
+          PositionComponent(),
+        ]),
+      PositionComponent(
+        size: Card.kCardSize * 1.5,
+        position: Vector2(0, Card.kCardHeight * -2.5),
+        anchor: Anchor.center,
+      ),
+    ];
+    deck = Deck(dealTargets: dealRegions);
     cameraComponent = CameraComponent(world: world);
     viewport = cameraComponent.viewport;
     viewfinder = cameraComponent.viewfinder;
@@ -43,11 +59,7 @@ class MainGame extends FlameGame with HasTappableComponents {
     viewport.children.register<PauseButton>();
     world.children.register<Deck>();
     await addAll([world, cameraComponent]);
-    await world.addAll([
-      deck,
-      PickUpRegion(position: Vector2(0, Card.kCardHeight * 2.5)),
-      PickUpRegion(position: Vector2(0, Card.kCardHeight * -2.5))
-    ]);
+    await world.addAll([deck, ...dealRegions]);
     await viewport.add(pauseButton);
 
     cameraComponent.follow(deck);
@@ -57,7 +69,7 @@ class MainGame extends FlameGame with HasTappableComponents {
   void onMount() {
     super.onMount();
     TimerComponent(
-      period: 1.5,
+      period: 1.8,
       onTick: () {
         _deal();
       },
@@ -66,15 +78,6 @@ class MainGame extends FlameGame with HasTappableComponents {
   }
 
   void _deal() {
-    viewfinder.add(
-      VisibleGameSizeEffect.to(
-        Vector2(Card.kCardWidth * 3, Card.kCardHeight * 7),
-        EffectController(
-          duration: 1,
-          curve: Curves.easeOutCubic,
-        ),
-      ),
-    );
     deck.deal();
   }
 }

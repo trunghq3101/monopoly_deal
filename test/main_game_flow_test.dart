@@ -27,7 +27,7 @@ void main() {
     'play until win',
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(360, 640));
-      final game = MainGame(gameModel);
+      final game = MainGame(gameModel)..debugMode = false;
       final widget = GameWidget(game: game);
       await tester.pumpWidget(widget);
 

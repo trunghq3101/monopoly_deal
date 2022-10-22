@@ -1,6 +1,5 @@
 // ignore_for_file: unused_element
 
-import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/game_components/card.dart' as card_component;
@@ -59,17 +58,17 @@ class DebugBoard extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                mainGame.deck.children
-                    .query<card_component.Card>()
-                    .first
-                    .deal(by: Vector2(0, -4000));
+                // mainGame.deck.children
+                //     .query<card_component.Card>()
+                //     .first
+                //     .deal(by: Vector2(0, -4000));
               },
               child: const Text('Deal'),
             ),
             ElevatedButton(
               onPressed: () {
                 mainGame.deck.removeFromParent();
-                mainGame.world.add(Deck());
+                mainGame.world.add(Deck(dealTargets: []));
               },
               child: const Text('Reset deal'),
             ),

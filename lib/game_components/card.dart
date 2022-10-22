@@ -1,10 +1,6 @@
-import 'dart:math';
+import 'dart:ui';
 
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
-import 'package:flutter/material.dart';
-import 'package:monopoly_deal/game_components/effects/priority_effect.dart';
-import 'package:monopoly_deal/game_components/game_assets.dart';
 
 class Card extends PositionComponent {
   Card({
@@ -19,6 +15,15 @@ class Card extends PositionComponent {
   static final kCardSize = Vector2(kCardWidth, kCardHeight);
 
   final int id;
+
+  @override
+  operator ==(other) => other is Card && other.id == id;
+
+  @override
+  int get hashCode => id;
+
+  @override
+  String toString() => 'Card $id';
 
   @override
   void render(Canvas canvas) {
@@ -44,38 +49,9 @@ class Card extends PositionComponent {
       ),
       paintFill,
     );
-  }
-
-  void deal({required Vector2 by, double delay = 0, int? priority}) {
-    final rotation =
-        pi * 0.75 + Random(gameAssets.randomSeed()).nextInt(90) * pi / 180;
-    addAll([
-      if (priority != null)
-        PriorityEffect.to(
-          priority,
-          EffectController(duration: 0.1, startDelay: delay + 0.1),
-        ),
-      RotateEffect.by(
-        rotation,
-        EffectController(
-            duration: 0.5, curve: Curves.easeOutCubic, startDelay: delay),
-      ),
-      MoveEffect.by(
-        by,
-        EffectController(
-            duration: 0.5, curve: Curves.easeOutCubic, startDelay: delay),
-      ),
-    ]);
-  }
-
-  void flyOut(int index) {
-    addAll([
-      RotateEffect.to(0, EffectController(duration: 0.5)),
-      MoveEffect.by(Vector2(index * 800, 0), EffectController(duration: 0.5)),
-      MoveEffect.by(
-        Vector2(-index * 800, 4000),
-        EffectController(startDelay: 0.5, duration: 0.5),
-      ),
-    ]);
+    final b = ParagraphBuilder(ParagraphStyle(fontSize: 120))..addText('$id');
+    final p = b.build();
+    p.layout(const ParagraphConstraints(width: 800));
+    canvas.drawParagraph(p, this.size.toOffset() / 2);
   }
 }
