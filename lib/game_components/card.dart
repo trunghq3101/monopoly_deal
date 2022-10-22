@@ -15,7 +15,6 @@ class Card extends PositionComponent with ParentIsA<PositionComponent> {
   static final kCardSize = Vector2(kCardWidth, kCardHeight);
 
   final int id;
-  bool _firstLoaded = true;
 
   @override
   operator ==(other) => other is Card && other.id == id;
@@ -25,16 +24,6 @@ class Card extends PositionComponent with ParentIsA<PositionComponent> {
 
   @override
   String toString() => 'Card $id';
-
-  @override
-  void onMount() {
-    super.onMount();
-    if (_firstLoaded) {
-      _firstLoaded = false;
-      return;
-    }
-    position = parent.size / 2;
-  }
 
   @override
   void render(Canvas canvas) {

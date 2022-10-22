@@ -89,7 +89,9 @@ class Deck extends PositionComponent with HasGameRef {
         TimerComponent(
           period: fullDuration,
           onTick: () {
-            c.changeParent(t);
+            c
+              ..changeParent(t)
+              ..removed.then((value) => c.position = t.size / 2);
           },
           removeOnFinish: true,
         )
