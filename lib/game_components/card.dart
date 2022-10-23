@@ -5,8 +5,8 @@ import 'package:flame/components.dart';
 class Card extends PositionComponent with ParentIsA<PositionComponent> {
   Card({
     required this.id,
-    required super.position,
-    required super.priority,
+    super.position,
+    super.priority,
     Vector2? size,
   }) : super(size: size ?? kCardSize, anchor: Anchor.center);
 
