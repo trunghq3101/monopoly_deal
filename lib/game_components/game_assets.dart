@@ -9,7 +9,7 @@ class GameAssets {
 
   Future<void> preCache() async {
     _riveFiles['buttons'] = await RiveFile.asset('assets/images/buttons.riv');
-    await Flame.assets.readFile('card.svg');
+    await Flame.images.load('card.png');
   }
 
   RiveFile riveFile(String name) => _riveFiles[name]!;

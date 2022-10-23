@@ -29,18 +29,21 @@ class MainGame extends FlameGame with HasTappableComponents {
     await gameAssets.preCache();
     add(FpsTextComponent(position: Vector2(0, size.y - 24)));
 
-    deck = Deck(dealTargets: [
-      PickUpRegion(
-        size: Card.kCardSize * 1.5,
-        position: Vector2(0, Card.kCardHeight * 2.5),
-        anchor: Anchor.center,
-      ),
-      PositionComponent(
-        size: Card.kCardSize * 1.5,
-        position: Vector2(0, Card.kCardHeight * -2.5),
-        anchor: Anchor.center,
-      ),
-    ]);
+    deck = Deck(
+      cardSprite: await Sprite.load('card.png'),
+      dealTargets: [
+        PickUpRegion(
+          size: Card.kCardSize * 1.5,
+          position: Vector2(0, Card.kCardHeight * 2.5),
+          anchor: Anchor.center,
+        ),
+        PositionComponent(
+          size: Card.kCardSize * 1.5,
+          position: Vector2(0, Card.kCardHeight * -2.5),
+          anchor: Anchor.center,
+        ),
+      ],
+    );
 
     world = World();
     world.children.register<Deck>();

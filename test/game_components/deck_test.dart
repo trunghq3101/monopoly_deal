@@ -9,12 +9,14 @@ import 'package:monopoly_deal/game_components/effects/camera_zoom_effect.dart';
 void main() {
   group('Deck', () {
     testWithFlameGame('deal', (game) async {
+      final image = await generateImage();
       final tt = [
         PositionComponent(position: Vector2(0, 500))..addToParent(game),
         PositionComponent(position: Vector2(500, 0))..addToParent(game),
         PositionComponent(position: Vector2(0, -500))..addToParent(game)
       ];
-      final c = Deck(dealTargets: tt)..addToParent(game);
+      final c = Deck(dealTargets: tt, cardSprite: Sprite(image))
+        ..addToParent(game);
       final cam = CameraComponent(world: World())..addToParent(game);
       cam.viewfinder.visibleGameSize = Vector2.all(1000);
       await game.ready();

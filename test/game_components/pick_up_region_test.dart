@@ -1,5 +1,6 @@
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame/sprite.dart';
 import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game_components/card.dart';
@@ -15,10 +16,12 @@ void main() {
       'take and pick up',
       () => StubMainGame(),
       (game) async {
+        final cardImg = await generateImage();
         final cam = CameraComponent(world: World())..addToParent(game);
         await cam.viewport.ensureAdd(Hand());
         await game.ready();
-        final cc = List.generate(5, (index) => Card(id: index));
+        final cc = List.generate(
+            5, (index) => Card(id: index, sprite: Sprite(cardImg)));
         final c = PickUpRegion()..addToParent(game);
         await c.ensureAddAll(cc);
         c.onTapDown(createTapDownEvents());

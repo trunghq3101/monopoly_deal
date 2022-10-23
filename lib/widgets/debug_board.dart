@@ -56,22 +56,6 @@ class DebugBoard extends StatelessWidget {
               },
               child: const Text('Reset zoom'),
             ),
-            ElevatedButton(
-              onPressed: () {
-                // mainGame.deck.children
-                //     .query<card_component.Card>()
-                //     .first
-                //     .deal(by: Vector2(0, -4000));
-              },
-              child: const Text('Deal'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                mainGame.deck.removeFromParent();
-                mainGame.world.add(Deck(dealTargets: []));
-              },
-              child: const Text('Reset deal'),
-            ),
           ],
         ),
       ),

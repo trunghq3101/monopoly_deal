@@ -12,6 +12,7 @@ import 'game_assets.dart';
 class Deck extends PositionComponent with HasGameRef {
   Deck({
     required this.dealTargets,
+    required this.cardSprite,
   }) : super(
           position: Vector2(0, 0),
           size: Card.kCardSize,
@@ -19,17 +20,17 @@ class Deck extends PositionComponent with HasGameRef {
         );
   static const kCardAmount = 110;
   final List<PositionComponent> dealTargets;
+  final Sprite cardSprite;
   int _currentLoadedCardIndex = 0;
 
   @override
   Future<void>? onLoad() async {
     children.register<Card>();
-    final c = await Sprite.load('card.png');
     final cards = List.generate(
         kCardAmount,
         (index) => Card(
               id: index,
-              sprite: c,
+              sprite: cardSprite,
               position: size / 2 +
                   Vector2.all(Card.kCardWidth / 1000) * (kCardAmount / 2) -
                   Vector2.all(Card.kCardWidth / 1000) * index.toDouble(),
