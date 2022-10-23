@@ -4,9 +4,9 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/animation.dart';
-import 'package:monopoly_deal/game_components/effects/camera_zoom_effect.dart';
 
 import 'card.dart';
+import 'effects/camera_zoom_effect.dart';
 import 'game_assets.dart';
 
 class Deck extends PositionComponent with HasGameRef {
@@ -24,13 +24,15 @@ class Deck extends PositionComponent with HasGameRef {
   @override
   Future<void>? onLoad() async {
     children.register<Card>();
+    final c = await Sprite.load('card.png');
     final cards = List.generate(
         kCardAmount,
         (index) => Card(
               id: index,
+              sprite: c,
               position: size / 2 +
-                  Vector2.all(1) * (kCardAmount / 2) -
-                  Vector2.all(1) * index.toDouble(),
+                  Vector2.all(Card.kCardWidth / 1000) * (kCardAmount / 2) -
+                  Vector2.all(Card.kCardWidth / 1000) * index.toDouble(),
               priority: index,
             ));
     TimerComponent(
@@ -55,7 +57,7 @@ class Deck extends PositionComponent with HasGameRef {
     game.children.query<CameraComponent>().first.add(
           CameraZoomEffect.to(
             Card.kCardSize * 7,
-            CurvedEffectController(1, Curves.easeOutCubic),
+            LinearEffectController(1),
           ),
         );
     var ti = dealTargets.iterator;

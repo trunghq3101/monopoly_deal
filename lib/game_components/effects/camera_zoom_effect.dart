@@ -26,8 +26,8 @@ class CameraZoomEffect extends Effect with EffectTarget<CameraComponent> {
   @override
   void apply(double progress) {
     final dProgress = progress - previousProgress;
-    target.viewfinder.visibleGameSize!.add(_size * dProgress);
-    target.onGameResize(target.findGame()!.size);
+    target.viewfinder.visibleGameSize =
+        target.viewfinder.visibleGameSize! + _size * dProgress;
   }
 }
 

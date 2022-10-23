@@ -26,7 +26,7 @@ class _GamePageState extends State<GamePage> {
     GameModel(players: [], step: Steps.idle, moves: [])
         .syncUp(widget.gameRepository)
         .then((value) => setState(() {
-              mainGame = MainGame(value)..debugMode = true;
+              mainGame = MainGame(value);
             }));
   }
 

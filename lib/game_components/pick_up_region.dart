@@ -59,11 +59,12 @@ class PickUpRegion extends PositionComponent
         RotateEffect.to(0, LinearEffectController(0.3)),
         SequenceEffect([
           MoveEffect.by(
-            Vector2((i + 0.5 - cards.length / 2) * 1600, 0),
+            Vector2((i + 0.5 - cards.length / 2) * Card.kCardWidth * 1.5, 0),
             LinearEffectController(0.5),
           ),
           MoveEffect.by(
-            Vector2((i + 0.5 - cards.length / 2) * -1600, 4000),
+            Vector2((i + 0.5 - cards.length / 2) * -Card.kCardWidth * 1.5,
+                Card.kCardHeight * 3),
             LinearEffectController(0.5),
           ),
         ]),

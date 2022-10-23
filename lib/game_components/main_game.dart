@@ -27,6 +27,7 @@ class MainGame extends FlameGame with HasTappableComponents {
   @override
   Future<void>? onLoad() async {
     await gameAssets.preCache();
+    add(FpsTextComponent(position: Vector2(0, size.y - 24)));
 
     deck = Deck(dealTargets: [
       PickUpRegion(
