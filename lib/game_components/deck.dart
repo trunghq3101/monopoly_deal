@@ -18,7 +18,7 @@ class Deck extends PositionComponent with HasGameRef {
           size: Card.kCardSize,
           anchor: Anchor.center,
         );
-  static const kCardAmount = 110;
+  static const kCardAmount = 106;
   final List<PositionComponent> dealTargets;
   final Sprite cardSprite;
   int _currentLoadedCardIndex = 0;
@@ -26,16 +26,20 @@ class Deck extends PositionComponent with HasGameRef {
   @override
   Future<void>? onLoad() async {
     children.register<Card>();
-    final cards = List.generate(
-        kCardAmount,
-        (index) => Card(
-              id: index,
+    final cardIds =
+        List.generate(kCardAmount, (index) => index, growable: false)
+          ..shuffle();
+    var p = 0;
+    final cards = cardIds
+        .map((id) => Card(
+              id: id,
               sprite: cardSprite,
               position: size / 2 +
                   Vector2.all(Card.kCardWidth / 1000) * (kCardAmount / 2) -
-                  Vector2.all(Card.kCardWidth / 1000) * index.toDouble(),
-              priority: index,
-            ));
+                  Vector2.all(Card.kCardWidth / 1000) * p.toDouble(),
+              priority: p++,
+            ))
+        .toList();
     TimerComponent(
       period: 0.01,
       repeat: true,

@@ -5,6 +5,7 @@ import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game_components/card.dart';
 import 'package:monopoly_deal/game_components/card_front.dart';
+import 'package:monopoly_deal/game_components/game_assets.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
 import 'package:monopoly_deal/game_components/pick_up_region.dart';
 
@@ -17,6 +18,7 @@ void main() {
       () => StubMainGame(),
       (game) async {
         final cardImg = await generateImage();
+        gameAssets.cardSprites = List.generate(106, (_) => Sprite(cardImg));
         final cam = CameraComponent(world: World())..addToParent(game);
         await cam.viewport.ensureAdd(Hand());
         await game.ready();

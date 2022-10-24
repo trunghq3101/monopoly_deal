@@ -3,6 +3,7 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:monopoly_deal/game_components/card_front.dart';
+import 'package:monopoly_deal/game_components/game_assets.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
 
 import 'card.dart';
@@ -38,9 +39,10 @@ class PickUpRegion extends PositionComponent
   @override
   void onChildrenChanged(Component child, ChildrenChangeType type) {
     if (type == ChildrenChangeType.added && child is Card) {
-      final s = _hand.size * 0.6;
+      final s = Card.kCardSize;
       _hand.add(CardFront(
         id: child.id,
+        sprite: gameAssets.cardSprites[child.id],
         size: s,
         position: Vector2(_hand.position.x, _hand.size.y - s.y / 2 + s.y * 3),
       ));

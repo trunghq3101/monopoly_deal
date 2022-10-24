@@ -22,8 +22,8 @@ void main() {
       await game.ready();
       game.update(1.5);
       await game.ready();
-      expect(c.children.length, 110);
-      final cc = c.children.skip(95).toList();
+      expect(c.children.length, 106);
+      final cc = c.children.skip(91).toList();
       c.deal();
       await game.ready();
       expect(cam.firstChild<CameraZoomEffect>(), isNotNull);
