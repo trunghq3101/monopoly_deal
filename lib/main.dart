@@ -10,7 +10,38 @@ import 'firebase_options.dart';
 import 'pages/home_page.dart';
 
 void main() {
-  runApp(const DebugApp());
+  runApp(FirebaseLoader(
+    child: MainApp(gameRepository: _gameRepository),
+  ));
+}
+
+class FirebaseLoader extends StatelessWidget {
+  const FirebaseLoader({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<FirebaseApp?>(
+        future: _firebaseInit,
+        builder: (_, snapshot) {
+          if (snapshot.hasError) {
+            return MaterialApp(
+              home: Center(
+                child: Text(snapshot.error.toString()),
+              ),
+            );
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Material(
+              child: Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+            );
+          }
+          return child;
+        });
+  }
 }
 
 class MainApp extends StatelessWidget {
@@ -43,37 +74,19 @@ final _firebaseInit = (defaultTargetPlatform == TargetPlatform.windows ||
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
-class DebugApp extends StatelessWidget {
-  const DebugApp({Key? key}) : super(key: key);
+class DebugTwoPlayersApp extends StatelessWidget {
+  const DebugTwoPlayersApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<FirebaseApp?>(
-        future: _firebaseInit,
-        builder: (_, snapshot) {
-          if (snapshot.hasError) {
-            return MaterialApp(
-              home: Center(
-                child: Text(snapshot.error.toString()),
-              ),
-            );
-          }
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Material(
-              child: Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
-            );
-          }
-          return MaterialApp(
-            home: Row(
-              children: [
-                Expanded(child: MainApp(gameRepository: _gameRepository)),
-                const VerticalDivider(color: Colors.orange),
-                Expanded(child: MainApp(gameRepository: _gameRepository)),
-              ],
-            ),
-          );
-        });
+    return MaterialApp(
+      home: Row(
+        children: [
+          Expanded(child: MainApp(gameRepository: _gameRepository)),
+          const VerticalDivider(color: Colors.orange),
+          Expanded(child: MainApp(gameRepository: _gameRepository)),
+        ],
+      ),
+    );
   }
 }
