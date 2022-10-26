@@ -1,11 +1,13 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
+import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game_components/pick_up_region.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 
 import 'card.dart';
 import 'deck.dart';
+import 'field.dart';
 import 'game_assets.dart';
 import 'hand.dart';
 import 'pause_button.dart';
@@ -21,8 +23,8 @@ class MainGame extends FlameGame with HasTappableComponents {
   late final Deck deck;
   Vector2 get visibleGameSize => viewfinder.visibleGameSize!;
 
-  // @override
-  // Color backgroundColor() => const Color(0xFFD74E30);
+  @override
+  Color backgroundColor() => const Color(0xFFD74E30);
 
   @override
   Future<void>? onLoad() async {
@@ -44,10 +46,13 @@ class MainGame extends FlameGame with HasTappableComponents {
         ),
       ],
     );
-
     world = World();
     world.children.register<Deck>();
-    await world.addAll([deck, ...deck.dealTargets]);
+    await world.addAll([
+      Field(position: Vector2(0, -Card.kCardHeight * 3.5)),
+      deck,
+      ...deck.dealTargets,
+    ]);
 
     cameraComponent = CameraComponent(world: world);
     cameraComponent.follow(deck);
