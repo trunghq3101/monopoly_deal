@@ -3,16 +3,27 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "two_players.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
+        "two_players.tmx": {
+            "scale": 0.163,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 469.3251533742332,
+                "y": -938.6503067484664
+            }
+        }
     },
     "last.objectTemplatePath": "/Users/trunghoang/code/monopoly_deal/tiled_map",
     "map.lastUsedFormat": "tmx",
     "openFiles": [
+        "two_players.tmx"
     ],
     "project": "lucky_deal.tiled-project",
     "recentFiles": [
+        "two_players.tmx"
     ]
 }

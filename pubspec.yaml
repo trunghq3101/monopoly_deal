@@ -48,8 +48,13 @@ dependencies:
     git:
       url: https://github.com/flame-engine/flame.git
       path: packages/flame_rive
+  flame_tiled:
+    git:
+      url: https://github.com/flame-engine/flame.git
+      path: packages/flame_tiled
   rive: ^0.9.1
   firebase_core: ^1.24.0
+  tiled: ^0.9.0
 
 dependency_overrides:
   flame:
@@ -68,6 +73,10 @@ dependency_overrides:
     git:
       url: https://github.com/flame-engine/flame.git
       path: packages/flame_test
+  flame_tiled:
+    path: ../flame/packages/flame_tiled
+  tiled:
+    path: ../tiled.dart/packages/tiled
 
 dev_dependencies:
   flutter_test:
@@ -102,6 +111,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/tiles/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

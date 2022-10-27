@@ -99,7 +99,6 @@ class _HomePageState extends State<HomePage> {
           const Spacer(),
           Row(
             children: [
-              const Spacer(),
               Expanded(
                 child: ElevatedButton(
                   onPressed: _onPlayGroundBtnPressed,
@@ -115,7 +114,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              const Spacer(),
             ],
           ),
           const Spacer(),

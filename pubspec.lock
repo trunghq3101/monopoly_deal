@@ -254,6 +254,13 @@ packages:
       url: "https://github.com/flame-engine/flame.git"
     source: git
     version: "1.8.0"
+  flame_tiled:
+    dependency: "direct main"
+    description:
+      path: "../flame/packages/flame_tiled"
+      relative: true
+    source: path
+    version: "1.8.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -653,6 +660,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.16"
+  tiled:
+    dependency: "direct main"
+    description:
+      path: "../tiled.dart/packages/tiled"
+      relative: true
+    source: path
+    version: "0.9.0"
   timing:
     dependency: transitive
     description:
