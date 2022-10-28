@@ -31,7 +31,7 @@ class TableLayoutGame extends FlameGame {
     await viewport.addAll([]);
 
     viewfinder = cameraComponent.viewfinder;
-    viewfinder.visibleGameSize = Vector2.all(3000);
+    viewfinder.visibleGameSize = Vector2.all(5000);
 
     children
       ..register<World>()
