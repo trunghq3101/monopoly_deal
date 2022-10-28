@@ -257,9 +257,11 @@ packages:
   flame_tiled:
     dependency: "direct main"
     description:
-      path: "../flame/packages/flame_tiled"
-      relative: true
-    source: path
+      path: "packages/flame_tiled"
+      ref: HEAD
+      resolved-ref: "4885e0fac59c27c887e9e86824b092d551ff3c96"
+      url: "https://github.com/flame-engine/flame.git"
+    source: git
     version: "1.8.0"
   flutter:
     dependency: "direct main"
@@ -663,9 +665,11 @@ packages:
   tiled:
     dependency: "direct main"
     description:
-      path: "../tiled.dart/packages/tiled"
-      relative: true
-    source: path
+      path: "packages/tiled"
+      ref: "fix/template-not-parsed"
+      resolved-ref: "793fe6b89f6a12248fd878e9ce8fc49b25f08d23"
+      url: "https://github.com/trunghq3101/tiled.dart.git"
+    source: git
     version: "0.9.0"
   timing:
     dependency: transitive

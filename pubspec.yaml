@@ -74,9 +74,14 @@ dependency_overrides:
       url: https://github.com/flame-engine/flame.git
       path: packages/flame_test
   flame_tiled:
-    path: ../flame/packages/flame_tiled
+    git:
+      url: https://github.com/flame-engine/flame.git
+      path: packages/flame_tiled
   tiled:
-    path: ../tiled.dart/packages/tiled
+    git:
+      url: https://github.com/trunghq3101/tiled.dart.git
+      path: packages/tiled
+      ref: fix/template-not-parsed
 
 dev_dependencies:
   flutter_test:
