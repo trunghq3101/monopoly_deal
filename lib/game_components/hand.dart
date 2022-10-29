@@ -1,12 +1,12 @@
 import 'package:flame/components.dart';
 
 class Hand extends PositionComponent {
-  Hand({super.position, super.size}) : super(anchor: Anchor.center);
+  Hand() : super(anchor: Anchor.bottomCenter);
 
   @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
-    this.size = size;
-    position = size / 2;
+    position = Vector2(size.x / 2, size.y);
+    this.size = size.clone()..clamp(Vector2.zero(), Vector2(800, 600));
   }
 }

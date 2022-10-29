@@ -63,10 +63,7 @@ class MainGame extends FlameGame with HasTappableComponents {
       ..register<Hand>();
     await viewport.addAll([
       PauseButton(),
-      Hand(
-        size: canvasSize,
-        position: canvasSize / 2,
-      ),
+      Hand(),
     ]);
 
     viewfinder = cameraComponent.viewfinder;
