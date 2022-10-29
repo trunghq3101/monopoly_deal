@@ -1,6 +1,6 @@
 import 'package:dashbook/dashbook.dart';
 import 'package:flutter/material.dart';
-import 'package:monopoly_deal/dev/play_ground_page.dart';
+import 'package:monopoly_deal/dev/game_wrapper.dart';
 import 'package:monopoly_deal/dev/table_layout_game.dart';
 
 void main() {

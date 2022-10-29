@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:monopoly_deal/dev/play_ground_page.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 import 'package:monopoly_deal/models/player_model.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
@@ -22,9 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _content = "";
   var _buttonText = "Join";
-  final _playGroundText = "Playground";
   late Function()? _onMainBtnPressed;
-  late Function() _onPlayGroundBtnPressed;
   late GameModel _gameModel;
   late PlayerModel _player;
 
@@ -36,10 +33,6 @@ class _HomePageState extends State<HomePage> {
     _onMainBtnPressed = () {
       _gameModel.addPlayer(_player, widget.gameRepository);
       _onMainBtnPressed = null;
-    };
-    _onPlayGroundBtnPressed = () {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => const PlayGroundPage()));
     };
     Timer.periodic(
       const Duration(milliseconds: 200),
@@ -94,26 +87,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const Spacer(),
-            ],
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _onPlayGroundBtnPressed,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      _playGroundText,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4!
-                          .copyWith(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
           const Spacer(),
