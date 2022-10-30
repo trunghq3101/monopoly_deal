@@ -1,4 +1,5 @@
 import 'package:dashbook/dashbook.dart';
+import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/dev/game_wrapper.dart';
 import 'package:monopoly_deal/dev/table_layout_game.dart';
@@ -17,11 +18,21 @@ void main() {
   ).add(
     'hand',
     (ctx) {
+      final hand = Hand();
       final game = BaseGame()
         ..onDebug((game) {
-          game.viewport.add(Hand());
+          game.viewport.add(hand);
         });
-      ctx.action('hide', (_) {});
+      ctx
+        ..action('collapse', (_) {
+          hand.onAction();
+        })
+        ..action('expand', (_) {
+          hand.onAction();
+        })
+        ..action('game resize', (_) {
+          game.onGameResize(Vector2(500, 500));
+        });
       return GameWrapper(game: game);
     },
   ).add(
