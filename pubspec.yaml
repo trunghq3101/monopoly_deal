@@ -56,6 +56,7 @@ dependencies:
   firebase_core: ^1.24.0
   tiled: ^0.9.0
   dashbook: ^0.1.11
+  collection: ^1.16.0
 
 dependency_overrides:
   flame:

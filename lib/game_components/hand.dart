@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
@@ -39,14 +40,20 @@ class Hand extends PositionComponent with ParentIsA<Viewport> {
       : Vector2((size.y - 20) * 4 / 3, size.y - 20)
     ..clamp(Vector2.zero(), Vector2(800, 600));
 
-  void onAction() {
-    _handContent.onAction();
+  void onAction(String action) {
+    _handContent.onAction(action);
   }
 }
 
 class HandContent extends PositionComponent with ParentIsA<Hand> {
   HandContent() : super(anchor: Anchor.bottomCenter);
-  late Function _action = collapse;
+  late String _state = 'expand';
+  late final _transitions = {
+    'collapse': {
+      'expand': expand,
+    },
+    'expand': {'collapse': collapse}
+  };
 
   @override
   Future<void> onLoad() async {
@@ -54,8 +61,11 @@ class HandContent extends PositionComponent with ParentIsA<Hand> {
     position = Vector2(parent.size.x / 2, parent.size.y);
   }
 
-  void onAction() {
-    _action();
+  void onAction(String action) {
+    _transitions[_state]!
+        .entries
+        .firstWhereOrNull((e) => e.key == action)
+        ?.value();
   }
 
   void collapse() {
@@ -66,7 +76,7 @@ class HandContent extends PositionComponent with ParentIsA<Hand> {
       ),
       EffectController(speed: 2000, curve: Curves.easeOut),
     ));
-    _action = expand;
+    _state = 'collapse';
   }
 
   void expand() {
@@ -74,6 +84,6 @@ class HandContent extends PositionComponent with ParentIsA<Hand> {
       Vector2(parent.size.x / 2, parent.size.y),
       EffectController(speed: 2000, curve: Curves.easeOut),
     ));
-    _action = collapse;
+    _state = 'expand';
   }
 }
