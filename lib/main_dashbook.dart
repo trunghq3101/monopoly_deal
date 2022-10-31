@@ -25,10 +25,10 @@ void main() {
         });
       ctx
         ..action('collapse', (_) {
-          hand.onAction('collapse');
+          hand.collapse();
         })
         ..action('expand', (_) {
-          hand.onAction('expand');
+          hand.expand();
         })
         ..action('game resize', (_) {
           game.onGameResize(Vector2(500, 500));

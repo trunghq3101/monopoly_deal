@@ -6,7 +6,7 @@ import 'package:flame/game.dart' hide Viewport;
 
 import 'game_assets.dart';
 
-class BaseGame extends FlameGame {
+class BaseGame extends FlameGame with HasTappableComponents {
   late final World world;
   late final CameraComponent cameraComponent;
   late final Viewfinder viewfinder;
