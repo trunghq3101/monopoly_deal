@@ -1,40 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/animation.dart';
-
-class Command {
-  final int id;
-
-  Command(this.id);
-
-  @override
-  bool operator ==(Object other) => other is Command && other.id == id;
-
-  @override
-  int get hashCode => id;
-}
-
-class State {
-  final Map<Command, Transition> _transitions = {};
-
-  void addTransition(MapEntry<Command, Transition> transition) {
-    _transitions.addEntries([transition]);
-  }
-
-  State handle(Command command) {
-    return _transitions.entries
-            .firstWhereOrNull((e) => e.key == command)
-            ?.value
-            .activate() ??
-        this;
-  }
-}
-
-abstract class Transition {
-  State activate();
-}
+import 'package:simple_state_machine/simple_state_machine.dart';
 
 class Hand extends PositionComponent with ParentIsA<Viewport> {
   Hand() : super(anchor: Anchor.bottomCenter);
