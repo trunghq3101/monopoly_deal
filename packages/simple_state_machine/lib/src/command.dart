@@ -1,3 +1,5 @@
+part of simple_state_machine;
+
 class Command {
   final int id;
 

@@ -1,20 +1,23 @@
-import 'package:simple_state_machine/src/extensions.dart';
-
-import 'command.dart';
-import 'transition.dart';
+part of simple_state_machine;
 
 class State {
+  final String? debugName;
   final Map<Command, Transition> _transitions = {};
+
+  State({this.debugName});
 
   void addTransition(MapEntry<Command, Transition> transition) {
     _transitions.addEntries([transition]);
   }
 
   State handle(Command command) {
-    return _transitions.entries
+    printDebug(debugName);
+    final newState = _transitions.entries
             .firstWhereOrNull((e) => e.key == command)
             ?.value
-            .activate() ??
+            ._activate() ??
         this;
+    printDebug(newState.debugName);
+    return newState;
   }
 }

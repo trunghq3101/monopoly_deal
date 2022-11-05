@@ -11,7 +11,7 @@ class ExpandTransition extends Transition {
   ExpandTransition(this.hand);
 
   @override
-  State activate() {
+  State onActivate() {
     hand.add(MoveEffect.by(
       Vector2(0, -(hand.size.y - 100)),
       EffectController(speed: 2000, curve: Curves.easeOut),
@@ -26,7 +26,7 @@ class CollapseTransition extends Transition {
   CollapseTransition(this.hand);
 
   @override
-  State activate() {
+  State onActivate() {
     hand.add(MoveEffect.by(
       Vector2(0, hand.size.y - 100),
       EffectController(speed: 2000, curve: Curves.easeOut),
@@ -41,8 +41,8 @@ const kTapInsideHand = 1;
 class Hand extends HudMarginComponent with TapCallbacks {
   Hand() : super(anchor: Anchor.bottomCenter, position: Vector2.zero());
 
-  static final collapsedState = State();
-  static final expandedState = State();
+  static final collapsedState = State(debugName: 'collapsed');
+  static final expandedState = State(debugName: 'expanded');
 
   late State _state = expandedState;
 

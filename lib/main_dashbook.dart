@@ -21,7 +21,7 @@ void main() {
       final hand = Hand();
       final game = BaseGame()
         ..onDebug((game) {
-          game.add(Hand());
+          game.add(hand);
         });
       ctx
         ..action('collapse', (_) {
