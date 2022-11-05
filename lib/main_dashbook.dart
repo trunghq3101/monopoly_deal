@@ -1,10 +1,10 @@
 import 'package:dashbook/dashbook.dart';
-import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/dev/game_wrapper.dart';
 import 'package:monopoly_deal/dev/table_layout_game.dart';
 import 'package:monopoly_deal/game_components/base_game.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
+import 'package:simple_state_machine/simple_state_machine.dart';
 
 void main() {
   final dashbook = Dashbook();
@@ -21,17 +21,14 @@ void main() {
       final hand = Hand();
       final game = BaseGame()
         ..onDebug((game) {
-          game.viewport.add(hand);
+          game.add(Hand());
         });
       ctx
         ..action('collapse', (_) {
           hand.collapse();
         })
         ..action('expand', (_) {
-          hand.expand();
-        })
-        ..action('game resize', (_) {
-          game.onGameResize(Vector2(500, 500));
+          hand.onCommand(Command(kTapInsideHand));
         });
       return GameWrapper(game: game);
     },
