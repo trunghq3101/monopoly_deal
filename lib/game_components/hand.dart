@@ -39,7 +39,11 @@ const kTapOutsideHand = 0;
 const kTapInsideHand = 1;
 
 class Hand extends HudMarginComponent with TapCallbacks {
-  Hand() : super(anchor: Anchor.bottomCenter, position: Vector2.zero());
+  Hand({super.children})
+      : super(
+          anchor: Anchor.bottomCenter,
+          position: Vector2.zero(),
+        );
 
   static final collapsedState = State(debugName: 'collapsed');
   static final expandedState = State(debugName: 'expanded');
@@ -60,10 +64,6 @@ class Hand extends HudMarginComponent with TapCallbacks {
   @override
   void onTapDown(TapDownEvent event) {
     onCommand(Command(kTapInsideHand));
-  }
-
-  void collapse() {
-    onCommand(Command(kTapOutsideHand));
   }
 
   void onCommand(Command command) {

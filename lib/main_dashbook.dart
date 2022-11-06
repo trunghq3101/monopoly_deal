@@ -25,7 +25,7 @@ void main() {
         });
       ctx
         ..action('collapse', (_) {
-          hand.collapse();
+          hand.onCommand(Command(kTapOutsideHand));
         })
         ..action('expand', (_) {
           hand.onCommand(Command(kTapInsideHand));
