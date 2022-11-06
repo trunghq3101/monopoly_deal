@@ -13,16 +13,30 @@ class TestComponent extends PositionComponent
   @override
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
+    tapOutsideEnabled = true;
+    scale = Vector2.all(1);
     print('Component tapped');
   }
 
   @override
   void onTapOutside() {
+    tapOutsideEnabled = false;
+    scale = Vector2.all(0.5);
     print('Component outside');
   }
 }
 
+class OtherComponent extends PositionComponent with TapCallbacks {
+  @override
+  void onTapDown(TapDownEvent event) {
+    super.onTapDown(event);
+    size = size * 0.8;
+    print('Other tapped');
+  }
+}
+
 mixin TapOutsideCallback on Component {
+  bool tapOutsideEnabled = true;
   void onTapOutside() {}
 }
 
@@ -40,6 +54,9 @@ void main() {
       ..onDebug((game) {
         game.children.register<TapOutsideCallback>();
         game.add(TestComponent()..size = Vector2.all(400));
+        game.add(OtherComponent()
+          ..size = Vector2.all(400)
+          ..position = Vector2.all(500));
       });
     return GameWrapper(game: game);
   }).add(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
@@ -17,10 +18,17 @@ class BaseGame extends FlameGame with HasTappableComponents {
   @override
   void onTapDown(TapDownEvent event) {
     print('game tapped');
-    super.onTapDown(event);
-    for (var c in children.query<TapOutsideCallback>()) {
-      c.onTapOutside();
+    final tapOutsideComponent =
+        children.query<TapOutsideCallback>().firstOrNull;
+    if (tapOutsideComponent != null && tapOutsideComponent.tapOutsideEnabled) {
+      assert(children.query<TapOutsideCallback>().length == 1);
+      if (!componentsAtPoint(event.canvasPosition)
+          .contains(tapOutsideComponent)) {
+        tapOutsideComponent.onTapOutside();
+        return;
+      }
     }
+    super.onTapDown(event);
   }
 
   @override
