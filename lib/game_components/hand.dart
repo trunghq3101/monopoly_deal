@@ -3,6 +3,7 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/animation.dart';
+import 'package:monopoly_deal/game_components/mixins.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
 class ExpandTransition extends Transition {
@@ -38,7 +39,7 @@ class CollapseTransition extends Transition {
 const kTapOutsideHand = 0;
 const kTapInsideHand = 1;
 
-class Hand extends HudMarginComponent with TapCallbacks {
+class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
   Hand({super.children})
       : super(
           anchor: Anchor.bottomCenter,
@@ -63,7 +64,14 @@ class Hand extends HudMarginComponent with TapCallbacks {
 
   @override
   void onTapDown(TapDownEvent event) {
+    tapOutsideSubscribed = true;
     onCommand(Command(kTapInsideHand));
+  }
+
+  @override
+  void onTapOutside() {
+    tapOutsideSubscribed = false;
+    onCommand(Command(kTapOutsideHand));
   }
 
   void onCommand(Command command) {

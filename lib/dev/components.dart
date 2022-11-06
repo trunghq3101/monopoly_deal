@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 
@@ -8,14 +10,14 @@ class TestComponent1 extends PositionComponent
   @override
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
-    tapOutsideEnabled = true;
+    tapOutsideSubscribed = true;
     scale = Vector2.all(1);
     print('Component tapped');
   }
 
   @override
   void onTapOutside() {
-    tapOutsideEnabled = false;
+    tapOutsideSubscribed = false;
     scale = Vector2.all(0.5);
     print('Component outside');
   }

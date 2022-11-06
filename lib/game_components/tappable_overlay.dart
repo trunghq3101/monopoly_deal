@@ -32,7 +32,7 @@ class TappableOverlay extends HudMarginComponent
   @override
   void onTapDown(TapDownEvent event) {
     final c = game.children.query<TapOutsideCallback>().firstOrNull;
-    if (c != null && c.tapOutsideEnabled) {
+    if (c != null && c.tapOutsideSubscribed) {
       assert(game.children.query<TapOutsideCallback>().length == 1);
       if (!componentsAtPoint(event.canvasPosition).contains(c)) {
         c.onTapOutside();

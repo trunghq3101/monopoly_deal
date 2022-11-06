@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
 
 mixin TapOutsideCallback on Component {
-  bool tapOutsideEnabled = true;
+  bool tapOutsideSubscribed = true;
   void onTapOutside() {}
 }

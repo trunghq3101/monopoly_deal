@@ -35,6 +35,7 @@ void main() {
       final hand = Hand();
       final game = BaseGame()
         ..onDebug((game) {
+          game.add(TappableOverlay());
           game.add(hand);
         });
       ctx
