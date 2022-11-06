@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
-import 'package:monopoly_deal/main_dashbook.dart';
 
 import 'game_assets.dart';
 
@@ -14,22 +12,6 @@ class BaseGame extends FlameGame with HasTappableComponents {
   late final Viewfinder viewfinder;
   late final Viewport viewport;
   Vector2 get visibleGameSize => viewfinder.visibleGameSize!;
-
-  @override
-  void onTapDown(TapDownEvent event) {
-    print('game tapped');
-    final tapOutsideComponent =
-        children.query<TapOutsideCallback>().firstOrNull;
-    if (tapOutsideComponent != null && tapOutsideComponent.tapOutsideEnabled) {
-      assert(children.query<TapOutsideCallback>().length == 1);
-      if (!componentsAtPoint(event.canvasPosition)
-          .contains(tapOutsideComponent)) {
-        tapOutsideComponent.onTapOutside();
-        return;
-      }
-    }
-    super.onTapDown(event);
-  }
 
   @override
   Future<void> onLoad() async {

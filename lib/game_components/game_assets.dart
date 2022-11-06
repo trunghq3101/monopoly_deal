@@ -4,6 +4,8 @@ import 'package:rive/rive.dart';
 
 final gameAssets = GameAssets();
 
+const kMaxPriority = 9999999;
+
 class GameAssets {
   int? Function() randomSeed = () => null;
   final Map<String, RiveFile> _riveFiles = {};

@@ -1,44 +1,14 @@
 import 'package:dashbook/dashbook.dart';
 import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/dev/game_wrapper.dart';
 import 'package:monopoly_deal/dev/table_layout_game.dart';
 import 'package:monopoly_deal/game_components/base_game.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
+import 'package:monopoly_deal/game_components/tappable_overlay.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
-class TestComponent extends PositionComponent
-    with TapCallbacks, TapOutsideCallback {
-  @override
-  void onTapDown(TapDownEvent event) {
-    super.onTapDown(event);
-    tapOutsideEnabled = true;
-    scale = Vector2.all(1);
-    print('Component tapped');
-  }
-
-  @override
-  void onTapOutside() {
-    tapOutsideEnabled = false;
-    scale = Vector2.all(0.5);
-    print('Component outside');
-  }
-}
-
-class OtherComponent extends PositionComponent with TapCallbacks {
-  @override
-  void onTapDown(TapDownEvent event) {
-    super.onTapDown(event);
-    size = size * 0.8;
-    print('Other tapped');
-  }
-}
-
-mixin TapOutsideCallback on Component {
-  bool tapOutsideEnabled = true;
-  void onTapOutside() {}
-}
+import 'dev/components.dart';
 
 void main() {
   final dashbook = Dashbook();
@@ -52,9 +22,9 @@ void main() {
   ).add('tap outside', (ctx) {
     final game = BaseGame()
       ..onDebug((game) {
-        game.children.register<TapOutsideCallback>();
-        game.add(TestComponent()..size = Vector2.all(400));
-        game.add(OtherComponent()
+        game.add(TappableOverlay());
+        game.add(TestComponent1()..size = Vector2.all(400));
+        game.add(TestComponent2()
           ..size = Vector2.all(400)
           ..position = Vector2.all(500));
       });
