@@ -48,9 +48,9 @@ void main() {
       return GameWrapper(game: game);
     },
   ).add(
-    'peek the card',
+    'holding cards',
     (ctx) {
-      final hand = Hand(children: []);
+      final hand = Hand();
       final game = BaseGame()
         ..onDebug((game) {
           game.add(hand);

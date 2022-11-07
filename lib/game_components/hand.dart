@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/animation.dart';
+import 'package:monopoly_deal/game_components/extensions.dart';
 import 'package:monopoly_deal/game_components/mixins.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
@@ -60,6 +63,27 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
         MapEntry(Command(kTapInsideHand), ExpandTransition(this)));
     expandedState.addTransition(
         MapEntry(Command(kTapOutsideHand), CollapseTransition(this)));
+    const r = 1000.0;
+    final c = CircleComponent(
+      radius: r,
+      position: Vector2(size.x / 2, 0),
+      anchor: Anchor.topCenter,
+    );
+    add(c);
+    final rAngle = pi / 2 - acos(size.x / 2 / r);
+    final lAngle = -rAngle;
+    c.add(PositionComponent(
+      position: rAngle.angleToVector2(r).reflected(Vector2(0, 1)) + c.size / 2,
+      size: Vector2(300, 500),
+      anchor: Anchor.topCenter,
+      angle: rAngle,
+    ));
+    c.add(PositionComponent(
+      position: lAngle.angleToVector2(r).reflected(Vector2(0, 1)) + c.size / 2,
+      size: Vector2(300, 500),
+      anchor: Anchor.topCenter,
+      angle: lAngle,
+    ));
   }
 
   @override
