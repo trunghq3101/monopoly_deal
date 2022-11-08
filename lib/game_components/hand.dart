@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/input.dart';
+import 'package:flame/palette.dart';
 import 'package:flutter/animation.dart';
 import 'package:monopoly_deal/game_components/extensions.dart';
 import 'package:monopoly_deal/game_components/mixins.dart';
@@ -63,27 +64,33 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
         MapEntry(Command(kTapInsideHand), ExpandTransition(this)));
     expandedState.addTransition(
         MapEntry(Command(kTapOutsideHand), CollapseTransition(this)));
-    const r = 1000.0;
+    final r = width * 1.25;
+    final circleCenterX = width / 2 + width / 16;
+    final paddingH = width / 5;
+    final paddingT = width / 16;
+    const cardN = 5;
     final c = CircleComponent(
       radius: r,
-      position: Vector2(size.x / 2, 0),
+      position: Vector2(circleCenterX, paddingT),
       anchor: Anchor.topCenter,
+      paint: BasicPalette.transparent.paint(),
     );
     add(c);
-    final rAngle = pi / 2 - acos(size.x / 2 / r);
-    final lAngle = -rAngle;
-    c.add(PositionComponent(
-      position: rAngle.angleToVector2(r).reflected(Vector2(0, 1)) + c.size / 2,
-      size: Vector2(300, 500),
-      anchor: Anchor.topCenter,
-      angle: rAngle,
-    ));
-    c.add(PositionComponent(
-      position: lAngle.angleToVector2(r).reflected(Vector2(0, 1)) + c.size / 2,
-      size: Vector2(300, 500),
-      anchor: Anchor.topCenter,
-      angle: lAngle,
-    ));
+    final rAngle = pi / 2 - acos((width - circleCenterX - paddingH) / r);
+    final lAngle = -(pi / 2 - acos((circleCenterX - paddingH) / r));
+    final angleDiff = rAngle - lAngle;
+    final angleSpacing = angleDiff / (cardN - 1);
+    for (var i = 0; i < cardN; i++) {
+      c.add(PositionComponent(
+        position: (rAngle - angleSpacing * i)
+                .angleToVector2(r)
+                .reflected(Vector2(0, 1)) +
+            c.size / 2,
+        size: Vector2(300, 500),
+        anchor: Anchor.topCenter,
+        angle: rAngle - angleSpacing * i,
+      ));
+    }
   }
 
   @override
