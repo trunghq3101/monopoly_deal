@@ -1,14 +1,17 @@
 import 'package:dashbook/dashbook.dart';
 import 'package:flame/components.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Card;
 import 'package:monopoly_deal/dev/game_wrapper.dart';
 import 'package:monopoly_deal/dev/table_layout_game.dart';
 import 'package:monopoly_deal/game_components/base_game.dart';
+import 'package:monopoly_deal/game_components/card_front.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
 import 'package:monopoly_deal/game_components/tappable_overlay.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
 import 'dev/components.dart';
+import 'game_components/card.dart';
+import 'game_components/game_assets.dart';
 
 void main() {
   final dashbook = Dashbook();
@@ -30,6 +33,21 @@ Widget _fiveCardsFlyToHand(ctx) {
     ..onDebug((game) {
       game.add(hand);
     });
+
+  ctx.action('add', (_) {
+    hand.onCommand(PickUpCommand(
+      kPickUp,
+      List.generate(
+        5,
+        (index) => CardFront(
+          id: index,
+          sprite: gameAssets.cardSprites[index],
+          size: Card.kCardSize,
+          anchor: Anchor.topCenter,
+        ),
+      ),
+    ));
+  });
   return GameWrapper(game: game);
 }
 

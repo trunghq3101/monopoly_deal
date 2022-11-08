@@ -6,7 +6,8 @@ class CardFront extends SpriteComponent {
     super.sprite,
     super.position,
     super.size,
-  }) : super(anchor: Anchor.center);
+    super.anchor = Anchor.center,
+  });
 
   final int id;
 

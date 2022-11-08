@@ -15,7 +15,7 @@ class State {
     final newState = _transitions.entries
             .firstWhereOrNull((e) => e.key == command)
             ?.value
-            ._activate() ??
+            ._activate(command) ??
         this;
     printDebug(newState.debugName);
     return newState;
