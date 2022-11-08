@@ -108,6 +108,8 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
         MapEntry(Command(kTapOutsideHand), CollapseTransition(this)));
     emptyState
         .addTransition(MapEntry(Command(kPickUp), AddCardsTransition(this)));
+    notEmptyState
+        .addTransition(MapEntry(Command(kPickUp), AddCardsTransition(this)));
     final r = width * 1.25;
     final circleCenterX = width / 2 + width / 16;
     final paddingH = width / 5;
@@ -138,21 +140,29 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
   }
 
   void preparePositionsForMore(int n) {
-    _preparePositions(n + children.query<CardFront>().length);
+    _preparePositions(n + _circle.children.query<CardFront>().length);
   }
 
   void shiftCards() {
-    for (var i = 0; i < _oldCardPositions.length; i++) {
+    var i = _newCardPositions.length - 1;
+    var o = _oldCardPositions.length - 1;
+    while (o >= 0) {
       final c = _circle.children
           .query<CardFront>()
-          .firstWhere((e) => e.id == _oldCardPositions[i].cardId);
+          .firstWhere((e) => e.id == _oldCardPositions[o].cardId);
       c.addAll([
         MoveEffect.to(
-            _newCardPositions[i].position, LinearEffectController(0.2)),
+          _newCardPositions[i].position,
+          CurvedEffectController(0.2, Curves.easeOutCubic),
+        ),
         RotateEffect.to(
-            _newCardPositions[i].angle, LinearEffectController(0.2)),
+          _newCardPositions[i].angle,
+          CurvedEffectController(0.2, Curves.easeOutCubic),
+        ),
       ]);
-      _newCardPositions[i].cardId = _oldCardPositions[i].cardId;
+      _newCardPositions[i].cardId = _oldCardPositions[o].cardId;
+      i--;
+      o--;
     }
   }
 
@@ -164,16 +174,22 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
     }
     for (var i = 0; i < unplacedPositions.length; i++) {
       final c = cards[i];
-      c.position = Vector2(0, _circle.height * 2);
+      c.position = Vector2(0, _circle.height * 1.2);
       unplacedPositions[i].cardId = c.id;
       c.addAll([
         MoveEffect.to(
           unplacedPositions[i].position,
-          DelayedEffectController(delay: i * 0.1, LinearEffectController(0.5)),
+          DelayedEffectController(
+            delay: i * 0.1,
+            CurvedEffectController(0.5, Curves.easeOutCubic),
+          ),
         ),
         RotateEffect.to(
           unplacedPositions[i].angle,
-          DelayedEffectController(delay: i * 0.1, LinearEffectController(0.5)),
+          DelayedEffectController(
+            delay: i * 0.1,
+            CurvedEffectController(0.5, Curves.easeOutCubic),
+          ),
         ),
       ]);
     }

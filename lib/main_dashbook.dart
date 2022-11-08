@@ -33,15 +33,29 @@ Widget _fiveCardsFlyToHand(ctx) {
     ..onDebug((game) {
       game.add(hand);
     });
-
-  ctx.action('add', (_) {
+  var i = 0;
+  ctx.action('add 5', (_) {
     hand.onCommand(PickUpCommand(
       kPickUp,
       List.generate(
         5,
         (index) => CardFront(
-          id: index,
-          sprite: gameAssets.cardSprites[index],
+          id: ++i,
+          sprite: gameAssets.cardSprites[i],
+          size: Card.kCardSize,
+          anchor: Anchor.topCenter,
+        ),
+      ),
+    ));
+  });
+  ctx.action('add 2', (_) {
+    hand.onCommand(PickUpCommand(
+      kPickUp,
+      List.generate(
+        2,
+        (index) => CardFront(
+          id: ++i,
+          sprite: gameAssets.cardSprites[i],
           size: Card.kCardSize,
           anchor: Anchor.topCenter,
         ),
