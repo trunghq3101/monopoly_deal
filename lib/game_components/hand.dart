@@ -40,8 +40,20 @@ class CollapseTransition extends Transition {
   }
 }
 
+class AddCardsTransition extends Transition {
+  final Hand hand;
+
+  AddCardsTransition(this.hand);
+
+  @override
+  State onActivate() {
+    return Hand.notEmptyState;
+  }
+}
+
 const kTapOutsideHand = 0;
 const kTapInsideHand = 1;
+const kPickUp = 2;
 
 class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
   Hand({super.children})
@@ -52,8 +64,12 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
 
   static final collapsedState = State(debugName: 'collapsed');
   static final expandedState = State(debugName: 'expanded');
-
-  late State _state = expandedState;
+  static final emptyState = State(debugName: 'empty');
+  static final notEmptyState = State(debugName: 'not empty');
+  final _stateMachines = [
+    StateMachine()..start(expandedState),
+    StateMachine()..start(emptyState),
+  ];
 
   @override
   Future<void> onLoad() async {
@@ -64,6 +80,8 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
         MapEntry(Command(kTapInsideHand), ExpandTransition(this)));
     expandedState.addTransition(
         MapEntry(Command(kTapOutsideHand), CollapseTransition(this)));
+    emptyState
+        .addTransition(MapEntry(Command(kPickUp), AddCardsTransition(this)));
     final r = width * 1.25;
     final circleCenterX = width / 2 + width / 16;
     final paddingH = width / 5;
@@ -106,7 +124,9 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
   }
 
   void onCommand(Command command) {
-    _state = _state.handle(command);
+    for (var m in _stateMachines) {
+      m.onCommand(command);
+    }
   }
 
   Vector2 _calcSize(Vector2 size) => size.x * 3 / 4 < size.y - 20
