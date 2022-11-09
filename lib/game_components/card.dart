@@ -8,10 +8,10 @@ import 'package:simple_state_machine/simple_state_machine.dart';
 class PickUpTransition extends Transition {
   final Card card;
 
-  PickUpTransition(this.card);
+  PickUpTransition(super.stateMachine, this.card);
 
   @override
-  State onActivate(Command command) {
+  State? onActivate(Command command) {
     card.addAll([
       RotateEffect.to(0, LinearEffectController(0.1)),
       MoveEffect.to(
@@ -26,9 +26,11 @@ class PickUpTransition extends Transition {
         CurvedEffectController(0.3, Curves.easeInCubic),
       )
     ]);
-    return Card.pickedUp;
+    return stateMachine.state(CardState.pickedUp);
   }
 }
+
+enum CardState { dealed, pickedUp }
 
 class Card extends SpriteComponent with HasGameReference<FlameGame> {
   Card({
@@ -44,15 +46,15 @@ class Card extends SpriteComponent with HasGameReference<FlameGame> {
 
   static const kPickUp = 0;
 
-  static final dealed = State(debugName: 'dealed');
-  static final pickedUp = State(debugName: 'picked up');
-
   final int id;
-  final _stateMachines = [StateMachine()..start(dealed)];
+  final _stateMachines = [StateMachine()..start(CardState.dealed)];
 
   @override
   Future<void>? onLoad() {
-    dealed.addTransition(MapEntry(Command(kPickUp), PickUpTransition(this)));
+    _stateMachines[0].addTransition(
+      CardState.dealed,
+      MapEntry(Command(kPickUp), PickUpTransition(_stateMachines[0], this)),
+    );
     return super.onLoad();
   }
 

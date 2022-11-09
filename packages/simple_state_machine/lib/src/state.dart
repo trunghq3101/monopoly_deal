@@ -1,10 +1,12 @@
 part of simple_state_machine;
 
-class State {
-  final String? debugName;
+class State<T> {
+  final T identifier;
   final Map<Command, Transition> _transitions = {};
 
-  State({this.debugName});
+  State(this.identifier);
+
+  String get debugName => identifier.toString();
 
   void addTransition(MapEntry<Command, Transition> transition) {
     _transitions.addEntries([transition]);

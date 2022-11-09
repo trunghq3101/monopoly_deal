@@ -14,46 +14,46 @@ import 'package:simple_state_machine/simple_state_machine.dart';
 class ExpandTransition extends Transition {
   final Hand hand;
 
-  ExpandTransition(this.hand);
+  ExpandTransition(super.stateMachine, this.hand);
 
   @override
-  State onActivate(Command command) {
+  State? onActivate(Command command) {
     hand.add(MoveEffect.by(
       Vector2(0, -(hand.size.y - 100)),
       EffectController(speed: 2000, curve: Curves.easeOut),
     ));
-    return Hand.expandedState;
+    return stateMachine.state(HandState.expanded);
   }
 }
 
 class CollapseTransition extends Transition {
   final Hand hand;
 
-  CollapseTransition(this.hand);
+  CollapseTransition(super.stateMachine, this.hand);
 
   @override
-  State onActivate(Command command) {
+  State? onActivate(Command command) {
     hand.add(MoveEffect.by(
       Vector2(0, hand.size.y - 100),
       EffectController(speed: 2000, curve: Curves.easeOut),
     ));
-    return Hand.collapsedState;
+    return stateMachine.state(HandState.collapsed);
   }
 }
 
 class AddCardsTransition extends Transition {
   final Hand hand;
 
-  AddCardsTransition(this.hand);
+  AddCardsTransition(super.stateMachine, this.hand);
 
   @override
-  State onActivate(Command command) {
+  State? onActivate(Command command) {
     final c = command as PickUpCommand;
     hand.preparePositionsForMore(c.cards.length);
     hand.shiftCards();
     hand.addCards(command.cards);
     hand.updatePositions();
-    return Hand.notEmptyState;
+    return stateMachine.state(HandState.notEmpty);
   }
 }
 
@@ -75,6 +75,13 @@ class CardPosition {
   CardPosition(this.position, this.angle);
 }
 
+enum HandState {
+  collapsed,
+  expanded,
+  empty,
+  notEmpty,
+}
+
 class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
   Hand({super.children})
       : super(
@@ -82,13 +89,9 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
           position: Vector2.zero(),
         );
 
-  static final collapsedState = State(debugName: 'collapsed');
-  static final expandedState = State(debugName: 'expanded');
-  static final emptyState = State(debugName: 'empty');
-  static final notEmptyState = State(debugName: 'not empty');
   final _stateMachines = [
-    StateMachine()..start(expandedState),
-    StateMachine()..start(emptyState),
+    StateMachine()..start(HandState.expanded),
+    StateMachine()..start(HandState.empty),
   ];
   final _oldCardPositions = <CardPosition>[];
   final List<CardPosition> _newCardPositions = [];
@@ -102,14 +105,26 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
     size = _calcSize(gameRef.size);
     super.onLoad();
     children.register<CardFront>();
-    collapsedState.addTransition(
-        MapEntry(Command(kTapInsideHand), ExpandTransition(this)));
-    expandedState.addTransition(
-        MapEntry(Command(kTapOutsideHand), CollapseTransition(this)));
-    emptyState
-        .addTransition(MapEntry(Command(kPickUp), AddCardsTransition(this)));
-    notEmptyState
-        .addTransition(MapEntry(Command(kPickUp), AddCardsTransition(this)));
+    _stateMachines[0]
+      ..addTransition(
+        HandState.collapsed,
+        MapEntry(
+            Command(kTapInsideHand), ExpandTransition(_stateMachines[0], this)),
+      )
+      ..addTransition(
+        HandState.expanded,
+        MapEntry(Command(kTapOutsideHand),
+            CollapseTransition(_stateMachines[0], this)),
+      );
+    _stateMachines[1]
+      ..addTransition(
+          HandState.empty,
+          MapEntry(
+              Command(kPickUp), AddCardsTransition(_stateMachines[1], this)))
+      ..addTransition(
+          HandState.notEmpty,
+          MapEntry(
+              Command(kPickUp), AddCardsTransition(_stateMachines[1], this)));
     final r = width * 1.25;
     final circleCenterX = width / 2 + width / 16;
     final paddingH = width / 5;

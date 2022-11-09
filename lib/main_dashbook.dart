@@ -38,11 +38,18 @@ Widget _pickUp(ctx) {
           id: 0,
           position: Vector2.zero(),
           sprite: await Sprite.load('card.png'),
-        )..angle = 0.2
+        )..angle = 0.2,
+        Card(
+          id: 1,
+          position: Vector2.zero(),
+          sprite: await Sprite.load('card.png'),
+        )..angle = 0.4
       ]);
     });
   ctx.action('pick', (_) {
-    game.world.children.query<Card>().first.onCommand(Command(Card.kPickUp));
+    for (var c in game.world.children.query<Card>()) {
+      c.onCommand(Command(Card.kPickUp));
+    }
   });
   return GameWrapper(game: game);
 }
