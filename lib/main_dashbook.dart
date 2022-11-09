@@ -18,6 +18,7 @@ void main() {
 
   dashbook
       .storiesOf('2 players game')
+      .add('pick up', _pickUp)
       .add('overview', _overview)
       .add('tap outside', _tapOutside)
       .add('hand', _hand)
@@ -27,10 +28,30 @@ void main() {
   runApp(dashbook);
 }
 
+Widget _pickUp(ctx) {
+  final game = BaseGame()
+    ..onDebug((game) async {
+      game.viewfinder.visibleGameSize = Vector2.all(2000);
+      game.world.children.register<Card>();
+      game.world.addAll([
+        Card(
+          id: 0,
+          position: Vector2.zero(),
+          sprite: await Sprite.load('card.png'),
+        )..angle = 0.2
+      ]);
+    });
+  ctx.action('pick', (_) {
+    game.world.children.query<Card>().first.onCommand(Command(Card.kPickUp));
+  });
+  return GameWrapper(game: game);
+}
+
 Widget _fiveCardsFlyToHand(ctx) {
   final hand = Hand();
   final game = BaseGame()
     ..onDebug((game) {
+      game.add(TappableOverlay());
       game.add(hand);
     });
   var i = 0;
