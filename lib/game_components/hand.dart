@@ -48,19 +48,13 @@ class AddCardsTransition extends Transition {
 
   @override
   State? onActivate(Command command) {
-    final c = command as PickUpCommand;
-    hand.preparePositionsForMore(c.cards.length);
+    final List<CardFront> cards = command.payload;
+    hand.preparePositionsForMore(cards.length);
     hand.shiftCards();
-    hand.addCards(command.cards);
+    hand.addCards(cards);
     hand.updatePositions();
     return stateMachine.state(HandState.notEmpty);
   }
-}
-
-class PickUpCommand extends Command {
-  PickUpCommand(super.id, this.cards);
-
-  final List<CardFront> cards;
 }
 
 const kTapOutsideHand = 0;
@@ -90,8 +84,12 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
         );
 
   final _stateMachines = [
-    StateMachine()..start(HandState.expanded),
-    StateMachine()..start(HandState.empty),
+    StateMachine()
+      ..start(HandState.expanded)
+      ..newState(HandState.collapsed),
+    StateMachine()
+      ..start(HandState.empty)
+      ..newState(HandState.notEmpty),
   ];
   final _oldCardPositions = <CardPosition>[];
   final List<CardPosition> _newCardPositions = [];

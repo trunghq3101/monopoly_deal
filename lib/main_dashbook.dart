@@ -63,7 +63,7 @@ Widget _fiveCardsFlyToHand(ctx) {
     });
   var i = 0;
   ctx.action('add 5', (_) {
-    hand.onCommand(PickUpCommand(
+    hand.onCommand(Command(
       kPickUp,
       List.generate(
         5,
@@ -77,7 +77,7 @@ Widget _fiveCardsFlyToHand(ctx) {
     ));
   });
   ctx.action('add 2', (_) {
-    hand.onCommand(PickUpCommand(
+    hand.onCommand(Command(
       kPickUp,
       List.generate(
         2,
