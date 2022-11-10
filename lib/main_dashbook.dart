@@ -18,6 +18,7 @@ void main() {
 
   dashbook
       .storiesOf('2 players game')
+      .add('pick up and show hand', _pickUpAndShowHand)
       .add('pick up', _pickUp)
       .add('overview', _overview)
       .add('tap outside', _tapOutside)
@@ -26,6 +27,46 @@ void main() {
       .add('5 cards fly to hand', _fiveCardsFlyToHand);
 
   runApp(dashbook);
+}
+
+Widget _pickUpAndShowHand(ctx) {
+  final hand = Hand();
+  final game = BaseGame()
+    ..onDebug((game) async {
+      game.add(hand);
+      game.viewfinder.visibleGameSize = Vector2.all(2000);
+      game.world.children.register<Card>();
+      final s = await Sprite.load('card.png');
+      game.world.addAll(List.generate(
+        5,
+        (index) => Card(
+          id: index,
+          position: Vector2.zero(),
+          sprite: s,
+        )..angle = 0.2 * index,
+      ));
+    });
+  var delay = 0.0;
+  ctx.action('pick', (_) {
+    for (var c in game.world.children.query<Card>().reversed) {
+      c.onCommand(Command(Card.kPickUp, delay += 0.1));
+    }
+    hand.onCommand(Command(
+        Hand.kPickUp,
+        game.world.children
+            .query<Card>()
+            .reversed
+            .map(
+              (e) => CardFront(
+                id: e.id,
+                sprite: e.sprite,
+                size: Card.kCardSize,
+                anchor: Anchor.topCenter,
+              ),
+            )
+            .toList()));
+  });
+  return GameWrapper(game: game);
 }
 
 Widget _pickUp(ctx) {
@@ -62,7 +103,7 @@ Widget _fiveCardsFlyToHand(ctx) {
   var i = 0;
   ctx.action('add 5', (_) {
     hand.onCommand(Command(
-      kPickUp,
+      Hand.kPickUp,
       List.generate(
         5,
         (index) => CardFront(
@@ -76,7 +117,7 @@ Widget _fiveCardsFlyToHand(ctx) {
   });
   ctx.action('add 2', (_) {
     hand.onCommand(Command(
-      kPickUp,
+      Hand.kPickUp,
       List.generate(
         2,
         (index) => CardFront(
@@ -109,10 +150,10 @@ Widget _hand(ctx) {
     });
   ctx
     ..action('collapse', (_) {
-      hand.onCommand(Command(kTapOutsideHand));
+      hand.onCommand(Command(Hand.kTapOutsideHand));
     })
     ..action('expand', (_) {
-      hand.onCommand(Command(kTapInsideHand));
+      hand.onCommand(Command(Hand.kTapInsideHand));
     });
   return GameWrapper(game: game);
 }

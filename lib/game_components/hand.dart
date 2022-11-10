@@ -54,10 +54,6 @@ class AddCardsTransition extends Transition<HandState> {
   }
 }
 
-const kTapOutsideHand = 0;
-const kTapInsideHand = 1;
-const kPickUp = 2;
-
 class CardPosition {
   int? cardId;
   final Vector2 position;
@@ -80,7 +76,9 @@ class Hand extends HudMarginComponent
           anchor: Anchor.bottomCenter,
           position: Vector2.zero(),
         );
-
+  static const kTapOutsideHand = 0;
+  static const kTapInsideHand = 1;
+  static const kPickUp = 2;
   final _oldCardPositions = <CardPosition>[];
   final List<CardPosition> _newCardPositions = [];
   late CircleComponent _circle;
