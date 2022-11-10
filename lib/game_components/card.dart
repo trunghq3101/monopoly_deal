@@ -12,8 +12,14 @@ class PickUpTransition extends Transition<CardState> {
 
   @override
   void onActivate(dynamic payload) {
+    final double d = payload;
     card.addAll([
-      RotateEffect.to(0, LinearEffectController(0.1)),
+      RotateEffect.to(
+          0,
+          DelayedEffectController(
+            LinearEffectController(0.1),
+            delay: d,
+          )),
       MoveEffect.to(
         Vector2(
             0,
@@ -23,7 +29,10 @@ class PickUpTransition extends Transition<CardState> {
                 .viewfinder
                 .visibleGameSize!
                 .y),
-        CurvedEffectController(0.3, Curves.easeInCubic),
+        DelayedEffectController(
+          CurvedEffectController(0.3, Curves.easeInCubic),
+          delay: d,
+        ),
       )
     ]);
   }

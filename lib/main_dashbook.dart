@@ -33,22 +33,20 @@ Widget _pickUp(ctx) {
     ..onDebug((game) async {
       game.viewfinder.visibleGameSize = Vector2.all(2000);
       game.world.children.register<Card>();
-      game.world.addAll([
-        Card(
+      final s = await Sprite.load('card.png');
+      game.world.addAll(List.generate(
+        5,
+        (index) => Card(
           id: 0,
           position: Vector2.zero(),
-          sprite: await Sprite.load('card.png'),
-        )..angle = 0.2,
-        Card(
-          id: 1,
-          position: Vector2.zero(),
-          sprite: await Sprite.load('card.png'),
-        )..angle = 0.4
-      ]);
+          sprite: s,
+        )..angle = 0.2 * index,
+      ));
     });
+  var delay = 0.0;
   ctx.action('pick', (_) {
-    for (var c in game.world.children.query<Card>()) {
-      c.onCommand(Command(Card.kPickUp));
+    for (var c in game.world.children.query<Card>().reversed) {
+      c.onCommand(Command(Card.kPickUp, delay += 0.1));
     }
   });
   return GameWrapper(game: game);
