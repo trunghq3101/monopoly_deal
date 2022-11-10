@@ -59,7 +59,7 @@ Widget _pickUpAndShowHand(ctx) {
             .map(
               (e) => CardFront(
                 id: e.id,
-                sprite: e.sprite,
+                sprite: gameAssets.cardSprites[e.id],
                 size: Card.kCardSize,
                 anchor: Anchor.topCenter,
               ),
