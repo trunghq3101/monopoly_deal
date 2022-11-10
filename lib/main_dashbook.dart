@@ -2,12 +2,13 @@ import 'package:dashbook/dashbook.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart' hide Card;
 import 'package:monopoly_deal/dev/game_wrapper.dart';
-import 'package:monopoly_deal/dev/table_layout_game.dart';
 import 'package:monopoly_deal/game_components/base_game.dart';
 import 'package:monopoly_deal/game_components/card_front.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
+import 'package:monopoly_deal/game_components/playground_map.dart';
 import 'package:monopoly_deal/game_components/tappable_overlay.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
+import 'package:tiled/tiled.dart';
 
 import 'dev/components.dart';
 import 'game_components/card.dart';
@@ -18,15 +19,76 @@ void main() {
 
   dashbook
       .storiesOf('2 players game')
+      .add('overview', _overview)
       .add('pick up and show hand', _pickUpAndShowHand)
       .add('pick up', _pickUp)
-      .add('overview', _overview)
       .add('tap outside', _tapOutside)
       .add('hand', _hand)
       .add('holding cards', _holdingCards)
       .add('5 cards fly to hand', _fiveCardsFlyToHand);
 
   runApp(dashbook);
+}
+
+Widget _overview(ctx) {
+  final game = BaseGame()
+    ..onDebug((game) async {
+      game.viewfinder.visibleGameSize = Vector2.all(5000);
+      game.world.add(PlaygroundMap(
+        'two_players.tmx',
+        {
+          'deck': (r, _, __) => game.world.add(
+                Card(
+                    id: 0,
+                    position: Vector2(r.x, r.y),
+                    sprite: gameAssets.sprites['card']),
+              ),
+          'deal_region_0': (r, _, __) => game.world.add(
+                PositionComponent(
+                  position: Vector2(r.x, r.y),
+                  size: Vector2(r.width, r.height),
+                  anchor: Anchor.center,
+                ),
+              ),
+          'deal_region_1': (r, _, __) => game.world.add(
+                PositionComponent(
+                  position: Vector2(r.x, r.y),
+                  size: Vector2(r.width, r.height),
+                  anchor: Anchor.center,
+                ),
+              ),
+          'play_region_0': (r, tiledMap, name) async {
+            final slots = tiledMap.getLayer<ObjectGroup>(r.name)!;
+            for (var s in slots.objects) {
+              game.world.add(PositionComponent(
+                position: Vector2(s.x, s.y),
+                size: Vector2(
+                  (await s.template!)!.object!.width,
+                  (await s.template!)!.object!.height,
+                ),
+                anchor: Anchor.center,
+              ));
+            }
+          },
+          'play_region_1': (r, tiledMap, name) async {
+            final slots = tiledMap.getLayer<ObjectGroup>(r.name)!;
+            for (var s in slots.objects) {
+              game.world.add(PositionComponent(
+                position: Vector2(s.x, s.y),
+                size: Vector2(
+                  (await s.template!)!.object!.width,
+                  (await s.template!)!.object!.height,
+                ),
+                anchor: Anchor.center,
+              ));
+            }
+          }
+        },
+      ));
+      game.viewfinder.position = Vector2.zero();
+    });
+  ctx.action('pick', (_) {});
+  return GameWrapper(game: game);
 }
 
 Widget _pickUpAndShowHand(ctx) {
@@ -167,10 +229,5 @@ Widget _tapOutside(ctx) {
         ..size = Vector2.all(400)
         ..position = Vector2.all(500));
     });
-  return GameWrapper(game: game);
-}
-
-Widget _overview(ctx) {
-  final game = TableLayoutGame();
   return GameWrapper(game: game);
 }

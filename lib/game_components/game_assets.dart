@@ -10,10 +10,11 @@ class GameAssets {
   int? Function() randomSeed = () => null;
   final Map<String, RiveFile> _riveFiles = {};
   List<Sprite> cardSprites = [];
+  Map<String, Sprite> sprites = {};
 
   Future<void> preCache() async {
     _riveFiles['buttons'] = await RiveFile.asset('assets/images/buttons.riv');
-    await Flame.images.load('card.png');
+    sprites['card'] = Sprite(await Flame.images.load('card.png'));
     for (var i = 1; i < 10; i++) {
       await Flame.images.load('0$i.png');
     }
