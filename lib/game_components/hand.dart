@@ -11,49 +11,46 @@ import 'package:monopoly_deal/game_components/extensions.dart';
 import 'package:monopoly_deal/game_components/mixins.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
-class ExpandTransition extends Transition {
+class ExpandTransition extends Transition<HandState> {
   final Hand hand;
 
-  ExpandTransition(super.stateMachine, this.hand);
+  ExpandTransition(super.dest, this.hand);
 
   @override
-  State? onActivate(Command command) {
+  void onActivate(dynamic payload) {
     hand.add(MoveEffect.by(
       Vector2(0, -(hand.size.y - 100)),
       EffectController(speed: 2000, curve: Curves.easeOut),
     ));
-    return stateMachine.state(HandState.expanded);
   }
 }
 
-class CollapseTransition extends Transition {
+class CollapseTransition extends Transition<HandState> {
   final Hand hand;
 
-  CollapseTransition(super.stateMachine, this.hand);
+  CollapseTransition(super.dest, this.hand);
 
   @override
-  State? onActivate(Command command) {
+  void onActivate(dynamic payload) {
     hand.add(MoveEffect.by(
       Vector2(0, hand.size.y - 100),
       EffectController(speed: 2000, curve: Curves.easeOut),
     ));
-    return stateMachine.state(HandState.collapsed);
   }
 }
 
-class AddCardsTransition extends Transition {
+class AddCardsTransition extends Transition<HandState> {
   final Hand hand;
 
-  AddCardsTransition(super.stateMachine, this.hand);
+  AddCardsTransition(super.dest, this.hand);
 
   @override
-  State? onActivate(Command command) {
-    final List<CardFront> cards = command.payload;
+  void onActivate(dynamic payload) {
+    final List<CardFront> cards = payload;
     hand.preparePositionsForMore(cards.length);
     hand.shiftCards();
     hand.addCards(cards);
     hand.updatePositions();
-    return stateMachine.state(HandState.notEmpty);
   }
 }
 
@@ -84,10 +81,10 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
         );
 
   final _stateMachines = [
-    StateMachine()
+    StateMachine<HandState>()
       ..start(HandState.expanded)
       ..newState(HandState.collapsed),
-    StateMachine()
+    StateMachine<HandState>()
       ..start(HandState.empty)
       ..newState(HandState.notEmpty),
   ];
@@ -104,25 +101,19 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
     super.onLoad();
     children.register<CardFront>();
     _stateMachines[0]
-      ..addTransition(
-        HandState.collapsed,
-        MapEntry(
-            Command(kTapInsideHand), ExpandTransition(_stateMachines[0], this)),
-      )
-      ..addTransition(
-        HandState.expanded,
-        MapEntry(Command(kTapOutsideHand),
-            CollapseTransition(_stateMachines[0], this)),
-      );
+      ..state(HandState.collapsed).addTransitions({
+        Command(kTapInsideHand): ExpandTransition(HandState.expanded, this),
+      })
+      ..state(HandState.expanded).addTransitions({
+        Command(kTapOutsideHand): CollapseTransition(HandState.collapsed, this),
+      });
     _stateMachines[1]
-      ..addTransition(
-          HandState.empty,
-          MapEntry(
-              Command(kPickUp), AddCardsTransition(_stateMachines[1], this)))
-      ..addTransition(
-          HandState.notEmpty,
-          MapEntry(
-              Command(kPickUp), AddCardsTransition(_stateMachines[1], this)));
+      ..state(HandState.empty).addTransitions({
+        Command(kPickUp): AddCardsTransition(HandState.notEmpty, this),
+      })
+      ..state(HandState.notEmpty).addTransitions({
+        Command(kPickUp): AddCardsTransition(HandState.notEmpty, this),
+      });
     final r = width * 1.25;
     final circleCenterX = width / 2 + width / 16;
     final paddingH = width / 5;

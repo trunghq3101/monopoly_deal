@@ -1,14 +1,13 @@
 part of simple_state_machine;
 
-abstract class Transition {
-  final StateMachine stateMachine;
+abstract class Transition<T> {
+  final T dest;
+  Transition(this.dest);
 
-  Transition(this.stateMachine);
-
-  State? _activate(Command command) {
+  FutureOr<void> _activate(dynamic payload) {
     printDebug(runtimeType);
-    return onActivate(command);
+    return onActivate(payload);
   }
 
-  State? onActivate(Command command);
+  FutureOr<void> onActivate(dynamic payload);
 }

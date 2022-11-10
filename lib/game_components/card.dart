@@ -5,13 +5,13 @@ import 'package:flame/game.dart';
 import 'package:flutter/animation.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
-class PickUpTransition extends Transition {
+class PickUpTransition extends Transition<CardState> {
   final Card card;
 
-  PickUpTransition(super.stateMachine, this.card);
+  PickUpTransition(super.dest, this.card);
 
   @override
-  State? onActivate(Command command) {
+  void onActivate(dynamic payload) {
     card.addAll([
       RotateEffect.to(0, LinearEffectController(0.1)),
       MoveEffect.to(
@@ -26,7 +26,6 @@ class PickUpTransition extends Transition {
         CurvedEffectController(0.3, Curves.easeInCubic),
       )
     ]);
-    return stateMachine.state(CardState.pickedUp);
   }
 }
 
@@ -47,14 +46,17 @@ class Card extends SpriteComponent with HasGameReference<FlameGame> {
   static const kPickUp = 0;
 
   final int id;
-  final _stateMachines = [StateMachine()..start(CardState.dealed)];
+  final _stateMachines = [
+    StateMachine<CardState>()
+      ..start(CardState.dealed)
+      ..newState(CardState.pickedUp)
+  ];
 
   @override
   Future<void>? onLoad() {
-    _stateMachines[0].addTransition(
-      CardState.dealed,
-      MapEntry(Command(kPickUp), PickUpTransition(_stateMachines[0], this)),
-    );
+    _stateMachines[0].state(CardState.dealed).addTransitions({
+      Command(kPickUp): PickUpTransition(CardState.pickedUp, this),
+    });
     return super.onLoad();
   }
 

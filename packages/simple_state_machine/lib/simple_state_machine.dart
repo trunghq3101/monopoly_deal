@@ -3,6 +3,8 @@
 /// More dartdocs go here.
 library simple_state_machine;
 
+import 'dart:async';
+
 import 'src/extensions.dart';
 import 'src/utils.dart';
 

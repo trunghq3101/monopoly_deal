@@ -8,18 +8,7 @@ class State<T> {
 
   String get debugName => identifier.toString();
 
-  void addTransition(MapEntry<Command, Transition> transition) {
-    _transitions.addEntries([transition]);
-  }
-
-  State handle(Command command) {
-    printDebug(debugName);
-    final newState = _transitions.entries
-            .firstWhereOrNull((e) => e.key == command)
-            ?.value
-            ._activate(command) ??
-        this;
-    printDebug(newState.debugName);
-    return newState;
+  void addTransitions(Map<Command, Transition> transitions) {
+    _transitions.addAll(transitions);
   }
 }

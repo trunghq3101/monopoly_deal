@@ -1,10 +1,16 @@
 part of simple_state_machine;
 
 class StateMachine<T> {
-  late State _state;
+  late State<T> _state;
   final _states = <T, State<T>>{};
 
-  State? state(T identifier) => _states[identifier];
+  State<T> state(T identifier) {
+    if (!_states.containsKey(identifier)) {
+      throw ArgumentError.value(
+          identifier, 'identifier', 'Not exist state identifier');
+    }
+    return _states[identifier]!;
+  }
 
   void start(T identifier) {
     _state = newState(identifier);
@@ -20,14 +26,17 @@ class StateMachine<T> {
     return state;
   }
 
-  void addTransition(T from, MapEntry<Command, Transition> transition) {
-    if (!_states.containsKey(from)) {
-      throw ArgumentError.value(from, 'from', 'Not existed identifier');
-    }
-    _states[from]!.addTransition(transition);
-  }
-
   void onCommand(Command command) {
-    _state = _state.handle(command);
+    final t = _state._transitions.entries
+        .firstWhereOrNull((e) => e.key == command)
+        ?.value;
+    if (t != null) {
+      if (!_states.containsKey(t.dest)) {
+        throw ArgumentError.value(
+            t.dest, 'destination', 'Not exist destination state');
+      }
+      t._activate(command.payload);
+      _state = _states[t.dest]!;
+    }
   }
 }
