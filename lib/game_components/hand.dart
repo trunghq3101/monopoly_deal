@@ -73,21 +73,14 @@ enum HandState {
   notEmpty,
 }
 
-class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
+class Hand extends HudMarginComponent
+    with TapCallbacks, TapOutsideCallback, HasStateMachine {
   Hand({super.children})
       : super(
           anchor: Anchor.bottomCenter,
           position: Vector2.zero(),
         );
 
-  final _stateMachines = [
-    StateMachine<HandState>()
-      ..start(HandState.expanded)
-      ..newState(HandState.collapsed),
-    StateMachine<HandState>()
-      ..start(HandState.empty)
-      ..newState(HandState.notEmpty),
-  ];
   final _oldCardPositions = <CardPosition>[];
   final List<CardPosition> _newCardPositions = [];
   late CircleComponent _circle;
@@ -100,20 +93,22 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
     size = _calcSize(gameRef.size);
     super.onLoad();
     children.register<CardFront>();
-    _stateMachines[0]
-      ..state(HandState.collapsed).addTransitions({
-        Command(kTapInsideHand): ExpandTransition(HandState.expanded, this),
-      })
-      ..state(HandState.expanded).addTransitions({
+    newMachine<HandState>({
+      HandState.expanded: {
         Command(kTapOutsideHand): CollapseTransition(HandState.collapsed, this),
-      });
-    _stateMachines[1]
-      ..state(HandState.empty).addTransitions({
+      },
+      HandState.collapsed: {
+        Command(kTapInsideHand): ExpandTransition(HandState.expanded, this),
+      }
+    });
+    newMachine<HandState>({
+      HandState.empty: {
         Command(kPickUp): AddCardsTransition(HandState.notEmpty, this),
-      })
-      ..state(HandState.notEmpty).addTransitions({
+      },
+      HandState.notEmpty: {
         Command(kPickUp): AddCardsTransition(HandState.notEmpty, this),
-      });
+      }
+    });
     final r = width * 1.25;
     final circleCenterX = width / 2 + width / 16;
     final paddingH = width / 5;
@@ -203,12 +198,6 @@ class Hand extends HudMarginComponent with TapCallbacks, TapOutsideCallback {
     _oldCardPositions.clear();
     _oldCardPositions.addAll(_newCardPositions);
     _newCardPositions.clear();
-  }
-
-  void onCommand(Command command) {
-    for (var m in _stateMachines) {
-      m.onCommand(command);
-    }
   }
 
   void _preparePositions(int n) {

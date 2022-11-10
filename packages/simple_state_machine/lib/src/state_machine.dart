@@ -6,14 +6,9 @@ class StateMachine<T> {
 
   State<T> state(T identifier) {
     if (!_states.containsKey(identifier)) {
-      throw ArgumentError.value(
-          identifier, 'identifier', 'Not exist state identifier');
+      return newState(identifier);
     }
     return _states[identifier]!;
-  }
-
-  void start(T identifier) {
-    _state = newState(identifier);
   }
 
   State<T> newState(T identifier) {
@@ -22,6 +17,9 @@ class StateMachine<T> {
           identifier, 'identifier', 'Duplicated state identifier');
     }
     final state = State<T>(identifier);
+    if (_states.isEmpty) {
+      _state = state;
+    }
     _states[identifier] = state;
     return state;
   }

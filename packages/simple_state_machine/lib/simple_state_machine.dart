@@ -10,6 +10,7 @@ import 'src/utils.dart';
 
 part 'src/command.dart';
 part 'src/flags.dart';
+part 'src/mixins.dart';
 part 'src/state.dart';
 part 'src/state_machine.dart';
 part 'src/transition.dart';

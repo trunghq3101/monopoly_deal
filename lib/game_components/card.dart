@@ -31,7 +31,8 @@ class PickUpTransition extends Transition<CardState> {
 
 enum CardState { dealed, pickedUp }
 
-class Card extends SpriteComponent with HasGameReference<FlameGame> {
+class Card extends SpriteComponent
+    with HasGameReference<FlameGame>, HasStateMachine {
   Card({
     required this.id,
     super.sprite,
@@ -46,23 +47,15 @@ class Card extends SpriteComponent with HasGameReference<FlameGame> {
   static const kPickUp = 0;
 
   final int id;
-  final _stateMachines = [
-    StateMachine<CardState>()
-      ..start(CardState.dealed)
-      ..newState(CardState.pickedUp)
-  ];
 
   @override
   Future<void>? onLoad() {
-    _stateMachines[0].state(CardState.dealed).addTransitions({
-      Command(kPickUp): PickUpTransition(CardState.pickedUp, this),
+    newMachine<CardState>({
+      CardState.dealed: {
+        Command(kPickUp): PickUpTransition(CardState.pickedUp, this),
+      },
+      CardState.pickedUp: {}
     });
     return super.onLoad();
-  }
-
-  void onCommand(Command command) {
-    for (var m in _stateMachines) {
-      m.onCommand(command);
-    }
   }
 }
