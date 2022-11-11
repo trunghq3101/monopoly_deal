@@ -4,7 +4,6 @@ import 'package:monopoly_deal/game_components/game_assets.dart';
 import 'package:monopoly_deal/game_components/main_game.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 import 'package:monopoly_deal/repositories/game_repository.dart';
-import 'package:monopoly_deal/widgets/debug_board.dart';
 import 'package:monopoly_deal/widgets/pause_menu.dart';
 
 class GamePage extends StatefulWidget {
@@ -40,21 +39,6 @@ class _GamePageState extends State<GamePage> {
             ),
           )
         : Scaffold(
-            floatingActionButton: Builder(
-              builder: (context) {
-                return FloatingActionButton.small(
-                  onPressed: () {
-                    showBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return DebugBoard(mainGame: game);
-                      },
-                    );
-                  },
-                  child: const Icon(Icons.bug_report),
-                );
-              },
-            ),
             body: GameWidget(
               game: game,
               overlayBuilderMap: {

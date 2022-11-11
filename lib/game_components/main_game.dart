@@ -3,15 +3,21 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
 import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/models/game_model.dart';
+import 'package:simple_state_machine/simple_state_machine.dart';
+import 'package:tiled/tiled.dart';
 
 import 'card.dart';
 import 'deck.dart';
-import 'field.dart';
 import 'game_assets.dart';
-import 'hand.dart';
+import 'main_game_states.dart';
 import 'pause_button.dart';
+import 'playground_map.dart';
 
-class MainGame extends FlameGame with HasTappableComponents {
+class DealTarget extends PositionComponent {
+  DealTarget({super.position, super.size, super.anchor});
+}
+
+class MainGame extends FlameGame with HasTappableComponents, HasStateMachine {
   MainGame(this.gameModel);
 
   final GameModel gameModel;
@@ -19,7 +25,6 @@ class MainGame extends FlameGame with HasTappableComponents {
   late final CameraComponent cameraComponent;
   late final Viewfinder viewfinder;
   late final Viewport viewport;
-  late final Deck deck;
   Vector2 get visibleGameSize => viewfinder.visibleGameSize!;
 
   @override
@@ -30,63 +35,98 @@ class MainGame extends FlameGame with HasTappableComponents {
     await gameAssets.preCache();
     add(FpsTextComponent(position: Vector2(0, size.y - 24)));
 
-    deck = Deck(
-      cardSprite: await Sprite.load('card.png'),
-      // dealTargets: [
-      //   PickUpRegion(
-      //     size: Card.kCardSize * 1.5,
-      //     position: Vector2(0, Card.kCardHeight * 2.5),
-      //     anchor: Anchor.center,
-      //   ),
-      //   PositionComponent(
-      //     size: Card.kCardSize * 1.5,
-      //     position: Vector2(0, Card.kCardHeight * -2.5),
-      //     anchor: Anchor.center,
-      //   ),
-      // ],
-    );
     world = World();
-    world.children.register<Deck>();
-    await world.addAll([
-      Field(position: Vector2(0, -Card.kCardHeight * 3.5)),
-      deck,
-      // ...deck.dealTargets,
-    ]);
-
     cameraComponent = CameraComponent(world: world);
-    cameraComponent.follow(deck);
-
     viewport = cameraComponent.viewport;
-    viewport.children
-      ..register<PauseButton>()
-      ..register<Hand>();
-    await viewport.addAll([
-      PauseButton(),
-      Hand(),
-    ]);
-
     viewfinder = cameraComponent.viewfinder;
     viewfinder.visibleGameSize = Card.kCardSize * 1.2;
 
-    children
-      ..register<World>()
-      ..register<CameraComponent>();
+    viewport.children.register<PauseButton>();
+    world.children
+      ..register<Deck>()
+      ..register<DealTarget>();
+
     await addAll([world, cameraComponent]);
+    await viewport.addAll([PauseButton()]);
+
+    newMachine({
+      CameraState.initial: {
+        Command(Deck.kDeal):
+            DealCameraTransition(CameraState.initial, cameraComponent),
+      }
+    });
+
+    world.add(PlaygroundMap(
+      'two_players.tmx',
+      {
+        'deck': (r, _, __) => world.add(
+              Deck(
+                cardSprite: gameAssets.sprites['card']!,
+                position: Vector2(r.x, r.y),
+              ),
+            ),
+        'deal_region_0': (r, _, __) => world.add(
+              DealTarget(
+                position: Vector2(r.x, r.y),
+                size: Vector2(r.width, r.height),
+                anchor: Anchor.center,
+              ),
+            ),
+        'deal_region_1': (r, _, __) => world.add(
+              DealTarget(
+                position: Vector2(r.x, r.y),
+                size: Vector2(r.width, r.height),
+                anchor: Anchor.center,
+              ),
+            ),
+        'play_region_0': (r, tiledMap, name) async {
+          final slots = tiledMap.getLayer<ObjectGroup>(r.name)!;
+          for (var s in slots.objects) {
+            world.add(PositionComponent(
+              position: Vector2(s.x, s.y),
+              size: Vector2(
+                (await s.template!)!.object!.width,
+                (await s.template!)!.object!.height,
+              ),
+              anchor: Anchor.center,
+            ));
+          }
+        },
+        'play_region_1': (r, tiledMap, name) async {
+          final slots = tiledMap.getLayer<ObjectGroup>(r.name)!;
+          for (var s in slots.objects) {
+            world.add(PositionComponent(
+              position: Vector2(s.x, s.y),
+              size: Vector2(
+                (await s.template!)!.object!.width,
+                (await s.template!)!.object!.height,
+              ),
+              anchor: Anchor.center,
+            ));
+          }
+        }
+      },
+    ));
   }
 
   @override
   void onMount() {
     super.onMount();
-    TimerComponent(
-      period: 1.8,
-      onTick: () {
-        _deal();
-      },
-      removeOnFinish: true,
-    ).addToParent(this);
-  }
-
-  void _deal() {
-    // deck.deal();
+    addAll([
+      TimerComponent(
+          period: 0.1,
+          removeOnFinish: true,
+          onTick: () {
+            world.children.query<Deck>().first.onCommand(Command(Deck.kBuild));
+          }),
+      TimerComponent(
+          period: 1.8,
+          removeOnFinish: true,
+          onTick: () {
+            onCommand(Command(Deck.kDeal));
+            world.children.query<Deck>().first.onCommand(
+                Command(Deck.kDeal, world.children.query<DealTarget>()));
+          })
+    ]);
   }
 }

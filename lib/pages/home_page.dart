@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     _player = PlayerModel(hand: []);
     _onMainBtnPressed = () {
       _gameModel.addPlayer(_player, widget.gameRepository);
+      _gameModel.addPlayer(PlayerModel(hand: []), widget.gameRepository);
       _onMainBtnPressed = null;
     };
     Timer.periodic(
