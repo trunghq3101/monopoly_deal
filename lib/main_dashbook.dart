@@ -67,6 +67,7 @@ Widget _overview(ctx) {
   late final Deck deck;
   late final PositionComponent dealTarget0;
   late final PositionComponent dealTarget1;
+  final hand = Hand();
   final game = BaseGame()
     ..onDebug((game) async {
       game.newMachine({
@@ -76,6 +77,8 @@ Widget _overview(ctx) {
         }
       });
       game.viewfinder.visibleGameSize = Vector2.all(1000);
+      game.add(TappableOverlay());
+      game.add(hand);
       game.world.add(PlaygroundMap(
         'two_players.tmx',
         {
@@ -138,6 +141,26 @@ Widget _overview(ctx) {
       [dealTarget0, dealTarget1],
     ));
     game.onCommand(Command(Deck.kDeal));
+  });
+  var delay = 0.0;
+  ctx.action('pick', (_) {
+    for (var c in dealTarget0.children.query<Card>().reversed) {
+      c.onCommand(Command(Card.kPickUp, delay += 0.1));
+    }
+    hand.onCommand(Command(
+        Hand.kPickUp,
+        dealTarget0.children
+            .query<Card>()
+            .reversed
+            .map(
+              (e) => CardFront(
+                id: e.id,
+                sprite: gameAssets.cardSprites[e.id],
+                size: Card.kCardSize,
+                anchor: Anchor.topCenter,
+              ),
+            )
+            .toList()));
   });
   return GameWrapper(game: game);
 }
