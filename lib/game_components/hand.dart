@@ -84,6 +84,7 @@ class Hand extends HudMarginComponent
   late CircleComponent _circle;
   late double _startingAngle;
   late double _angleDiff;
+  late StateMachine _fillUpMachine;
 
   @override
   Future<void> onLoad() async {
@@ -99,7 +100,7 @@ class Hand extends HudMarginComponent
         Command(kTapInsideHand): ExpandTransition(HandState.expanded, this),
       }
     });
-    newMachine<HandState>({
+    _fillUpMachine = newMachine<HandState>({
       HandState.empty: {
         Command(kPickUp): AddCardsTransition(HandState.notEmpty, this),
       },
@@ -126,6 +127,10 @@ class Hand extends HudMarginComponent
 
   @override
   void onTapDown(TapDownEvent event) {
+    if (_fillUpMachine.current.identifier == HandState.empty) {
+      event.continuePropagation = true;
+      return;
+    }
     tapOutsideSubscribed = true;
     onCommand(Command(kTapInsideHand));
   }

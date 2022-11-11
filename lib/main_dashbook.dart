@@ -1,8 +1,8 @@
 import 'package:dashbook/dashbook.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart' hide Card;
+import 'package:monopoly_deal/dev/base_game.dart';
 import 'package:monopoly_deal/dev/game_wrapper.dart';
-import 'package:monopoly_deal/game_components/base_game.dart';
 import 'package:monopoly_deal/game_components/card_front.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
 import 'package:monopoly_deal/game_components/main_game_states.dart';
@@ -13,6 +13,7 @@ import 'package:tiled/tiled.dart';
 
 import 'dev/components.dart';
 import 'game_components/card.dart';
+import 'game_components/deal_target.dart';
 import 'game_components/deck.dart';
 import 'game_components/game_assets.dart';
 
@@ -89,14 +90,14 @@ Widget _overview(ctx) {
                 ),
               ),
           'deal_region_0': (r, _, __) => game.world.add(
-                dealTarget0 = PositionComponent(
+                dealTarget0 = DealTarget(
                   position: Vector2(r.x, r.y),
                   size: Vector2(r.width, r.height),
                   anchor: Anchor.center,
                 ),
               ),
           'deal_region_1': (r, _, __) => game.world.add(
-                dealTarget1 = PositionComponent(
+                dealTarget1 = DealTarget(
                   position: Vector2(r.x, r.y),
                   size: Vector2(r.width, r.height),
                   anchor: Anchor.center,

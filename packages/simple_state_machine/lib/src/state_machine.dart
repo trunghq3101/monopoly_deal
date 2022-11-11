@@ -4,6 +4,8 @@ class StateMachine<T> {
   late State<T> _state;
   final _states = <T, State<T>>{};
 
+  State get current => _state;
+
   State<T> state(T identifier) {
     if (!_states.containsKey(identifier)) {
       return newState(identifier);

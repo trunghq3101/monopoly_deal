@@ -2,20 +2,19 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
 import 'package:flutter/painting.dart';
+import 'package:monopoly_deal/game_components/hand.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 import 'package:tiled/tiled.dart';
 
 import 'card.dart';
+import 'deal_target.dart';
 import 'deck.dart';
 import 'game_assets.dart';
 import 'main_game_states.dart';
 import 'pause_button.dart';
 import 'playground_map.dart';
-
-class DealTarget extends PositionComponent {
-  DealTarget({super.position, super.size, super.anchor});
-}
+import 'tappable_overlay.dart';
 
 class MainGame extends FlameGame with HasTappableComponents, HasStateMachine {
   MainGame(this.gameModel);
@@ -41,12 +40,13 @@ class MainGame extends FlameGame with HasTappableComponents, HasStateMachine {
     viewfinder = cameraComponent.viewfinder;
     viewfinder.visibleGameSize = Card.kCardSize * 1.2;
 
+    children.register<World>();
     viewport.children.register<PauseButton>();
     world.children
       ..register<Deck>()
       ..register<DealTarget>();
 
-    await addAll([world, cameraComponent]);
+    await addAll([world, cameraComponent, TappableOverlay(), Hand()]);
     await viewport.addAll([PauseButton()]);
 
     newMachine({
@@ -66,7 +66,7 @@ class MainGame extends FlameGame with HasTappableComponents, HasStateMachine {
               ),
             ),
         'deal_region_0': (r, _, __) => world.add(
-              DealTarget(
+              PickUpRegion(
                 position: Vector2(r.x, r.y),
                 size: Vector2(r.width, r.height),
                 anchor: Anchor.center,
