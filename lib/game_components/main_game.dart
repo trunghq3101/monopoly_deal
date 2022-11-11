@@ -88,6 +88,6 @@ class MainGame extends FlameGame with HasTappableComponents {
   }
 
   void _deal() {
-    deck.deal();
+    // deck.deal();
   }
 }

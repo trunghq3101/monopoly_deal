@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
+import 'package:simple_state_machine/simple_state_machine.dart';
 
 import 'game_assets.dart';
 
-class BaseGame extends FlameGame with HasTappableComponents {
+class BaseGame extends FlameGame with HasTappableComponents, HasStateMachine {
   late final World world;
   late final CameraComponent cameraComponent;
   late final Viewfinder viewfinder;

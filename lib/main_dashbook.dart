@@ -5,6 +5,7 @@ import 'package:monopoly_deal/dev/game_wrapper.dart';
 import 'package:monopoly_deal/game_components/base_game.dart';
 import 'package:monopoly_deal/game_components/card_front.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
+import 'package:monopoly_deal/game_components/main_game_states.dart';
 import 'package:monopoly_deal/game_components/playground_map.dart';
 import 'package:monopoly_deal/game_components/tappable_overlay.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
@@ -12,6 +13,7 @@ import 'package:tiled/tiled.dart';
 
 import 'dev/components.dart';
 import 'game_components/card.dart';
+import 'game_components/deck.dart';
 import 'game_components/game_assets.dart';
 
 void main() {
@@ -19,6 +21,7 @@ void main() {
 
   dashbook
       .storiesOf('2 players game')
+      .add('deck', _deck)
       .add('overview', _overview)
       .add('pick up and show hand', _pickUpAndShowHand)
       .add('pick up', _pickUp)
@@ -28,6 +31,33 @@ void main() {
       .add('5 cards fly to hand', _fiveCardsFlyToHand);
 
   runApp(dashbook);
+}
+
+Widget _deck(ctx) {
+  late final Deck deck;
+  final game = BaseGame()
+    ..onDebug((game) async {
+      deck = Deck(dealTargets: [
+        PositionComponent(position: Vector2(0, -1000)),
+        PositionComponent(position: Vector2(0, 1000)),
+      ], cardSprite: gameAssets.sprites['card']!);
+      game.viewfinder.visibleGameSize = Vector2.all(1000);
+      game.world.add(deck);
+      game.newMachine({
+        CameraState.initial: {
+          Command(Deck.kDeal):
+              DealCameraTransition(CameraState.initial, game.cameraComponent),
+        }
+      });
+    });
+  ctx.action('build', (_) {
+    deck.onCommand(Command(Deck.kBuild));
+  });
+  ctx.action('deal', (_) {
+    deck.onCommand(Command(Deck.kDeal));
+    game.onCommand(Command(Deck.kDeal));
+  });
+  return GameWrapper(game: game);
 }
 
 Widget _overview(ctx) {
