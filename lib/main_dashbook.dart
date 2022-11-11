@@ -21,8 +21,8 @@ void main() {
 
   dashbook
       .storiesOf('2 players game')
-      .add('deck', _deck)
       .add('overview', _overview)
+      .add('deck', _deck)
       .add('pick up and show hand', _pickUpAndShowHand)
       .add('pick up', _pickUp)
       .add('tap outside', _tapOutside)
@@ -37,10 +37,7 @@ Widget _deck(ctx) {
   late final Deck deck;
   final game = BaseGame()
     ..onDebug((game) async {
-      deck = Deck(dealTargets: [
-        PositionComponent(position: Vector2(0, -1000)),
-        PositionComponent(position: Vector2(0, 1000)),
-      ], cardSprite: gameAssets.sprites['card']!);
+      deck = Deck(cardSprite: gameAssets.sprites['card']!);
       game.viewfinder.visibleGameSize = Vector2.all(1000);
       game.world.add(deck);
       game.newMachine({
@@ -54,34 +51,49 @@ Widget _deck(ctx) {
     deck.onCommand(Command(Deck.kBuild));
   });
   ctx.action('deal', (_) {
-    deck.onCommand(Command(Deck.kDeal));
+    deck.onCommand(Command(
+      Deck.kDeal,
+      [
+        PositionComponent(position: Vector2(0, -1000)),
+        PositionComponent(position: Vector2(0, 1000)),
+      ],
+    ));
     game.onCommand(Command(Deck.kDeal));
   });
   return GameWrapper(game: game);
 }
 
 Widget _overview(ctx) {
+  late final Deck deck;
+  late final PositionComponent dealTarget0;
+  late final PositionComponent dealTarget1;
   final game = BaseGame()
     ..onDebug((game) async {
-      game.viewfinder.visibleGameSize = Vector2.all(5000);
+      game.newMachine({
+        CameraState.initial: {
+          Command(Deck.kDeal):
+              DealCameraTransition(CameraState.initial, game.cameraComponent),
+        }
+      });
+      game.viewfinder.visibleGameSize = Vector2.all(1000);
       game.world.add(PlaygroundMap(
         'two_players.tmx',
         {
           'deck': (r, _, __) => game.world.add(
-                Card(
-                    id: 0,
-                    position: Vector2(r.x, r.y),
-                    sprite: gameAssets.sprites['card']),
+                deck = Deck(
+                  cardSprite: gameAssets.sprites['card']!,
+                  position: Vector2(r.x, r.y),
+                ),
               ),
           'deal_region_0': (r, _, __) => game.world.add(
-                PositionComponent(
+                dealTarget0 = PositionComponent(
                   position: Vector2(r.x, r.y),
                   size: Vector2(r.width, r.height),
                   anchor: Anchor.center,
                 ),
               ),
           'deal_region_1': (r, _, __) => game.world.add(
-                PositionComponent(
+                dealTarget1 = PositionComponent(
                   position: Vector2(r.x, r.y),
                   size: Vector2(r.width, r.height),
                   anchor: Anchor.center,
@@ -117,7 +129,16 @@ Widget _overview(ctx) {
       ));
       game.viewfinder.position = Vector2.zero();
     });
-  ctx.action('pick', (_) {});
+  ctx.action('build', (_) {
+    deck.onCommand(Command(Deck.kBuild));
+  });
+  ctx.action('deal', (_) {
+    deck.onCommand(Command(
+      Deck.kDeal,
+      [dealTarget0, dealTarget1],
+    ));
+    game.onCommand(Command(Deck.kDeal));
+  });
   return GameWrapper(game: game);
 }
 

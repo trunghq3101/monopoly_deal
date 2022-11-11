@@ -2,7 +2,6 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
 import 'package:flutter/painting.dart';
-import 'package:monopoly_deal/game_components/pick_up_region.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 
 import 'card.dart';
@@ -33,25 +32,25 @@ class MainGame extends FlameGame with HasTappableComponents {
 
     deck = Deck(
       cardSprite: await Sprite.load('card.png'),
-      dealTargets: [
-        PickUpRegion(
-          size: Card.kCardSize * 1.5,
-          position: Vector2(0, Card.kCardHeight * 2.5),
-          anchor: Anchor.center,
-        ),
-        PositionComponent(
-          size: Card.kCardSize * 1.5,
-          position: Vector2(0, Card.kCardHeight * -2.5),
-          anchor: Anchor.center,
-        ),
-      ],
+      // dealTargets: [
+      //   PickUpRegion(
+      //     size: Card.kCardSize * 1.5,
+      //     position: Vector2(0, Card.kCardHeight * 2.5),
+      //     anchor: Anchor.center,
+      //   ),
+      //   PositionComponent(
+      //     size: Card.kCardSize * 1.5,
+      //     position: Vector2(0, Card.kCardHeight * -2.5),
+      //     anchor: Anchor.center,
+      //   ),
+      // ],
     );
     world = World();
     world.children.register<Deck>();
     await world.addAll([
       Field(position: Vector2(0, -Card.kCardHeight * 3.5)),
       deck,
-      ...deck.dealTargets,
+      // ...deck.dealTargets,
     ]);
 
     cameraComponent = CameraComponent(world: world);

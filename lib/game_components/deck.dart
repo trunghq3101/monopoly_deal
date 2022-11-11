@@ -52,7 +52,7 @@ class DealTransition extends Transition {
 
   @override
   FutureOr<void> onActivate(payload) async {
-    final dealTargets = deck.dealTargets;
+    final List<PositionComponent> dealTargets = payload;
     // deck.priority = 1;
     // for (var d in dealTargets) {
     //   d.priority = 0;
@@ -107,17 +107,15 @@ enum DeckState { initial, built, dealt }
 
 class Deck extends PositionComponent with HasGameRef, HasStateMachine {
   Deck({
-    required this.dealTargets,
     required this.cardSprite,
+    super.position,
   }) : super(
-          position: Vector2(0, 0),
           size: Card.kCardSize,
           anchor: Anchor.center,
         );
   static const kCardAmount = 106;
   static const kBuild = 0;
   static const kDeal = 1;
-  final List<PositionComponent> dealTargets;
   final Sprite cardSprite;
 
   @override
