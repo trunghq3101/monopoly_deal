@@ -1,20 +1,20 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_rive/flame_rive.dart';
-import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import 'game_assets.dart';
 
-class PauseButton extends RiveComponent
-    with TapCallbacks, HasGameRef, ComponentViewportMargin {
+class PauseButton extends RiveComponent with TapCallbacks, HasGameRef {
   PauseButton()
       : super(
-          artboard: loadArtboard,
-          size: Vector2.all(50),
-        ) {
-    margin = const EdgeInsets.only(left: 10, top: 10);
-  }
+            artboard: loadArtboard,
+            size: Vector2.all(50),
+            priority: kOverlayPriority0,
+            position: Vector2.all(10));
+
+  @override
+  PositionType get positionType => PositionType.viewport;
 
   static get loadArtboard =>
       gameAssets.riveFile('buttons').artboardByName('pause-one');
@@ -22,10 +22,9 @@ class PauseButton extends RiveComponent
   late final RiveAnimationController _controller;
 
   @override
-  Future<void> onLoad() {
+  Future<void> onLoad() async {
     _controller = OneShotAnimation('Press', autoplay: false);
     artboard.addController(_controller);
-    return super.onLoad();
   }
 
   @override

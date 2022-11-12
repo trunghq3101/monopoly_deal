@@ -13,7 +13,7 @@ class TappableOverlay extends HudMarginComponent
       : super(
           anchor: Anchor.center,
           position: Vector2.zero(),
-          priority: kMaxPriority,
+          priority: kOverlayPriority1,
         );
 
   @override

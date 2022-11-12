@@ -41,13 +41,12 @@ class MainGame extends FlameGame with HasTappableComponents, HasStateMachine {
     viewfinder.visibleGameSize = Card.kCardSize * 1.2;
 
     children.register<World>();
-    viewport.children.register<PauseButton>();
     world.children
       ..register<Deck>()
       ..register<DealTarget>();
 
-    await addAll([world, cameraComponent, TappableOverlay(), Hand()]);
-    await viewport.addAll([PauseButton()]);
+    await addAll(
+        [world, cameraComponent, TappableOverlay(), Hand(), PauseButton()]);
 
     newMachine({
       CameraState.initial: {
