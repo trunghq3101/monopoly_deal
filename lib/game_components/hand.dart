@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/animation.dart';
 import 'package:monopoly_deal/game_components/card_front.dart';
@@ -18,8 +17,8 @@ class ExpandTransition extends Transition<HandState> {
 
   @override
   void onActivate(dynamic payload) {
-    hand.add(MoveEffect.by(
-      Vector2(0, -(hand.size.y - 100)),
+    hand.add(MoveEffect.to(
+      Vector2(hand.game.size.x / 2, hand.game.size.y),
       EffectController(speed: 2000, curve: Curves.easeOut),
     ));
   }
@@ -32,8 +31,8 @@ class CollapseTransition extends Transition<HandState> {
 
   @override
   void onActivate(dynamic payload) {
-    hand.add(MoveEffect.by(
-      Vector2(0, hand.size.y - 100),
+    hand.add(MoveEffect.to(
+      Vector2(hand.game.size.x / 2, hand.game.size.y * 1.4),
       EffectController(speed: 2000, curve: Curves.easeOut),
     ));
   }
@@ -69,27 +68,29 @@ enum HandState {
   notEmpty,
 }
 
-class Hand extends HudMarginComponent
-    with TapCallbacks, TapOutsideCallback, HasStateMachine {
+class Hand extends PositionComponent
+    with TapCallbacks, TapOutsideCallback, HasStateMachine, HasGameReference {
   Hand({super.children})
       : super(
           anchor: Anchor.bottomCenter,
-          position: Vector2.zero(),
         );
   static const kTapOutsideHand = 0;
   static const kTapInsideHand = 1;
   static const kPickUp = 2;
   final _oldCardPositions = <CardPosition>[];
   final List<CardPosition> _newCardPositions = [];
-  late CircleComponent _circle;
+  final CircleComponent _circle = CircleComponent(
+    anchor: Anchor.topCenter,
+    paint: BasicPalette.transparent.paint(),
+  );
   late double _startingAngle;
   late double _angleDiff;
   late StateMachine _fillUpMachine;
+  Vector2? _originSize;
+  Vector2? _prevGameSize;
 
   @override
   Future<void> onLoad() async {
-    position = Vector2(gameRef.size.x / 2, gameRef.size.y);
-    size = _calcSize(gameRef.size);
     super.onLoad();
     children.register<CardFront>();
     newMachine<HandState>({
@@ -108,21 +109,37 @@ class Hand extends HudMarginComponent
         Command(kPickUp): AddCardsTransition(HandState.notEmpty, this),
       }
     });
-    final r = width * 1.25;
+
+    final r = width * 1.5;
     final circleCenterX = width / 2 + width / 16;
-    final paddingH = width / 5;
-    final paddingT = width / 16;
-    _circle = CircleComponent(
-      radius: r,
-      position: Vector2(circleCenterX, paddingT),
-      anchor: Anchor.topCenter,
-      paint: BasicPalette.transparent.paint(),
-    );
+    final paddingH = width / 3;
+    final paddingT = height / 8;
+    _circle
+      ..radius = r
+      ..position = Vector2(circleCenterX, paddingT);
     add(_circle);
+
     final rAngle = pi / 2 - acos((width - circleCenterX - paddingH) / r);
     final lAngle = -(pi / 2 - acos((circleCenterX - paddingH) / r));
     _angleDiff = rAngle - lAngle;
     _startingAngle = rAngle;
+
+    position = Vector2(game.size.x / 2, game.size.y);
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    if (_originSize == null) {
+      this.size = _calcSize(size);
+      _originSize = this.size;
+      _prevGameSize = size.clone();
+    } else {
+      scale = Vector2.all(_calcSize(size).x / _originSize!.x);
+      position = Vector2(position.x * size.x / _prevGameSize!.x,
+          position.y * size.y / _prevGameSize!.y);
+      _prevGameSize = size.clone();
+    }
   }
 
   @override
@@ -217,11 +234,8 @@ class Hand extends HudMarginComponent
   }
 
   Vector2 _transitionFromTopLeftToBottomCenter(Vector2 vector) {
-    return vector.reflected(Vector2(0, 1)) + _circle.size / 2;
+    return vector.reflected(Vector2(0, 1)) + _circle.scaledSize / 2;
   }
 
-  Vector2 _calcSize(Vector2 size) => size.x * 3 / 4 < size.y - 20
-      ? Vector2(size.x, size.x * 3 / 4)
-      : Vector2((size.y - 20) * 4 / 3, size.y - 20)
-    ..clamp(Vector2.zero(), Vector2(800, 600));
+  Vector2 _calcSize(Vector2 size) => Vector2(size.y * 0.6 * 0.8, size.y * 0.6);
 }

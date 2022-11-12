@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
-import 'package:flutter/painting.dart';
+import 'package:flame/palette.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';

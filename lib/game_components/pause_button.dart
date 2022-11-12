@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_rive/flame_rive.dart';
@@ -9,7 +11,6 @@ class PauseButton extends RiveComponent with TapCallbacks, HasGameRef {
   PauseButton()
       : super(
             artboard: loadArtboard,
-            size: Vector2.all(50),
             priority: kOverlayPriority0,
             position: Vector2.all(10));
 
@@ -33,6 +34,12 @@ class PauseButton extends RiveComponent with TapCallbacks, HasGameRef {
     _controller.isActive = true;
     _controller.isActiveChanged.addListener(_pauseGame);
     gameRef.overlays.add(Overlays.kPauseMenu);
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    this.size = Vector2.all(min(50, min(size.x / 7, size.y / 7)));
   }
 
   void _pauseGame() {
