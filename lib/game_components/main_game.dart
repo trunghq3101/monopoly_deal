@@ -1,7 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
+import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
+import 'package:monopoly_deal/game_components/card_front.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
@@ -16,7 +19,8 @@ import 'pause_button.dart';
 import 'playground_map.dart';
 import 'tappable_overlay.dart';
 
-class MainGame extends FlameGame with HasTappableComponents, HasStateMachine {
+class MainGame extends FlameGame
+    with HasTappableComponents, HasStateMachine, MouseMovementDetector {
   MainGame(this.gameModel);
 
   final GameModel gameModel;
@@ -127,5 +131,20 @@ class MainGame extends FlameGame with HasTappableComponents, HasStateMachine {
                 Command(Deck.kDeal, world.children.query<DealTarget>()));
           })
     ]);
+  }
+
+  CardFront? _lastTargeting;
+  @override
+  void onMouseMove(PointerHoverInfo info) {
+    final c = componentsAtPoint(info.eventPosition.viewport)
+        .whereType<CardFront>()
+        .firstOrNull;
+    if (c == null || c.id != _lastTargeting?.id) {
+      _lastTargeting?.targeting = false;
+    }
+    if (c != null) {
+      c.targeting = true;
+      _lastTargeting = c;
+    }
   }
 }
