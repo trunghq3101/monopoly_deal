@@ -27,18 +27,20 @@ class PickUpRegionTransition extends Transition<PickUpRegionState> {
     for (var c in cards) {
       c.onCommand(Command(Card.kPickUp, delay += 0.1));
     }
+    final hand = region.game.children.query<Hand>().firstOrNull;
     region.add(TimerComponent(
       period: 0.8,
       removeOnFinish: true,
       onTick: () {
-        region.game.children.query<Hand>().firstOrNull?.onCommand(Command(
+        hand?.onCommand(Command(
             Hand.kPickUp,
             cards
                 .map(
                   (e) => CardFront(
                     id: e.id,
                     sprite: gameAssets.cardSprites[e.id],
-                    size: Card.kCardSize,
+                    size: Vector2(hand.size.x * 0.5,
+                        hand.size.x * 0.5 * Card.kCardHeight / Card.kCardWidth),
                     anchor: Anchor.topCenter,
                   ),
                 )

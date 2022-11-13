@@ -32,7 +32,7 @@ class CollapseTransition extends Transition<HandState> {
   @override
   void onActivate(dynamic payload) {
     hand.add(MoveEffect.to(
-      Vector2(hand.game.size.x / 2, hand.game.size.y * 1.4),
+      Vector2(hand.game.size.x / 2, hand.game.size.y * 1.1),
       EffectController(speed: 2000, curve: Curves.easeOut),
     ));
   }
@@ -111,13 +111,12 @@ class Hand extends PositionComponent
       }
     });
 
-    final r = width * 1.5;
+    final r = width * 4;
     final circleCenterX = width / 2 + width / 16;
-    final paddingH = width / 3;
-    final paddingT = height / 8;
+    final paddingH = width / 16;
     _circle
       ..radius = r
-      ..position = Vector2(circleCenterX, paddingT);
+      ..position = Vector2(circleCenterX, 0);
     add(_circle);
 
     final rAngle = pi / 2 - acos((width - circleCenterX - paddingH) / r);
@@ -155,6 +154,9 @@ class Hand extends PositionComponent
 
   @override
   void onTapOutside() {
+    if (_fillUpMachine.current.identifier == HandState.empty) {
+      return;
+    }
     tapOutsideSubscribed = false;
     onCommand(Command(kTapOutsideHand));
   }
@@ -238,5 +240,5 @@ class Hand extends PositionComponent
     return vector.reflected(Vector2(0, 1)) + _circle.scaledSize / 2;
   }
 
-  Vector2 _calcSize(Vector2 size) => Vector2(size.y * 0.6 * 0.8, size.y * 0.6);
+  Vector2 _calcSize(Vector2 size) => Vector2(size.y * 0.3 * 1.2, size.y * 0.3);
 }
