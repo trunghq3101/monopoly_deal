@@ -56,10 +56,10 @@ class CardTargetingTransition extends Transition<MainGameState> {
         .whereType<CardFront>()
         .firstOrNull;
     if (c == null || c.id != _lastTargeting?.id) {
-      _lastTargeting?.targeting = false;
+      _lastTargeting?.onCommand(Command(CardFront.kMouseHoverLeft));
     }
     if (c != null) {
-      c.targeting = true;
+      c.onCommand(Command(CardFront.kMouseHover));
       _lastTargeting = c;
     }
   }

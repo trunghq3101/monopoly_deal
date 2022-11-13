@@ -1,8 +1,38 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:simple_state_machine/simple_state_machine.dart';
 
-class CardFront extends SpriteComponent {
+class CardFrontTargetTransition extends Transition<CardFrontState> {
+  CardFrontTargetTransition(super.dest, this.cardFront);
+
+  final CardFront cardFront;
+
+  @override
+  FutureOr<void> onActivate(payload) {
+    cardFront.targeting = true;
+  }
+}
+
+class CardFrontUntargetTransition extends Transition<CardFrontState> {
+  CardFrontUntargetTransition(super.dest, this.cardFront);
+
+  final CardFront cardFront;
+
+  @override
+  FutureOr<void> onActivate(payload) {
+    cardFront.targeting = false;
+  }
+}
+
+enum CardFrontState {
+  initial,
+  targeted,
+  selected,
+}
+
+class CardFront extends SpriteComponent with HasStateMachine {
   CardFront({
     required this.id,
     super.sprite,
@@ -11,6 +41,8 @@ class CardFront extends SpriteComponent {
     super.anchor = Anchor.center,
   });
 
+  static const kMouseHover = 0;
+  static const kMouseHoverLeft = 1;
   final int id;
   bool targeting = false;
 
@@ -19,6 +51,21 @@ class CardFront extends SpriteComponent {
 
   @override
   int get hashCode => id;
+
+  @override
+  Future<void>? onLoad() async {
+    newMachine({
+      CardFrontState.initial: {
+        Command(kMouseHover):
+            CardFrontTargetTransition(CardFrontState.targeted, this)
+      },
+      CardFrontState.targeted: {
+        Command(kMouseHoverLeft):
+            CardFrontUntargetTransition(CardFrontState.initial, this)
+      },
+      CardFrontState.selected: {},
+    });
+  }
 
   @override
   void render(Canvas canvas) {
