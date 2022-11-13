@@ -115,7 +115,7 @@ class CardFront extends SpriteComponent
 
     final rRect = RRect.fromRectAndRadius(
         (drawPosition - delta).toPositionedRect(drawSize),
-        const Radius.circular(24));
+        const Radius.circular(16));
 
     canvas.drawRRect(
         rRect,
@@ -128,7 +128,7 @@ class CardFront extends SpriteComponent
       final targetingDelta = Anchor.center.toVector2()..multiply(targetingSize);
       final targetingRect = RRect.fromRectAndRadius(
           (drawPosition - targetingDelta).toPositionedRect(targetingSize),
-          const Radius.circular(28));
+          const Radius.circular(18));
       canvas.drawRRect(
           targetingRect,
           Paint()
