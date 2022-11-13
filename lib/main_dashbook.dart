@@ -3,18 +3,18 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart' hide Card;
 import 'package:monopoly_deal/dev/base_game.dart';
 import 'package:monopoly_deal/dev/game_wrapper.dart';
-import 'package:monopoly_deal/game_components/card_front.dart';
-import 'package:monopoly_deal/game_components/hand.dart';
+import 'package:monopoly_deal/features/cards/card_front.dart';
+import 'package:monopoly_deal/features/cards/hand.dart';
+import 'package:monopoly_deal/features/map/playground_map.dart';
 import 'package:monopoly_deal/game_components/main_game_states.dart';
-import 'package:monopoly_deal/game_components/playground_map.dart';
 import 'package:monopoly_deal/game_components/tappable_overlay.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 import 'package:tiled/tiled.dart';
 
 import 'dev/components.dart';
-import 'game_components/card.dart';
-import 'game_components/deal_target.dart';
-import 'game_components/deck.dart';
+import 'features/cards/card.dart';
+import 'features/cards/deck.dart';
+import 'features/map/deal_target.dart';
 import 'game_components/game_assets.dart';
 
 void main() {

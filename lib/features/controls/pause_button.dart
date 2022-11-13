@@ -5,7 +5,7 @@ import 'package:flame/experimental.dart';
 import 'package:flame_rive/flame_rive.dart';
 import 'package:rive/rive.dart';
 
-import 'game_assets.dart';
+import '../../game_components/game_assets.dart';
 
 class PauseButton extends RiveComponent with TapCallbacks, HasGameRef {
   PauseButton()

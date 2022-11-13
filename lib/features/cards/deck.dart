@@ -6,8 +6,8 @@ import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
+import '../../game_components/game_assets.dart';
 import 'card.dart';
-import 'game_assets.dart';
 
 class BuildDeckTransition extends Transition<DeckState> {
   BuildDeckTransition(super.dest, this.deck);

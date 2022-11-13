@@ -1,8 +1,8 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:monopoly_deal/features/controls/pause_menu.dart';
 import 'package:monopoly_deal/game_components/game_assets.dart';
 import 'package:monopoly_deal/game_components/main_game.dart';
-import 'package:monopoly_deal/widgets/pause_menu.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});

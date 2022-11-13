@@ -5,11 +5,11 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
-import 'package:monopoly_deal/game_components/hand.dart';
+import 'package:monopoly_deal/features/cards/hand.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
-import 'card.dart';
-import 'card_front.dart';
+import '../features/cards/card.dart';
+import '../features/cards/card_front.dart';
 import 'effects/camera_zoom_effect.dart';
 
 enum CameraState { initial }

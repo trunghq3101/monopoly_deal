@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:monopoly_deal/features/controls/pause_menu.dart';
 import 'package:monopoly_deal/game_components/game_assets.dart';
 import 'package:monopoly_deal/routes.dart';
-import 'package:monopoly_deal/widgets/pause_menu.dart';
 
-import '../utils.dart';
+import '../../utils.dart';
 
 void main() {
   group('PauseMenu', () {

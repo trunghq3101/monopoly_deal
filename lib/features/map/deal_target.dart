@@ -6,10 +6,10 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
-import 'card.dart';
-import 'card_front.dart';
-import 'game_assets.dart';
-import 'hand.dart';
+import '../../game_components/game_assets.dart';
+import '../cards/card.dart';
+import '../cards/card_front.dart';
+import '../cards/hand.dart';
 
 class DealTarget extends PositionComponent {
   DealTarget({super.position, super.size, super.anchor});

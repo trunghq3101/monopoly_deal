@@ -3,17 +3,17 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
-import 'package:monopoly_deal/game_components/hand.dart';
+import 'package:monopoly_deal/features/cards/hand.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 import 'package:tiled/tiled.dart';
 
-import 'card.dart';
-import 'deal_target.dart';
-import 'deck.dart';
+import '../features/cards/card.dart';
+import '../features/cards/deck.dart';
+import '../features/controls/pause_button.dart';
+import '../features/map/deal_target.dart';
+import '../features/map/playground_map.dart';
 import 'game_assets.dart';
 import 'main_game_states.dart';
-import 'pause_button.dart';
-import 'playground_map.dart';
 import 'tappable_overlay.dart';
 
 class MainGame extends FlameGame

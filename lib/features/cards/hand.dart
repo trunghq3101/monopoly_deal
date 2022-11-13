@@ -5,7 +5,7 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/animation.dart';
-import 'package:monopoly_deal/game_components/card_front.dart';
+import 'package:monopoly_deal/features/cards/card_front.dart';
 import 'package:monopoly_deal/game_components/extensions.dart';
 import 'package:monopoly_deal/game_components/mixins.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
