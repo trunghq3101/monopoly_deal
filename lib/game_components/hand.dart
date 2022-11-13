@@ -86,6 +86,7 @@ class Hand extends PositionComponent
   late double _startingAngle;
   late double _angleDiff;
   late StateMachine _fillUpMachine;
+  late StateMachine positionMachine;
   Vector2? _originSize;
   Vector2? _prevGameSize;
 
@@ -93,7 +94,7 @@ class Hand extends PositionComponent
   Future<void> onLoad() async {
     super.onLoad();
     children.register<CardFront>();
-    newMachine<HandState>({
+    positionMachine = newMachine<HandState>({
       HandState.expanded: {
         Command(kTapOutsideHand): CollapseTransition(HandState.collapsed, this),
       },

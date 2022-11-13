@@ -1,13 +1,22 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame/game.dart';
+import 'package:flame/input.dart';
+import 'package:monopoly_deal/game_components/hand.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
 import 'card.dart';
+import 'card_front.dart';
 import 'effects/camera_zoom_effect.dart';
 
 enum CameraState { initial }
+
+enum MainGameState { initial }
+
+const kMouseMove = 11;
 
 class DealCameraTransition extends Transition<CameraState> {
   DealCameraTransition(super.dest, this.camera);
@@ -20,5 +29,38 @@ class DealCameraTransition extends Transition<CameraState> {
       Card.kCardSize * 7,
       LinearEffectController(1),
     ));
+  }
+}
+
+class CardTargetingTransition extends Transition<MainGameState> {
+  CardTargetingTransition(super.dest, this.game);
+
+  final FlameGame game;
+
+  CardFront? _lastTargeting;
+
+  @override
+  FutureOr<void> onActivate(payload) async {
+    if (game.children
+            .query<Hand>()
+            .firstOrNull
+            ?.positionMachine
+            .current
+            .identifier !=
+        HandState.expanded) {
+      return;
+    }
+    final PointerHoverInfo info = payload;
+    final c = game
+        .componentsAtPoint(info.eventPosition.viewport)
+        .whereType<CardFront>()
+        .firstOrNull;
+    if (c == null || c.id != _lastTargeting?.id) {
+      _lastTargeting?.targeting = false;
+    }
+    if (c != null) {
+      c.targeting = true;
+      _lastTargeting = c;
+    }
   }
 }

@@ -1,10 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
-import 'package:monopoly_deal/game_components/card_front.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
 import 'package:monopoly_deal/models/game_model.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
@@ -56,6 +54,12 @@ class MainGame extends FlameGame
       CameraState.initial: {
         Command(Deck.kDeal):
             DealCameraTransition(CameraState.initial, cameraComponent),
+      }
+    });
+    newMachine({
+      MainGameState.initial: {
+        Command(kMouseMove):
+            CardTargetingTransition(MainGameState.initial, this),
       }
     });
 
@@ -133,18 +137,8 @@ class MainGame extends FlameGame
     ]);
   }
 
-  CardFront? _lastTargeting;
   @override
   void onMouseMove(PointerHoverInfo info) {
-    final c = componentsAtPoint(info.eventPosition.viewport)
-        .whereType<CardFront>()
-        .firstOrNull;
-    if (c == null || c.id != _lastTargeting?.id) {
-      _lastTargeting?.targeting = false;
-    }
-    if (c != null) {
-      c.targeting = true;
-      _lastTargeting = c;
-    }
+    onCommand(Command(kMouseMove, info));
   }
 }
