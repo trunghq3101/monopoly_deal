@@ -4,7 +4,6 @@ import 'package:flame/game.dart' hide Viewport;
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:monopoly_deal/game_components/hand.dart';
-import 'package:monopoly_deal/models/game_model.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 import 'package:tiled/tiled.dart';
 
@@ -19,9 +18,8 @@ import 'tappable_overlay.dart';
 
 class MainGame extends FlameGame
     with HasTappableComponents, HasStateMachine, MouseMovementDetector {
-  MainGame(this.gameModel);
+  MainGame();
 
-  final GameModel gameModel;
   late final World world;
   late final CameraComponent cameraComponent;
   late final Viewfinder viewfinder;
