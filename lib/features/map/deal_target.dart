@@ -27,7 +27,12 @@ class PickUpRegionTransition extends Transition<PickUpRegionState> {
     for (var c in cards) {
       c.onCommand(Command(Card.kPickUp, delay += 0.1));
     }
-    final hand = region.game.children.query<Hand>().firstOrNull;
+    final hand = region.game.children
+        .query<World>()
+        .firstOrNull
+        ?.children
+        .query<Hand>()
+        .firstOrNull;
     region.add(TimerComponent(
       period: 0.8,
       removeOnFinish: true,

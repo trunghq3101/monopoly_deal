@@ -13,6 +13,16 @@ Updating...
 This project uses Firebase distribution to distribute apps on Android and iOS. All the Firebase config files weren't commited because you shouldn't use my Firebase account when building this app on your machine. Please following
 [this documentation](https://firebase.google.com/docs/flutter/setup?platform=ios#configure-firebase) to setup your own Firebase project and integrate it with this app.
 
+# To-do list
+
+- Place the hand in the world instead of the viewport
+- Should be able to set positions for components graphically
+- Should have these kinds of commands:
+  - Standard commands (user inputs): tap, click, hover, tap outside, ...
+  - Custom commands (actions): pick up, build, deal
+- Components should not keep logic inside. Component includes properties and rendering.
+- If there are some common logic, add extensions on the component
+
 # License
 
 ```

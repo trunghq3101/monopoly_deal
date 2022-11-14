@@ -1,4 +1,5 @@
 import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
 import 'package:rive/rive.dart';
 
@@ -6,6 +7,8 @@ final gameAssets = GameAssets();
 
 const kOverlayPriority0 = 99999;
 const kOverlayPriority1 = 99998;
+
+Vector2 playgroundSize = Vector2.zero();
 
 class GameAssets {
   int? Function() randomSeed = () => null;

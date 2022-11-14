@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="1" nextlayerid="5" nextobjectid="42">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="1" nextlayerid="5" nextobjectid="45">
  <objectgroup id="2" name="regions">
   <object id="1" name="deck" x="0" y="0" width="320" height="416"/>
   <object id="11" name="play_region_0" x="-256" y="736" width="864" height="1664"/>
   <object id="6" name="deal_region_0" x="0" y="736" width="320" height="416"/>
   <object id="8" name="play_region_1" x="-256" y="-1984" width="864" height="1664"/>
   <object id="5" name="deal_region_1" x="0" y="-736" width="320" height="416"/>
+  <object id="42" name="playground" x="-2240" y="-2176" width="4790.01" height="6197.01"/>
+  <object id="44" name="hand" x="-2144" y="1184" width="4608" height="2776"/>
  </objectgroup>
  <objectgroup id="4" name="play_region_0">
-  <object id="31" template="card.tx" name="bank" gid="0" x="-256" y="736" rotation="0"/>
-  <object id="32" template="card.tx" name="" gid="0" x="32" y="736" rotation="0"/>
-  <object id="33" template="card.tx" name="" gid="0" x="320" y="736" rotation="0"/>
-  <object id="34" template="card.tx" name="" gid="0" x="-256" y="1152" rotation="0"/>
-  <object id="35" template="card.tx" name="" gid="0" x="32" y="1152" rotation="0"/>
-  <object id="36" template="card.tx" name="" gid="0" x="320" y="1152" rotation="0"/>
-  <object id="37" template="card.tx" gid="0" x="-256" y="1568" rotation="0"/>
-  <object id="38" template="card.tx" gid="0" x="32" y="1568" rotation="0"/>
-  <object id="39" template="card.tx" gid="0" x="320" y="1568" rotation="0"/>
-  <object id="40" template="card.tx" gid="0" x="32" y="1984" rotation="0"/>
-  <object id="41" template="card.tx" gid="0" x="320" y="1984" rotation="0"/>
+  <object id="31" template="card.tx" name="bank" x="-256" y="736" rotation="0"/>
+  <object id="32" template="card.tx" x="32" y="736" rotation="0"/>
+  <object id="33" template="card.tx" x="320" y="736" rotation="0"/>
+  <object id="34" template="card.tx" x="-256" y="1152" rotation="0"/>
+  <object id="35" template="card.tx" x="32" y="1152" rotation="0"/>
+  <object id="36" template="card.tx" x="320" y="1152" rotation="0"/>
+  <object id="37" template="card.tx" x="-256" y="1568" rotation="0"/>
+  <object id="38" template="card.tx" x="32" y="1568" rotation="0"/>
+  <object id="39" template="card.tx" x="320" y="1568" rotation="0"/>
+  <object id="40" template="card.tx" x="32" y="1984" rotation="0"/>
+  <object id="41" template="card.tx" x="320" y="1984" rotation="0"/>
  </objectgroup>
  <objectgroup id="3" name="play_region_1">
-  <object id="19" template="card.tx" name="bank" gid="0" x="-256" y="-736" rotation="0"/>
-  <object id="22" template="card.tx" name="" gid="0" x="32" y="-736" rotation="0"/>
-  <object id="21" template="card.tx" name="" gid="0" x="320" y="-736" rotation="0"/>
-  <object id="23" template="card.tx" name="" gid="0" x="-256" y="-1152" rotation="0"/>
-  <object id="25" template="card.tx" name="" gid="0" x="32" y="-1152" rotation="0"/>
-  <object id="24" template="card.tx" name="" gid="0" x="320" y="-1152" rotation="0"/>
-  <object id="26" template="card.tx" gid="0" x="-256" y="-1568" rotation="0"/>
-  <object id="29" template="card.tx" gid="0" x="32" y="-1568" rotation="0"/>
-  <object id="27" template="card.tx" gid="0" x="320" y="-1568" rotation="0"/>
-  <object id="28" template="card.tx" gid="0" x="32" y="-1984" rotation="0"/>
-  <object id="30" template="card.tx" gid="0" x="320" y="-1984" rotation="0"/>
+  <object id="19" template="card.tx" name="bank" x="-256" y="-736" rotation="0"/>
+  <object id="22" template="card.tx" x="32" y="-736" rotation="0"/>
+  <object id="21" template="card.tx" x="320" y="-736" rotation="0"/>
+  <object id="23" template="card.tx" x="-256" y="-1152" rotation="0"/>
+  <object id="25" template="card.tx" x="32" y="-1152" rotation="0"/>
+  <object id="24" template="card.tx" x="320" y="-1152" rotation="0"/>
+  <object id="26" template="card.tx" x="-256" y="-1568" rotation="0"/>
+  <object id="29" template="card.tx" x="32" y="-1568" rotation="0"/>
+  <object id="27" template="card.tx" x="320" y="-1568" rotation="0"/>
+  <object id="28" template="card.tx" x="32" y="-1984" rotation="0"/>
+  <object id="30" template="card.tx" x="320" y="-1984" rotation="0"/>
  </objectgroup>
 </map>

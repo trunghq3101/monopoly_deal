@@ -6,9 +6,9 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:monopoly_deal/features/cards/hand.dart';
+import 'package:monopoly_deal/game_components/game_assets.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 
-import '../features/cards/card.dart';
 import '../features/cards/card_front.dart';
 import 'effects/camera_zoom_effect.dart';
 
@@ -25,10 +25,12 @@ class DealCameraTransition extends Transition<CameraState> {
 
   @override
   FutureOr<void> onActivate(payload) {
-    camera.add(CameraZoomEffect.to(
-      Card.kCardSize * 7,
+    camera.add(CameraZoomEffectTo(
+      playgroundSize,
       LinearEffectController(1),
     ));
+    camera.viewfinder
+        .add(MoveEffect.to(Vector2(180, 50), LinearEffectController(1)));
   }
 }
 

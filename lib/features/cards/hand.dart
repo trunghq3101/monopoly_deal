@@ -70,10 +70,7 @@ enum HandState {
 
 class Hand extends PositionComponent
     with TapCallbacks, TapOutsideCallback, HasStateMachine, HasGameReference {
-  Hand({super.children})
-      : super(
-          anchor: Anchor.bottomCenter,
-        );
+  Hand({super.children});
   static const kTapOutsideHand = 0;
   static const kTapInsideHand = 1;
   static const kPickUp = 2;
@@ -87,8 +84,6 @@ class Hand extends PositionComponent
   late double _angleDiff;
   late StateMachine _fillUpMachine;
   late StateMachine positionMachine;
-  Vector2? _originSize;
-  Vector2? _prevGameSize;
 
   @override
   Future<void> onLoad() async {
@@ -113,7 +108,7 @@ class Hand extends PositionComponent
 
     final r = width * 4;
     final circleCenterX = width / 2 + width / 16;
-    final paddingH = width / 16;
+    final paddingH = width / 4;
     _circle
       ..radius = r
       ..position = Vector2(circleCenterX, 0);
@@ -123,23 +118,6 @@ class Hand extends PositionComponent
     final lAngle = -(pi / 2 - acos((circleCenterX - paddingH) / r));
     _angleDiff = rAngle - lAngle;
     _startingAngle = rAngle;
-
-    position = Vector2(game.size.x / 2, game.size.y);
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-    if (_originSize == null) {
-      this.size = _calcSize(size);
-      _originSize = this.size;
-      _prevGameSize = size.clone();
-    } else {
-      scale = Vector2.all(_calcSize(size).x / _originSize!.x);
-      position = Vector2(position.x * size.x / _prevGameSize!.x,
-          position.y * size.y / _prevGameSize!.y);
-      _prevGameSize = size.clone();
-    }
   }
 
   @override
@@ -239,6 +217,4 @@ class Hand extends PositionComponent
   Vector2 _transitionFromTopLeftToBottomCenter(Vector2 vector) {
     return vector.reflected(Vector2(0, 1)) + _circle.scaledSize / 2;
   }
-
-  Vector2 _calcSize(Vector2 size) => Vector2(size.y * 0.3 * 1.2, size.y * 0.3);
 }

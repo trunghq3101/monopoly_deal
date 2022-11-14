@@ -2,7 +2,6 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
 import 'package:flame/input.dart';
-import 'package:flame/palette.dart';
 import 'package:monopoly_deal/features/cards/hand.dart';
 import 'package:simple_state_machine/simple_state_machine.dart';
 import 'package:tiled/tiled.dart';
@@ -26,11 +25,12 @@ class MainGame extends FlameGame
   late final Viewport viewport;
   Vector2 get visibleGameSize => viewfinder.visibleGameSize!;
 
-  @override
-  Color backgroundColor() => const Color(0xFFD74E30);
+  // @override
+  // Color backgroundColor() => const Color(0xFFD74E30);
 
   @override
   Future<void>? onLoad() async {
+    debugMode = true;
     await gameAssets.preCache();
     add(FpsTextComponent(position: Vector2(0, size.y - 24)));
 
@@ -43,10 +43,10 @@ class MainGame extends FlameGame
     children.register<World>();
     world.children
       ..register<Deck>()
-      ..register<DealTarget>();
+      ..register<DealTarget>()
+      ..register<Hand>();
 
-    await addAll(
-        [world, cameraComponent, TappableOverlay(), Hand(), PauseButton()]);
+    await addAll([world, cameraComponent, TappableOverlay(), PauseButton()]);
 
     newMachine({
       CameraState.initial: {
@@ -64,6 +64,16 @@ class MainGame extends FlameGame
     world.add(PlaygroundMap(
       'two_players.tmx',
       {
+        'playground': (r, _, __) {
+          playgroundSize = Vector2(r.width, r.height);
+          world.add(PositionComponent(
+              position: Vector2(r.x, r.y), size: playgroundSize));
+        },
+        'hand': (r, _, __) => world.add(
+              Hand()
+                ..position = Vector2(r.x, r.y)
+                ..size = Vector2(r.width, r.height),
+            ),
         'deck': (r, _, __) => world.add(
               Deck(
                 cardSprite: gameAssets.sprites['card']!,
