@@ -40,7 +40,9 @@ class MainGame extends FlameGame
     viewfinder = cameraComponent.viewfinder;
     viewfinder.visibleGameSize = Card.kCardSize * 1.2;
 
-    children.register<World>();
+    children
+      ..register<World>()
+      ..register<CameraComponent>();
     world.children
       ..register<Deck>()
       ..register<DealTarget>()

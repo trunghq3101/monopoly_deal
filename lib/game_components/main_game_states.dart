@@ -43,7 +43,11 @@ class CardTargetingTransition extends Transition<MainGameState> {
 
   @override
   FutureOr<void> onActivate(payload) async {
+    // TODO: refactor this
     if (game.children
+            .query<World>()
+            .firstOrNull
+            ?.children
             .query<Hand>()
             .firstOrNull
             ?.positionMachine
@@ -53,8 +57,17 @@ class CardTargetingTransition extends Transition<MainGameState> {
       return;
     }
     final PointerHoverInfo info = payload;
-    final c = game
-        .componentsAtPoint(info.eventPosition.viewport)
+    final worldPoint = game.children
+        .query<CameraComponent>()
+        .firstOrNull
+        ?.viewfinder
+        .transform
+        .globalToLocal(info.eventPosition.viewport);
+    final c = game.children
+        .query<CameraComponent>()
+        .firstOrNull
+        ?.world
+        .componentsAtPoint(worldPoint!)
         .whereType<CardFront>()
         .firstOrNull;
     if (c == null || c.id != _lastTargeting?.id) {

@@ -15,7 +15,6 @@ This project uses Firebase distribution to distribute apps on Android and iOS. A
 
 # To-do list
 
-- Place the hand in the world instead of the viewport
 - Should be able to set positions for components graphically
 - Should have these kinds of commands:
   - Standard commands (user inputs): tap, click, hover, tap outside, ...

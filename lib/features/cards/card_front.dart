@@ -110,30 +110,30 @@ class CardFront extends SpriteComponent
   @override
   void render(Canvas canvas) {
     final drawPosition = size / 2;
-    final drawSize = size + Vector2.all(15);
+    final drawSize = size + Vector2.all(150);
     final delta = Anchor.center.toVector2()..multiply(drawSize);
 
     final rRect = RRect.fromRectAndRadius(
         (drawPosition - delta).toPositionedRect(drawSize),
-        const Radius.circular(16));
+        const Radius.circular(160));
 
     canvas.drawRRect(
         rRect,
         Paint()
           ..color = const Color.fromARGB(146, 0, 0, 0)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2));
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20));
 
     if (targeting) {
-      final targetingSize = drawSize + Vector2.all(15);
+      final targetingSize = drawSize + Vector2.all(150);
       final targetingDelta = Anchor.center.toVector2()..multiply(targetingSize);
       final targetingRect = RRect.fromRectAndRadius(
           (drawPosition - targetingDelta).toPositionedRect(targetingSize),
-          const Radius.circular(18));
+          const Radius.circular(180));
       canvas.drawRRect(
           targetingRect,
           Paint()
             ..color = const Color.fromARGB(255, 110, 240, 255)
-            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2));
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20));
     }
 
     canvas.drawRRect(rRect, Paint()..color = const Color(0xFFFFFFFF));
