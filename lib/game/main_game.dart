@@ -6,8 +6,11 @@ import 'package:monopoly_deal/game_components/game_assets.dart';
 class MainGame extends BaseGame {
   @override
   World get world => _world;
-
   final World _world = World();
+
+  @override
+  CameraComponent get cameraComponent => _cameraComponent;
+  late final CameraComponent _cameraComponent;
 
   @override
   Future<void> onLoad() async {
@@ -18,7 +21,11 @@ class MainGame extends BaseGame {
     final cardSize = Vector2(300, 440);
 
     world.addToParent(this);
-    CameraComponent(world: world).addToParent(this);
+    _cameraComponent = CameraComponent(world: world)
+      ..viewfinder.visibleGameSize = Vector2.all(600)
+      ..addToParent(this);
+
+    final gameMasterBroadcaster = GameMasterBroadcaster(null);
 
     GameMaster(
       cardsGenerator: CardsGenerator(
@@ -28,6 +35,9 @@ class MainGame extends BaseGame {
         cardAnchor: Anchor.center,
       ),
       milestones: milestones,
+      broadcaster: gameMasterBroadcaster,
     ).addToParent(this);
+
+    CameraMan(gameMasterBroadcaster: gameMasterBroadcaster).addToParent(this);
   }
 }
