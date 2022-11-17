@@ -1,9 +1,10 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame/game.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game_components/game_assets.dart';
 
-class MainGame extends BaseGame {
+class MainGame extends BaseGame with HasTappableComponents, HasHoverables {
   @override
   World get world => _world;
   final World _world = World();
@@ -39,5 +40,7 @@ class MainGame extends BaseGame {
     ).addToParent(this);
 
     CameraMan(gameMasterBroadcaster: gameMasterBroadcaster).addToParent(this);
+
+    Player().addToParent(this);
   }
 }

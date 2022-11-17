@@ -78,6 +78,7 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
     required List<Vector2> toTargets,
     required List<CardBack> cardsInTopToBottomOrder,
     required int amountPerEach,
+    required double timeStep,
   }) {
     _broadcaster.value = GameMasterEvent.startDealing;
 
@@ -85,7 +86,6 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
     assert(remaining <= cardsInTopToBottomOrder.length,
         "Not enough cards to deal");
 
-    const timeStep = 0.2;
     const durationPerEach = 0.2;
     const randSeed = 1;
     final noise = SimplexNoise(Random(randSeed));
@@ -127,25 +127,45 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
     }
   }
 
+  void _allowPickUp({required Vector2 playerPickUpPosition}) {
+    PickUpRegion()
+      ..position = playerPickUpPosition
+      ..size = Vector2.all(500)
+      ..anchor = Anchor.center
+      ..addToParent(game.world);
+  }
+
   void _scheduleMoves() {
-    const timeStep = 0.006;
-    final putTheDeckDuration = timeStep * (_deck.deckCapacity - 1);
+    const putTheDeckTimeStep = 0.006;
+    final putTheDeckDuration = putTheDeckTimeStep * (_deck.deckCapacity - 1);
+    const dealCardsTimeStep = 0.2;
+    final dealCardsTarget = [
+      Vector2(0, 1000),
+      Vector2(0, -1000),
+    ];
+    const dealCardsAmountPerEach = 5;
+
     final startDealing = _milestones.start + putTheDeckDuration + 0.3;
+    final finishDealing = startDealing +
+        dealCardsTimeStep * dealCardsAmountPerEach * dealCardsTarget.length;
+
     final moves = {
       _milestones.start: () => _putTheDeck(
             at: Vector2.zero(),
             world: game.world,
-            timeStep: timeStep,
+            timeStep: putTheDeckTimeStep,
           ),
       startDealing: () => _dealCards(
-            toTargets: [
-              Vector2(0, 1000),
-              Vector2(0, -1000),
-            ],
+            toTargets: dealCardsTarget,
             cardsInTopToBottomOrder: _deck.cards.reversed.toList(),
-            amountPerEach: 5,
+            amountPerEach: dealCardsAmountPerEach,
+            timeStep: dealCardsTimeStep,
+          ),
+      finishDealing: () => _allowPickUp(
+            playerPickUpPosition: dealCardsTarget[0],
           ),
     };
+
     for (var move in moves.entries) {
       TimerComponent(
         period: move.key,
