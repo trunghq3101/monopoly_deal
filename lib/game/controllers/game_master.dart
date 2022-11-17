@@ -1,12 +1,14 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:monopoly_deal/game/game.dart';
 
-class CardsGenerator {
-  CardsGenerator({
+class Deck {
+  Deck({
     required this.randSeed,
     required this.deckCapacity,
     required this.cardSize,
@@ -17,15 +19,14 @@ class CardsGenerator {
   final int deckCapacity;
   final Vector2 cardSize;
   final Anchor cardAnchor;
+  final List<CardBack> cards = [];
 
-  List<CardBack> generate() {
+  void initialize() {
     final ids = List.generate(deckCapacity, (index) => index)
       ..shuffle(Random(randSeed));
-    return ids
-        .map((id) => CardBack(id: id)
-          ..size = cardSize
-          ..anchor = cardAnchor)
-        .toList();
+    cards.addAll(ids.map((id) => CardBack(id: id)
+      ..size = cardSize
+      ..anchor = cardAnchor));
   }
 }
 
@@ -40,14 +41,14 @@ class GameMasterBroadcaster extends ValueNotifier<GameMasterEvent?> {
 class GameMaster extends Component with HasGameReference<BaseGame> {
   GameMaster({
     required Milestones milestones,
-    required CardsGenerator cardsGenerator,
+    required Deck deck,
     required GameMasterBroadcaster broadcaster,
   })  : _milestones = milestones,
-        _cardsGenerator = cardsGenerator,
+        _deck = deck,
         _broadcaster = broadcaster;
 
   final Milestones _milestones;
-  final CardsGenerator _cardsGenerator;
+  final Deck _deck;
   final GameMasterBroadcaster _broadcaster;
 
   void _putTheDeck({
@@ -55,15 +56,15 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
     required World world,
     required double timeStep,
   }) {
-    final cards = _cardsGenerator.generate();
+    _deck.initialize();
     const spacing = 0.6;
-    final diagonalLength = spacing * (_cardsGenerator.deckCapacity - 1);
+    final diagonalLength = spacing * (_deck.deckCapacity - 1);
     final deckBottomRight = Vector2(diagonalLength / 2, 0)..rotate(pi / 4);
     final direction = Vector2(spacing, 0)..rotate(pi + pi / 4);
-    for (var i = 0; i < _cardsGenerator.deckCapacity; i++) {
+    for (var i = 0; i < _deck.deckCapacity; i++) {
       TimerComponent(
         onTick: () {
-          cards[i]
+          _deck.cards[i]
             ..position = deckBottomRight + direction.scaled(spacing * i)
             ..addToParent(world);
         },
@@ -73,25 +74,84 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
     }
   }
 
-  void _dealCards() {
+  void _dealCards({
+    required List<Vector2> toTargets,
+    required List<CardBack> cardsInTopToBottomOrder,
+    required int amountPerEach,
+  }) {
     _broadcaster.value = GameMasterEvent.startDealing;
+
+    var remaining = amountPerEach * toTargets.length;
+    assert(remaining <= cardsInTopToBottomOrder.length,
+        "Not enough cards to deal");
+
+    const timeStep = 0.2;
+    const durationPerEach = 0.2;
+    const randSeed = 1;
+    final noise = SimplexNoise(Random(randSeed));
+
+    var nextCardIndex = 0;
+    var nextTargetIndex = 0;
+    var nextPriority = 0;
+    while (remaining > 0) {
+      final delay = timeStep * nextCardIndex;
+      final randomValue =
+          noise.noise2D(10 + nextCardIndex * 30, 10 + nextCardIndex * 10) * 100;
+      final randomOffset = Vector2.all(randomValue);
+      final c = cardsInTopToBottomOrder[nextCardIndex];
+      c.addAll([
+        MoveEffect.to(
+          toTargets[nextTargetIndex] + randomOffset,
+          DelayedEffectController(
+              CurvedEffectController(durationPerEach, Curves.fastOutSlowIn),
+              delay: delay),
+        ),
+        RotateEffect.by(
+          randomValue % (pi * 2),
+          DelayedEffectController(
+              CurvedEffectController(durationPerEach, Curves.fastOutSlowIn),
+              delay: delay),
+        ),
+        TimerComponent(
+          onTick: () {
+            c.priority = nextPriority;
+            nextPriority++;
+          },
+          period: delay,
+          removeOnFinish: true,
+        )
+      ]);
+      nextCardIndex++;
+      nextTargetIndex = (nextTargetIndex + 1) % toTargets.length;
+      remaining--;
+    }
   }
 
   void _scheduleMoves() {
     const timeStep = 0.006;
-    final dealCards =
-        _milestones.start + timeStep * _cardsGenerator.deckCapacity - 1 + 1.3;
+    final putTheDeckDuration = timeStep * (_deck.deckCapacity - 1);
+    final startDealing = _milestones.start + putTheDeckDuration + 0.3;
     final moves = {
       _milestones.start: () => _putTheDeck(
             at: Vector2.zero(),
             world: game.world,
             timeStep: timeStep,
           ),
-      dealCards: _dealCards,
+      startDealing: () => _dealCards(
+            toTargets: [
+              Vector2(0, 1000),
+              Vector2(0, -1000),
+            ],
+            cardsInTopToBottomOrder: _deck.cards.reversed.toList(),
+            amountPerEach: 5,
+          ),
     };
     for (var move in moves.entries) {
-      TimerComponent(period: move.key, onTick: move.value, removeOnFinish: true)
-          .addToParent(this);
+      TimerComponent(
+        period: move.key,
+        onTick: move.value.call,
+        removeOnFinish: true,
+      ).addToParent(this);
     }
   }
 

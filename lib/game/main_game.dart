@@ -28,7 +28,7 @@ class MainGame extends BaseGame {
     final gameMasterBroadcaster = GameMasterBroadcaster(null);
 
     GameMaster(
-      cardsGenerator: CardsGenerator(
+      deck: Deck(
         randSeed: randSeed,
         deckCapacity: deckCapacity,
         cardSize: cardSize,
