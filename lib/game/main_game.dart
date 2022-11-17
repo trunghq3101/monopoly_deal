@@ -27,6 +27,7 @@ class MainGame extends BaseGame with HasTappableComponents, HasHoverables {
       ..addToParent(this);
 
     final gameMasterBroadcaster = GameMasterBroadcaster(null);
+    final playerBroadcaster = PlayerBroadcaster();
 
     GameMaster(
       deck: Deck(
@@ -37,10 +38,11 @@ class MainGame extends BaseGame with HasTappableComponents, HasHoverables {
       ),
       milestones: milestones,
       broadcaster: gameMasterBroadcaster,
+      playerBroadcaster: playerBroadcaster,
     ).addToParent(this);
 
     CameraMan(gameMasterBroadcaster: gameMasterBroadcaster).addToParent(this);
 
-    Player().addToParent(this);
+    Player(broadcaster: playerBroadcaster).addToParent(this);
   }
 }

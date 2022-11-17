@@ -43,13 +43,16 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
     required Milestones milestones,
     required Deck deck,
     required GameMasterBroadcaster broadcaster,
+    required PlayerBroadcaster playerBroadcaster,
   })  : _milestones = milestones,
         _deck = deck,
-        _broadcaster = broadcaster;
+        _broadcaster = broadcaster,
+        _playerBroadcaster = playerBroadcaster;
 
   final Milestones _milestones;
   final Deck _deck;
   final GameMasterBroadcaster _broadcaster;
+  final PlayerBroadcaster _playerBroadcaster;
 
   void _putTheDeck({
     required Vector2 at,
@@ -128,7 +131,7 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
   }
 
   void _allowPickUp({required Vector2 playerPickUpPosition}) {
-    PickUpRegion()
+    PickUpRegion(playerBroadcaster: _playerBroadcaster)
       ..position = playerPickUpPosition
       ..size = Vector2.all(500)
       ..anchor = Anchor.center

@@ -8,13 +8,22 @@ import 'package:monopoly_deal/game/game.dart';
 
 class PickUpRegion extends PositionComponent
     with TapCallbacks, Hoverable, HasGameReference<BaseGame> {
-  bool _isHovered = false;
+  PickUpRegion({required this.playerBroadcaster});
+
   @override
   bool get isHovered => _isHovered;
+  bool _isHovered = false;
+
+  final PlayerBroadcaster playerBroadcaster;
 
   @override
   void onTapDown(TapDownEvent event) {
-    print(event.canvasPosition);
+    playerBroadcaster.tapPickUpRegion(
+      withCards: game.world
+          .componentsAtPoint(absolutePosition)
+          .whereType<CardBack>()
+          .toList(),
+    );
   }
 
   bool handleMouseMovement(PointerHoverInfo info) {
