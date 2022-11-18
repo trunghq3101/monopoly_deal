@@ -15,6 +15,7 @@ class MainGame extends BaseGame with HasTappableComponents, HasHoverables {
 
   @override
   Future<void> onLoad() async {
+    debugMode = true;
     await gameAssets.preCache();
     final milestones = Milestones();
     const randSeed = 1;

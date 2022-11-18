@@ -3,9 +3,10 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
 
-class Player extends Component with HasGameReference {
+class Player extends Component with HasGameReference<BaseGame> {
   Player({required this.broadcaster});
 
   final PlayerBroadcaster broadcaster;
@@ -30,6 +31,23 @@ class Player extends Component with HasGameReference {
           ),
         )
       ]);
+    }
+    final left = Vector2(-1000, 2500);
+    final right = Vector2(1000, 2500);
+    const radius = Radius.elliptical(2000, 1000);
+    const cardsAmount = 7;
+    const spacing = 2000 / (cardsAmount - 1);
+    final handCurve = Path()
+      ..moveTo(left.x, left.y)
+      ..arcToPoint(Offset(right.x, right.y), radius: radius);
+    final pathMetrics = handCurve.computeMetrics().first;
+    for (var i = 0; i < cardsAmount; i++) {
+      final tangent = pathMetrics.getTangentForOffset(i * spacing)!;
+      game.world.add(CardBack(id: 1)
+        ..size = Vector2(1500, 2200)
+        ..position = Vector2(tangent.position.dx, tangent.position.dy)
+        ..angle = tangent.vector.direction
+        ..anchor = Anchor.center);
     }
   }
 
