@@ -12,7 +12,8 @@ class CameraMan extends Component with HasGameReference<BaseGame> {
   void _zoomOutToSize(Vector2 visibleGameSize) {
     CameraZoomEffectTo(visibleGameSize, LinearEffectController(1))
         .addToParent(game.cameraComponent);
-    MoveEffect.to(Vector2(0, 3000), LinearEffectController(1))
+    MoveEffect.to(Vector2(0, GameSize.visibleAfterDealing.y / 2),
+            LinearEffectController(1))
         .addToParent(game.cameraComponent.viewfinder);
     AnchorEffect.to(Anchor.bottomCenter, LinearEffectController(1))
         .addToParent(game.cameraComponent.viewfinder);
@@ -21,7 +22,7 @@ class CameraMan extends Component with HasGameReference<BaseGame> {
   void _listenToGameMasterBroadcaster() {
     switch (_gameMasterBroadcaster.value) {
       case GameMasterEvent.startDealing:
-        _zoomOutToSize(Vector2(4000, 6000));
+        _zoomOutToSize(GameSize.visibleAfterDealing.size);
         break;
       default:
     }

@@ -133,7 +133,7 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
   void _allowPickUp({required Vector2 playerPickUpPosition}) {
     PickUpRegion(playerBroadcaster: _playerBroadcaster)
       ..position = playerPickUpPosition
-      ..size = Vector2.all(500)
+      ..size = Vector2.all(GameSize.cardOnTable.y * 1.4)
       ..anchor = Anchor.center
       ..addToParent(game.world);
   }
@@ -143,8 +143,8 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
     final putTheDeckDuration = putTheDeckTimeStep * (_deck.deckCapacity - 1);
     const dealCardsTimeStep = 0.2;
     final dealCardsTarget = [
-      Vector2(0, 1000),
-      Vector2(0, -1000),
+      GamePosition.dealTargetMe.position,
+      GamePosition.dealTarget1.position,
     ];
     const dealCardsAmountPerEach = 5;
 
@@ -154,7 +154,7 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
 
     final moves = {
       _milestones.start: () => _putTheDeck(
-            at: Vector2.zero(),
+            at: GamePosition.deck.position,
             world: game.world,
             timeStep: putTheDeckTimeStep,
           ),
@@ -165,7 +165,7 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
             timeStep: dealCardsTimeStep,
           ),
       finishDealing: () => _allowPickUp(
-            playerPickUpPosition: dealCardsTarget[0],
+            playerPickUpPosition: GamePosition.dealTargetMe.position,
           ),
     };
 

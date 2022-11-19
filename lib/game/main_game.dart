@@ -20,11 +20,10 @@ class MainGame extends BaseGame with HasTappableComponents, HasHoverables {
     final milestones = Milestones();
     const randSeed = 1;
     const deckCapacity = 100;
-    final cardSize = Vector2(300, 440);
 
     world.addToParent(this);
     _cameraComponent = CameraComponent(world: world)
-      ..viewfinder.visibleGameSize = Vector2.all(600)
+      ..viewfinder.visibleGameSize = GameSize.visibleInitial.size
       ..addToParent(this);
 
     final gameMasterBroadcaster = GameMasterBroadcaster(null);
@@ -34,7 +33,7 @@ class MainGame extends BaseGame with HasTappableComponents, HasHoverables {
       deck: Deck(
         randSeed: randSeed,
         deckCapacity: deckCapacity,
-        cardSize: cardSize,
+        cardSize: GameSize.cardOnTable.size,
         cardAnchor: Anchor.center,
       ),
       milestones: milestones,

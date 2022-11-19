@@ -26,7 +26,7 @@ class Player extends Component with HasGameReference<BaseGame> {
           ),
         ),
         MoveEffect.to(
-          Vector2(0, 9000),
+          Vector2(0, GameSize.visibleAfterDealing.y * 1.5),
           DelayedEffectController(
             CurvedEffectController(0.3, Curves.easeInCubic),
             delay: timeStep * i,
@@ -37,10 +37,12 @@ class Player extends Component with HasGameReference<BaseGame> {
     }
 
     // take the cards to hand
-    const handCurveWidth = 2000.0;
-    final handCurveStart = Vector2(-1000, 2500);
+    final handCurveWidth = GameSize.visibleAfterDealing.x / 2;
+    final handCurveStart =
+        Vector2(-handCurveWidth / 2, GameSize.visibleAfterDealing.y * 0.35);
     final handCurveEnd = handCurveStart + Vector2(handCurveWidth, 0);
-    const handCurveRadius = Radius.elliptical(2000, 1000);
+    final handCurveRadius =
+        Radius.elliptical(handCurveWidth, handCurveWidth / 2);
     final handCurve = Path()
       ..moveTo(handCurveStart.x, handCurveStart.y)
       ..arcToPoint(
@@ -52,10 +54,10 @@ class Player extends Component with HasGameReference<BaseGame> {
     final pathMetrics = handCurve.computeMetrics().first;
     for (var i = 0; i < cardsAmount; i++) {
       final tangent = pathMetrics.getTangentForOffset(i * spacing)!;
-      final initialPosition = Vector2(0, 6000);
+      final initialPosition = Vector2(0, GameSize.visibleAfterDealing.y * 1.3);
       final inHandPosition = Vector2(tangent.position.dx, tangent.position.dy);
       final c = CardFront(id: facingDownCardsByTopMost[i].id)
-        ..size = Vector2(1500, 2200)
+        ..size = GameSize.cardInHand.size
         ..position = initialPosition
         ..angle = tangent.vector.direction
         ..anchor = Anchor.center
