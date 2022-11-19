@@ -7,14 +7,12 @@
     {
       "name": "monopoly_deal",
       "request": "launch",
-      "type": "dart",
-      "args": ["-t", "lib/app/main.dart"]
+      "type": "dart"
     },
     {
       "name": "monopoly_deal widgetbook",
       "request": "launch",
-      "type": "dart",
-      "args": ["-t", "widgetbook/main.dart"]
+      "type": "dart"
     },
     {
       "name": "monopoly_deal (profile mode)",

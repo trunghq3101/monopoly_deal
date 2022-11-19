@@ -4,7 +4,6 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:monopoly_deal/game/game.dart';
-import 'package:monopoly_deal/game_components/game_assets.dart';
 
 class MainGame extends BaseGame with HasTappableComponents, HasHoverables {
   @override
