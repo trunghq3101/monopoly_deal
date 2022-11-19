@@ -72,6 +72,41 @@ class Player extends Component with HasGameReference<BaseGame> {
     }
   }
 
+  bool _isTappedOutsideHand({required TapDownEvent tapDownEvent}) {
+    final worldPosition = game.worldPosition(tapDownEvent.canvasPosition);
+    return GameSize.visibleAfterDealing.y * 0.14 > worldPosition.y;
+  }
+
+  bool _isTappedInsideHand({required TapDownEvent tapDownEvent}) {
+    final worldPosition = game.worldPosition(tapDownEvent.canvasPosition);
+    return GameSize.visibleAfterDealing.y * 0.42 < worldPosition.y;
+  }
+
+  static const stateHandUp = 0;
+  static const stateHandDown = 1;
+  static const handDownOffset = 900.0;
+  int _handState = stateHandUp;
+
+  void _letTheHandDown() {
+    if (_handState == stateHandDown) return;
+    _handState = stateHandDown;
+    final cardsInHand = game.world.children.query<CardFront>();
+    for (var c in cardsInHand) {
+      MoveEffect.by(Vector2(0, handDownOffset), LinearEffectController(0.1))
+          .addToParent(c);
+    }
+  }
+
+  void _letTheHandUp() {
+    if (_handState == stateHandUp) return;
+    _handState = stateHandUp;
+    final cardsInHand = game.world.children.query<CardFront>();
+    for (var c in cardsInHand) {
+      MoveEffect.by(Vector2(0, -handDownOffset), LinearEffectController(0.1))
+          .addToParent(c);
+    }
+  }
+
   void _listenToBroadcaster() {
     switch (broadcaster.event) {
       case PlayerEvent.tapPickUpRegion:
@@ -81,14 +116,27 @@ class Player extends Component with HasGameReference<BaseGame> {
     }
   }
 
+  void _listenToGlobalTapDown() {
+    final tapDownEvent = game.onTapDownBroadcaster.value;
+    if (tapDownEvent == null) return;
+    if (_isTappedOutsideHand(tapDownEvent: tapDownEvent)) {
+      _letTheHandDown();
+    }
+    if (_isTappedInsideHand(tapDownEvent: tapDownEvent)) {
+      _letTheHandUp();
+    }
+  }
+
   @override
   void onMount() {
     broadcaster.addListener(_listenToBroadcaster);
+    game.onTapDownBroadcaster.addListener(_listenToGlobalTapDown);
   }
 
   @override
   void onRemove() {
     broadcaster.removeListener(_listenToBroadcaster);
+    game.onTapDownBroadcaster.removeListener(_listenToGlobalTapDown);
   }
 }
 

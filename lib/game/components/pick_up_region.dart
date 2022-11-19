@@ -29,9 +29,8 @@ class PickUpRegion extends PositionComponent
   }
 
   bool handleMouseMovement(PointerHoverInfo info) {
-    final worldPoint = game.cameraComponent.viewfinder.transform
-        .globalToLocal(info.eventPosition.viewport);
-    if (containsLocalPoint(absoluteToLocal(worldPoint))) {
+    final worldPosition = game.worldPosition(info.eventPosition.viewport);
+    if (containsLocalPoint(absoluteToLocal(worldPosition))) {
       if (!_isHovered) {
         _isHovered = true;
         return onHoverEnter(info);

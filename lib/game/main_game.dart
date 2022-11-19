@@ -1,6 +1,8 @@
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/foundation.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game_components/game_assets.dart';
 
@@ -12,6 +14,12 @@ class MainGame extends BaseGame with HasTappableComponents, HasHoverables {
   @override
   CameraComponent get cameraComponent => _cameraComponent;
   late final CameraComponent _cameraComponent;
+
+  @override
+  ValueNotifier<TapDownEvent?> get onTapDownBroadcaster =>
+      _onTapDownBroadcaster;
+  final ValueNotifier<TapDownEvent?> _onTapDownBroadcaster =
+      ValueNotifier(null);
 
   @override
   Future<void> onLoad() async {
@@ -44,5 +52,13 @@ class MainGame extends BaseGame with HasTappableComponents, HasHoverables {
     CameraMan(gameMasterBroadcaster: gameMasterBroadcaster).addToParent(this);
 
     Player(broadcaster: playerBroadcaster).addToParent(this);
+
+    world.children.register<CardFront>();
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    _onTapDownBroadcaster.value = event;
+    super.onTapDown(event);
   }
 }
