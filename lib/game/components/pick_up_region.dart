@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class PickUpRegion extends PositionComponent
-    with TapCallbacks, Hoverable, HasGameReference<BaseGame> {
+    with TapCallbacks, Hoverable, HasGameRef<BaseGame> {
   PickUpRegion({required this.playerBroadcaster});
 
   @override
@@ -19,17 +19,17 @@ class PickUpRegion extends PositionComponent
   @override
   void onTapDown(TapDownEvent event) {
     playerBroadcaster.tapPickUpRegion(
-      withCards: game.world
+      withCards: gameRef.world
           .componentsAtPoint(absolutePosition)
           .whereType<CardBack>()
           .toList(),
     );
-    game.mouseCursor = MouseCursor.defer;
+    gameRef.mouseCursor = MouseCursor.defer;
     removeFromParent();
   }
 
   bool handleMouseMovement(PointerHoverInfo info) {
-    final worldPosition = game.worldPosition(info.eventPosition.viewport);
+    final worldPosition = gameRef.worldPosition(info.eventPosition.viewport);
     if (containsLocalPoint(absoluteToLocal(worldPosition))) {
       if (!_isHovered) {
         _isHovered = true;
@@ -46,13 +46,13 @@ class PickUpRegion extends PositionComponent
 
   @override
   bool onHoverEnter(PointerHoverInfo info) {
-    game.mouseCursor = SystemMouseCursors.click;
+    gameRef.mouseCursor = SystemMouseCursors.click;
     return super.onHoverEnter(info);
   }
 
   @override
   bool onHoverLeave(PointerHoverInfo info) {
-    game.mouseCursor = MouseCursor.defer;
+    gameRef.mouseCursor = MouseCursor.defer;
     return super.onHoverLeave(info);
   }
 }

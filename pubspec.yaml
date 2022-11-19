@@ -36,22 +36,6 @@ dependencies:
   equatable: ^2.0.5
   freezed_annotation: ^2.1.0
   json_annotation: ^4.7.0
-  flame:
-    git:
-      url: https://github.com/flame-engine/flame.git
-      path: packages/flame
-  flame_svg:
-    git:
-      url: https://github.com/flame-engine/flame.git
-      path: packages/flame_svg
-  flame_rive:
-    git:
-      url: https://github.com/flame-engine/flame.git
-      path: packages/flame_rive
-  flame_tiled:
-    git:
-      url: https://github.com/flame-engine/flame.git
-      path: packages/flame_tiled
   rive: ^0.9.1
   firebase_core: ^1.24.0
   tiled: ^0.9.0
@@ -59,33 +43,10 @@ dependencies:
   collection: ^1.16.0
   simple_state_machine:
     path: ./packages/simple_state_machine
-
-dependency_overrides:
-  flame:
-    git:
-      url: https://github.com/flame-engine/flame.git
-      path: packages/flame
-  flame_svg:
-    git:
-      url: https://github.com/flame-engine/flame.git
-      path: packages/flame_svg
-  flame_rive:
-    git:
-      url: https://github.com/flame-engine/flame.git
-      path: packages/flame_rive
-  flame_test:
-    git:
-      url: https://github.com/flame-engine/flame.git
-      path: packages/flame_test
-  flame_tiled:
-    git:
-      url: https://github.com/flame-engine/flame.git
-      path: packages/flame_tiled
-  tiled:
-    git:
-      url: https://github.com/trunghq3101/tiled.dart.git
-      path: packages/tiled
-      ref: fix/template-not-parsed
+  flame: ^1.4.0
+  flame_svg: ^1.6.0
+  flame_rive: ^1.5.2
+  flame_tiled: ^1.8.0
 
 dev_dependencies:
   flutter_test:
@@ -102,10 +63,6 @@ dev_dependencies:
   json_serializable: ^6.4.0
   integration_test:
     sdk: flutter
-  flame_test:
-    git:
-      url: https://github.com/flame-engine/flame.git
-      path: packages/flame_test
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

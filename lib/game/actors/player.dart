@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
 
-class Player extends Component with HasGameReference<BaseGame> {
+class Player extends Component with HasGameRef<BaseGame> {
   Player({required this.broadcaster});
 
   final PlayerBroadcaster broadcaster;
@@ -61,7 +61,7 @@ class Player extends Component with HasGameReference<BaseGame> {
         ..position = initialPosition
         ..angle = tangent.vector.direction
         ..anchor = Anchor.center
-        ..addToParent(game.world);
+        ..addToParent(gameRef.world);
       MoveEffect.to(
         inHandPosition,
         DelayedEffectController(
@@ -73,12 +73,12 @@ class Player extends Component with HasGameReference<BaseGame> {
   }
 
   bool _isTappedOutsideHand({required TapDownEvent tapDownEvent}) {
-    final worldPosition = game.worldPosition(tapDownEvent.canvasPosition);
+    final worldPosition = gameRef.worldPosition(tapDownEvent.canvasPosition);
     return GameSize.visibleAfterDealing.y * 0.14 > worldPosition.y;
   }
 
   bool _isTappedInsideHand({required TapDownEvent tapDownEvent}) {
-    final worldPosition = game.worldPosition(tapDownEvent.canvasPosition);
+    final worldPosition = gameRef.worldPosition(tapDownEvent.canvasPosition);
     return GameSize.visibleAfterDealing.y * 0.42 < worldPosition.y;
   }
 
@@ -90,7 +90,7 @@ class Player extends Component with HasGameReference<BaseGame> {
   void _letTheHandDown() {
     if (_handState == stateHandDown) return;
     _handState = stateHandDown;
-    final cardsInHand = game.world.children.query<CardFront>();
+    final cardsInHand = gameRef.world.children.query<CardFront>();
     for (var c in cardsInHand) {
       MoveEffect.by(Vector2(0, handDownOffset), LinearEffectController(0.1))
           .addToParent(c);
@@ -100,7 +100,7 @@ class Player extends Component with HasGameReference<BaseGame> {
   void _letTheHandUp() {
     if (_handState == stateHandUp) return;
     _handState = stateHandUp;
-    final cardsInHand = game.world.children.query<CardFront>();
+    final cardsInHand = gameRef.world.children.query<CardFront>();
     for (var c in cardsInHand) {
       MoveEffect.by(Vector2(0, -handDownOffset), LinearEffectController(0.1))
           .addToParent(c);
@@ -117,7 +117,7 @@ class Player extends Component with HasGameReference<BaseGame> {
   }
 
   void _listenToGlobalTapDown() {
-    final tapDownEvent = game.onTapDownBroadcaster.value;
+    final tapDownEvent = gameRef.onTapDownBroadcaster.value;
     if (tapDownEvent == null) return;
     if (_isTappedOutsideHand(tapDownEvent: tapDownEvent)) {
       _letTheHandDown();
@@ -130,13 +130,13 @@ class Player extends Component with HasGameReference<BaseGame> {
   @override
   void onMount() {
     broadcaster.addListener(_listenToBroadcaster);
-    game.onTapDownBroadcaster.addListener(_listenToGlobalTapDown);
+    gameRef.onTapDownBroadcaster.addListener(_listenToGlobalTapDown);
   }
 
   @override
   void onRemove() {
     broadcaster.removeListener(_listenToBroadcaster);
-    game.onTapDownBroadcaster.removeListener(_listenToGlobalTapDown);
+    gameRef.onTapDownBroadcaster.removeListener(_listenToGlobalTapDown);
   }
 }
 

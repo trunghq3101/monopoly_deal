@@ -38,7 +38,7 @@ class GameMasterBroadcaster extends ValueNotifier<GameMasterEvent?> {
   GameMasterBroadcaster(super.value);
 }
 
-class GameMaster extends Component with HasGameReference<BaseGame> {
+class GameMaster extends Component with HasGameRef<BaseGame> {
   GameMaster({
     required Milestones milestones,
     required Deck deck,
@@ -135,7 +135,7 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
       ..position = playerPickUpPosition
       ..size = Vector2.all(GameSize.cardOnTable.y * 1.4)
       ..anchor = Anchor.center
-      ..addToParent(game.world);
+      ..addToParent(gameRef.world);
   }
 
   void _scheduleMoves() {
@@ -155,7 +155,7 @@ class GameMaster extends Component with HasGameReference<BaseGame> {
     final moves = {
       _milestones.start: () => _putTheDeck(
             at: GamePosition.deck.position,
-            world: game.world,
+            world: gameRef.world,
             timeStep: putTheDeckTimeStep,
           ),
       startDealing: () => _dealCards(
