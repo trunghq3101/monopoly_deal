@@ -24,6 +24,8 @@ class PickUpRegion extends PositionComponent
           .whereType<CardBack>()
           .toList(),
     );
+    game.mouseCursor = MouseCursor.defer;
+    removeFromParent();
   }
 
   bool handleMouseMovement(PointerHoverInfo info) {

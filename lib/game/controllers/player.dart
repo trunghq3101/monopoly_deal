@@ -11,10 +11,12 @@ class Player extends Component with HasGameReference<BaseGame> {
 
   final PlayerBroadcaster broadcaster;
 
-  void _pickUpCards({required List<CardBack> facingDownCards}) {
+  void _pickUpCards({required List<CardBack> facingDownCardsByTopMost}) {
     const timeStep = 0.1;
-    for (var i = 0; i < facingDownCards.length; i++) {
-      final card = facingDownCards[i];
+
+    // pull the cards out
+    for (var i = 0; i < facingDownCardsByTopMost.length; i++) {
+      final card = facingDownCardsByTopMost[i];
       card.addAll([
         RotateEffect.to(
           0,
@@ -29,32 +31,49 @@ class Player extends Component with HasGameReference<BaseGame> {
             CurvedEffectController(0.3, Curves.easeInCubic),
             delay: timeStep * i,
           ),
-        )
+        ),
+        RemoveEffect(delay: timeStep * i + 0.3),
       ]);
     }
-    final left = Vector2(-1000, 2500);
-    final right = Vector2(1000, 2500);
-    const radius = Radius.elliptical(2000, 1000);
-    const cardsAmount = 7;
-    const spacing = 2000 / (cardsAmount - 1);
+
+    // take the cards to hand
+    const handCurveWidth = 2000.0;
+    final handCurveStart = Vector2(-1000, 2500);
+    final handCurveEnd = handCurveStart + Vector2(handCurveWidth, 0);
+    const handCurveRadius = Radius.elliptical(2000, 1000);
     final handCurve = Path()
-      ..moveTo(left.x, left.y)
-      ..arcToPoint(Offset(right.x, right.y), radius: radius);
+      ..moveTo(handCurveStart.x, handCurveStart.y)
+      ..arcToPoint(
+        Offset(handCurveEnd.x, handCurveEnd.y),
+        radius: handCurveRadius,
+      );
+    final cardsAmount = facingDownCardsByTopMost.length;
+    final spacing = handCurveWidth / (cardsAmount - 1);
     final pathMetrics = handCurve.computeMetrics().first;
     for (var i = 0; i < cardsAmount; i++) {
       final tangent = pathMetrics.getTangentForOffset(i * spacing)!;
-      game.world.add(CardBack(id: 1)
+      final initialPosition = Vector2(0, 6000);
+      final inHandPosition = Vector2(tangent.position.dx, tangent.position.dy);
+      final c = CardFront(id: facingDownCardsByTopMost[i].id)
         ..size = Vector2(1500, 2200)
-        ..position = Vector2(tangent.position.dx, tangent.position.dy)
+        ..position = initialPosition
         ..angle = tangent.vector.direction
-        ..anchor = Anchor.center);
+        ..anchor = Anchor.center
+        ..addToParent(game.world);
+      MoveEffect.to(
+        inHandPosition,
+        DelayedEffectController(
+          CurvedEffectController(0.4, Curves.easeInOutCubic),
+          delay: i * timeStep,
+        ),
+      ).addToParent(c);
     }
   }
 
   void _listenToBroadcaster() {
     switch (broadcaster.event) {
       case PlayerEvent.tapPickUpRegion:
-        _pickUpCards(facingDownCards: broadcaster.aboutToPickUpCards!);
+        _pickUpCards(facingDownCardsByTopMost: broadcaster.aboutToPickUpCards!);
         break;
       default:
     }
