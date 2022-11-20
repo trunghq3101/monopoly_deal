@@ -1,11 +1,10 @@
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:monopoly_deal/game/game.dart';
 
-class MainGame extends BaseGame with HasTappableComponents, HasHoverables {
+class MainGame extends BaseGame
+    with HasTappableComponents, HasHoverableComponents {
   @override
   World get world => _world;
   final World _world = World();

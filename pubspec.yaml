@@ -47,6 +47,7 @@ dependencies:
   flame_svg: ^1.6.0
   flame_rive: ^1.5.2
   flame_tiled: ^1.8.0
+  meta: ^1.8.0
 
 dev_dependencies:
   flutter_test:

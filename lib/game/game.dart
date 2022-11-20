@@ -4,3 +4,4 @@ export 'components/components.dart';
 export 'configurations/configurations.dart';
 export 'effects/effects.dart';
 export 'main_game.dart';
+export 'mixins/mixins.dart';

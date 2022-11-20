@@ -70,6 +70,12 @@ class Player extends Component with HasGameRef<BaseGame> {
         ),
       ).addToParent(c);
     }
+
+    HandRegion()
+      ..position = Vector2(0, GameSize.visibleAfterDealing.size.y * 0.3)
+      ..size = Vector2(handCurveWidth, handCurveRadius.y * 2)
+      ..anchor = Anchor.center
+      ..addToParent(gameRef.world);
   }
 
   bool _isTappedOutsideHand({required TapDownEvent tapDownEvent}) {

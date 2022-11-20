@@ -2,17 +2,12 @@
 
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/input.dart';
 import 'package:flutter/rendering.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class PickUpRegion extends PositionComponent
-    with TapCallbacks, Hoverable, HasGameRef<BaseGame> {
+    with TapCallbacks, HoverCallbacks, HasGameRef<BaseGame> {
   PickUpRegion({required this.playerBroadcaster});
-
-  @override
-  bool get isHovered => _isHovered;
-  bool _isHovered = false;
 
   final PlayerBroadcaster playerBroadcaster;
 
@@ -28,31 +23,14 @@ class PickUpRegion extends PositionComponent
     removeFromParent();
   }
 
-  bool handleMouseMovement(PointerHoverInfo info) {
-    final worldPosition = gameRef.worldPosition(info.eventPosition.viewport);
-    if (containsLocalPoint(absoluteToLocal(worldPosition))) {
-      if (!_isHovered) {
-        _isHovered = true;
-        return onHoverEnter(info);
-      }
-    } else {
-      if (_isHovered) {
-        _isHovered = false;
-        return onHoverLeave(info);
-      }
-    }
-    return true;
-  }
-
   @override
-  bool onHoverEnter(PointerHoverInfo info) {
+  void onHoverEnter(int hoverId) {
+    super.onHoverEnter(hoverId);
     gameRef.mouseCursor = SystemMouseCursors.click;
-    return super.onHoverEnter(info);
   }
 
   @override
-  bool onHoverLeave(PointerHoverInfo info) {
+  void onHoverLeave() {
     gameRef.mouseCursor = MouseCursor.defer;
-    return super.onHoverLeave(info);
   }
 }
