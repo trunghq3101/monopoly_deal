@@ -34,7 +34,7 @@ mixin HasHoverableComponents on FlameGame implements MouseMovementDetector {
               component.onHoverEnter(hoverId!);
             }
           }
-          component?.onHover();
+          component?.onHover(event);
         });
   }
 }
@@ -49,7 +49,7 @@ mixin HoverCallbacks on Component {
 
   void onHoverLeave() {}
 
-  void onHover() {}
+  void onHover(HoverEvent event) {}
 
   @override
   @mustCallSuper
@@ -74,8 +74,6 @@ class HoverEvent {
 
   factory HoverEvent.fromInfo(PointerHoverInfo info) =>
       HoverEvent(info.eventPosition.widget);
-
-  bool continuePropagation = false;
 
   final Vector2 canvasPosition;
 
