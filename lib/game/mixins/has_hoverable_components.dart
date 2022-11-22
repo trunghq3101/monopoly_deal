@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/rendering.dart';
 import 'package:meta/meta.dart';
 
 mixin HasHoverableComponents on FlameGame implements MouseMovementDetector {
@@ -41,13 +42,22 @@ mixin HasHoverableComponents on FlameGame implements MouseMovementDetector {
 
 mixin HoverCallbacks on Component {
   int? hoverId;
+  bool handCursor = true;
 
   @mustCallSuper
   void onHoverEnter(int hoverId) {
     this.hoverId = hoverId;
+    if (handCursor) {
+      findGame()?.mouseCursor = SystemMouseCursors.click;
+    }
   }
 
-  void onHoverLeave() {}
+  @mustCallSuper
+  void onHoverLeave() {
+    if (handCursor) {
+      findGame()?.mouseCursor = MouseCursor.defer;
+    }
+  }
 
   void onHover(HoverEvent event) {}
 
