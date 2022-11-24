@@ -11,6 +11,8 @@ class Player extends Component with HasGameRef<BaseGame> {
 
   final PlayerBroadcaster broadcaster;
   final CardFrontBroadcaster cardFrontBroadcaster = CardFrontBroadcaster();
+  late final HandStateMachine _handStateMachine =
+      HandStateMachine(player: this);
 
   void _pickUpCards({required List<CardBack> facingDownCardsByTopMost}) {
     const timeStep = 0.1;
@@ -105,6 +107,11 @@ class Player extends Component with HasGameRef<BaseGame> {
     }
   }
 
+  void moveCardToPreviewingPosition() {
+    CardFront.findById(gameRef, cardFrontBroadcaster.id!)
+        .moveToPreviewingPosition();
+  }
+
   void _listenToBroadcaster() {
     switch (broadcaster.event) {
       case PlayerEvent.tapPickUpRegion:
@@ -115,12 +122,17 @@ class Player extends Component with HasGameRef<BaseGame> {
   }
 
   void _listenToCardFrontBroadcaster() {
-    switch (cardFrontBroadcaster.event) {
-      case CardFrontEvent.tapped:
-        CardFront.findById(gameRef, cardFrontBroadcaster.id!)
-            .moveToPreviewingPosition();
-        break;
-      default:
+    _handStateMachine.handle(cardFrontBroadcaster.event?.toHandEvent());
+  }
+
+  void _listenToGlobalTapDown() {
+    final tapDownEvent = gameRef.onTapDownBroadcaster.value;
+    if (tapDownEvent == null) return;
+    if (_isTappedOutsideHand(tapDownEvent: tapDownEvent)) {
+      _handStateMachine.handle(HandEvent.outsideHandTappedEvent);
+    }
+    if (_isTappedInsideHand(tapDownEvent: tapDownEvent)) {
+      _handStateMachine.handle(HandEvent.insideHandTappedEvent);
     }
   }
 
@@ -137,39 +149,45 @@ class Player extends Component with HasGameRef<BaseGame> {
     gameRef.onTapDownBroadcaster.removeListener(_listenToGlobalTapDown);
     cardFrontBroadcaster.removeListener(_listenToCardFrontBroadcaster);
   }
+}
 
-  late final HandStateMachine _handStateMachine =
-      HandStateMachine(player: this);
+enum HandEvent {
+  outsideHandTappedEvent,
+  insideHandTappedEvent,
+  cardTappedEvent
+}
 
-  void _listenToGlobalTapDown() {
-    final tapDownEvent = gameRef.onTapDownBroadcaster.value;
-    if (tapDownEvent == null) return;
-    if (_isTappedOutsideHand(tapDownEvent: tapDownEvent)) {
-      _handStateMachine.handle(HandEvent.outsideHandTappedEvent);
-    }
-    if (_isTappedInsideHand(tapDownEvent: tapDownEvent)) {
-      _handStateMachine.handle(HandEvent.insideHandTappedEvent);
+extension HandEventMapper on CardFrontEvent {
+  HandEvent? toHandEvent() {
+    switch (this) {
+      case CardFrontEvent.tapped:
+        return HandEvent.cardTappedEvent;
+      default:
+        return null;
     }
   }
 }
 
-enum HandEvent { outsideHandTappedEvent, insideHandTappedEvent }
-
 class HandStateMachine {
   static const stateHandUp = 0;
   static const stateHandDown = 1;
+  static const stateCardPreviewing = 2;
 
   int _handState = stateHandUp;
   final Player player;
 
   HandStateMachine({required this.player});
 
-  void handle(HandEvent event) {
+  void handle(HandEvent? event) {
     switch (_handState) {
       case stateHandUp:
         if (event == HandEvent.outsideHandTappedEvent) {
           player.letTheHandDown();
           _handState = stateHandDown;
+        }
+        if (event == HandEvent.cardTappedEvent) {
+          player.moveCardToPreviewingPosition();
+          _handState = stateCardPreviewing;
         }
         break;
       case stateHandDown:
