@@ -27,3 +27,11 @@ enum GamePosition {
 
   Vector2 get position => Vector2(x, y);
 }
+
+enum GamePriority {
+  hand(10000);
+
+  final int priority;
+
+  const GamePriority(this.priority);
+}

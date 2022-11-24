@@ -61,6 +61,7 @@ class Player extends Component with HasGameRef<BaseGame> {
         ..position = initialPosition
         ..angle = tangent.vector.direction
         ..anchor = Anchor.center
+        ..priority = GamePriority.hand.priority
         ..addToParent(gameRef.world);
       MoveEffect.to(
         inHandPosition,
