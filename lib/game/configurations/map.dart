@@ -17,7 +17,8 @@ enum GameSize {
 enum GamePosition {
   deck(0, 0),
   dealTargetMe(0, 1000),
-  dealTarget1(0, -1000);
+  dealTarget1(0, -1000),
+  previewCard(0, -500);
 
   final double x;
   final double y;

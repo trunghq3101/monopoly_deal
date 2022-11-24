@@ -1,8 +1,10 @@
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
+import 'package:flame/experimental.dart';
 import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
 
-class CardFront extends SpriteComponent with HoverCallbacks {
+class CardFront extends SpriteComponent with HoverCallbacks, TapCallbacks {
   CardFront({required this.id});
 
   final int id;
@@ -10,6 +12,15 @@ class CardFront extends SpriteComponent with HoverCallbacks {
   @override
   Future<void>? onLoad() async {
     sprite = gameAssets.cardSprites[id];
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    addAll([
+      MoveEffect.to(
+          GamePosition.previewCard.position, LinearEffectController(0.1)),
+      RotateEffect.to(0, LinearEffectController(0.1)),
+    ]);
   }
 
   @override
