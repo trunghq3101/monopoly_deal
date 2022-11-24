@@ -20,6 +20,7 @@ class CardFront extends SpriteComponent with HoverCallbacks, TapCallbacks {
       MoveEffect.to(
           GamePosition.previewCard.position, LinearEffectController(0.1)),
       RotateEffect.to(0, LinearEffectController(0.1)),
+      ScaleEffect.by(Vector2.all(1.6), LinearEffectController(0.1)),
     ]);
   }
 
