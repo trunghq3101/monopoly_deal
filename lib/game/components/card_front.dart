@@ -76,13 +76,11 @@ enum CardFrontEvent {
 }
 
 class CardFrontBroadcaster extends ChangeNotifier {
-  int? prevSelectedCardId;
   int? selectedCardId;
   CardFrontEvent? event;
 
   void onTapDown(int id) {
     event = CardFrontEvent.tapped;
-    prevSelectedCardId = selectedCardId;
     selectedCardId = id;
     notifyListeners();
   }

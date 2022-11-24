@@ -13,6 +13,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   final CardFrontBroadcaster cardFrontBroadcaster = CardFrontBroadcaster();
   late final HandStateMachine _handStateMachine =
       HandStateMachine(player: this);
+  int? _previewingCardId;
 
   void _pickUpCards({required List<CardBack> facingDownCardsByTopMost}) {
     const timeStep = 0.1;
@@ -110,6 +111,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   void moveSelectedCardToPreviewingPosition() {
     CardFront.findById(gameRef, cardFrontBroadcaster.selectedCardId!)
         .moveToPreviewingPosition();
+    _previewingCardId = cardFrontBroadcaster.selectedCardId;
   }
 
   void swapPreviewingCard() {
@@ -118,8 +120,8 @@ class Player extends Component with HasGameRef<BaseGame> {
   }
 
   void movePreviewingCardBackToHand() {
-    CardFront.findById(gameRef, cardFrontBroadcaster.prevSelectedCardId!)
-        .moveBackToHand();
+    CardFront.findById(gameRef, _previewingCardId!).moveBackToHand();
+    _previewingCardId = null;
   }
 
   void _listenToBroadcaster() {
@@ -149,8 +151,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   HandEvent? _toHandEvent(CardFrontEvent? cardFrontEvent) {
     switch (cardFrontEvent) {
       case CardFrontEvent.tapped:
-        if (cardFrontBroadcaster.selectedCardId ==
-            cardFrontBroadcaster.prevSelectedCardId) {
+        if (cardFrontBroadcaster.selectedCardId == _previewingCardId) {
           return HandEvent.previewingCardTappedEvent;
         } else {
           return HandEvent.inHandCardTappedEvent;
@@ -181,8 +182,6 @@ enum HandEvent {
   inHandCardTappedEvent,
   previewingCardTappedEvent,
 }
-
-extension HandEventMapper on CardFrontEvent {}
 
 class HandStateMachine {
   static const stateHandUp = 0;
