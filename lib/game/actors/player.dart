@@ -10,6 +10,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   Player({required this.broadcaster});
 
   final PlayerBroadcaster broadcaster;
+  final CardFrontBroadcaster cardFrontBroadcaster = CardFrontBroadcaster();
 
   void _pickUpCards({required List<CardBack> facingDownCardsByTopMost}) {
     const timeStep = 0.1;
@@ -56,7 +57,10 @@ class Player extends Component with HasGameRef<BaseGame> {
       final tangent = pathMetrics.getTangentForOffset(i * spacing)!;
       final initialPosition = Vector2(0, GameSize.visibleAfterDealing.y * 1.3);
       final inHandPosition = Vector2(tangent.position.dx, tangent.position.dy);
-      final c = CardFront(id: facingDownCardsByTopMost[i].id)
+      final c = CardFront(
+        id: facingDownCardsByTopMost[i].id,
+        broadcaster: cardFrontBroadcaster,
+      )
         ..size = GameSize.cardInHand.size
         ..position = initialPosition
         ..angle = tangent.vector.direction
@@ -128,16 +132,26 @@ class Player extends Component with HasGameRef<BaseGame> {
     }
   }
 
+  void _listenToCardFrontBroadcaster() {
+    switch (cardFrontBroadcaster.event) {
+      case CardFrontEvent.tapped:
+        break;
+      default:
+    }
+  }
+
   @override
   void onMount() {
     broadcaster.addListener(_listenToBroadcaster);
     gameRef.onTapDownBroadcaster.addListener(_listenToGlobalTapDown);
+    cardFrontBroadcaster.addListener(_listenToCardFrontBroadcaster);
   }
 
   @override
   void onRemove() {
     broadcaster.removeListener(_listenToBroadcaster);
     gameRef.onTapDownBroadcaster.removeListener(_listenToGlobalTapDown);
+    cardFrontBroadcaster.removeListener(_listenToCardFrontBroadcaster);
   }
 }
 
