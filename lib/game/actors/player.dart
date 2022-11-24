@@ -107,9 +107,19 @@ class Player extends Component with HasGameRef<BaseGame> {
     }
   }
 
-  void moveCardToPreviewingPosition() {
-    CardFront.findById(gameRef, cardFrontBroadcaster.id!)
+  void moveSelectedCardToPreviewingPosition() {
+    CardFront.findById(gameRef, cardFrontBroadcaster.selectedCardId!)
         .moveToPreviewingPosition();
+  }
+
+  void swapPreviewingCard() {
+    movePreviewingCardBackToHand();
+    moveSelectedCardToPreviewingPosition();
+  }
+
+  void movePreviewingCardBackToHand() {
+    CardFront.findById(gameRef, cardFrontBroadcaster.prevSelectedCardId!)
+        .moveBackToHand();
   }
 
   void _listenToBroadcaster() {
@@ -122,7 +132,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   }
 
   void _listenToCardFrontBroadcaster() {
-    _handStateMachine.handle(cardFrontBroadcaster.event?.toHandEvent());
+    _handStateMachine.handle(_toHandEvent(cardFrontBroadcaster.event));
   }
 
   void _listenToGlobalTapDown() {
@@ -133,6 +143,20 @@ class Player extends Component with HasGameRef<BaseGame> {
     }
     if (_isTappedInsideHand(tapDownEvent: tapDownEvent)) {
       _handStateMachine.handle(HandEvent.insideHandTappedEvent);
+    }
+  }
+
+  HandEvent? _toHandEvent(CardFrontEvent? cardFrontEvent) {
+    switch (cardFrontEvent) {
+      case CardFrontEvent.tapped:
+        if (cardFrontBroadcaster.selectedCardId ==
+            cardFrontBroadcaster.prevSelectedCardId) {
+          return HandEvent.previewingCardTappedEvent;
+        } else {
+          return HandEvent.inHandCardTappedEvent;
+        }
+      default:
+        return null;
     }
   }
 
@@ -154,19 +178,11 @@ class Player extends Component with HasGameRef<BaseGame> {
 enum HandEvent {
   outsideHandTappedEvent,
   insideHandTappedEvent,
-  cardTappedEvent
+  inHandCardTappedEvent,
+  previewingCardTappedEvent,
 }
 
-extension HandEventMapper on CardFrontEvent {
-  HandEvent? toHandEvent() {
-    switch (this) {
-      case CardFrontEvent.tapped:
-        return HandEvent.cardTappedEvent;
-      default:
-        return null;
-    }
-  }
-}
+extension HandEventMapper on CardFrontEvent {}
 
 class HandStateMachine {
   static const stateHandUp = 0;
@@ -185,14 +201,24 @@ class HandStateMachine {
           player.letTheHandDown();
           _handState = stateHandDown;
         }
-        if (event == HandEvent.cardTappedEvent) {
-          player.moveCardToPreviewingPosition();
+        if (event == HandEvent.inHandCardTappedEvent) {
+          player.moveSelectedCardToPreviewingPosition();
           _handState = stateCardPreviewing;
         }
         break;
       case stateHandDown:
         if (event == HandEvent.insideHandTappedEvent) {
           player.letTheHandUp();
+          _handState = stateHandUp;
+        }
+        break;
+      case stateCardPreviewing:
+        if (event == HandEvent.inHandCardTappedEvent) {
+          player.swapPreviewingCard();
+          _handState = stateCardPreviewing;
+        }
+        if (event == HandEvent.previewingCardTappedEvent) {
+          player.movePreviewingCardBackToHand();
           _handState = stateHandUp;
         }
         break;
