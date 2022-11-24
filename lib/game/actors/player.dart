@@ -95,7 +95,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   void _letTheHandDown() {
     if (_handState == stateHandDown) return;
     _handState = stateHandDown;
-    final cardsInHand = gameRef.world.children.query<CardFront>();
+    final cardsInHand = CardFront.findAll(gameRef);
     for (var c in cardsInHand) {
       MoveEffect.by(Vector2(0, handDownOffset), LinearEffectController(0.1))
           .addToParent(c);
@@ -105,7 +105,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   void _letTheHandUp() {
     if (_handState == stateHandUp) return;
     _handState = stateHandUp;
-    final cardsInHand = gameRef.world.children.query<CardFront>();
+    final cardsInHand = CardFront.findAll(gameRef);
     for (var c in cardsInHand) {
       MoveEffect.by(Vector2(0, -handDownOffset), LinearEffectController(0.1))
           .addToParent(c);
@@ -135,6 +135,8 @@ class Player extends Component with HasGameRef<BaseGame> {
   void _listenToCardFrontBroadcaster() {
     switch (cardFrontBroadcaster.event) {
       case CardFrontEvent.tapped:
+        CardFront.findById(gameRef, cardFrontBroadcaster.id!)
+            .moveToPreviewingPosition();
         break;
       default:
     }

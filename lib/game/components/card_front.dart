@@ -22,12 +22,6 @@ class CardFront extends SpriteComponent with HoverCallbacks, TapCallbacks {
   @override
   void onTapDown(TapDownEvent event) {
     broadcaster.onTapDown(id);
-    addAll([
-      MoveEffect.to(
-          GamePosition.previewCard.position, LinearEffectController(0.1)),
-      RotateEffect.to(0, LinearEffectController(0.1)),
-      ScaleEffect.by(Vector2.all(1.6), LinearEffectController(0.1)),
-    ]);
   }
 
   @override
@@ -46,6 +40,20 @@ class CardFront extends SpriteComponent with HoverCallbacks, TapCallbacks {
   void onHoverLeave() {
     super.onHoverLeave();
     decorator.removeLast();
+  }
+
+  static List<CardFront> findAll(BaseGame game) =>
+      game.world.children.query<CardFront>();
+  static CardFront findById(BaseGame game, int id) =>
+      game.world.children.query<CardFront>().firstWhere((e) => e.id == id);
+
+  void moveToPreviewingPosition() {
+    addAll([
+      MoveEffect.to(
+          GamePosition.previewCard.position, LinearEffectController(0.1)),
+      RotateEffect.to(0, LinearEffectController(0.1)),
+      ScaleEffect.by(Vector2.all(1.6), LinearEffectController(0.1)),
+    ]);
   }
 }
 
