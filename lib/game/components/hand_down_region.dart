@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:monopoly_deal/game/game.dart';
+import 'package:monopoly_deal/state_machine/state_machine.dart';
 
 class HandDownRegion extends PositionComponent
     with TapCallbacks, HasGameRef<BaseGame> {
@@ -16,7 +17,7 @@ class HandDownRegion extends PositionComponent
       gameRef.children
           .query<Player>()
           .firstOrNull
-          ?.handle(const HandEvent(TapDownEvent, EventSender.handDownRegion));
+          ?.handle(const Event(GameEvent.tapHandDownRegion));
     } else {
       event.continuePropagation = true;
     }

@@ -14,7 +14,6 @@ class MainGame extends BaseGame
 
   @override
   Future<void> onLoad() async {
-    debugMode = true;
     await gameAssets.preCache();
     final milestones = Milestones();
     const randSeed = 1;

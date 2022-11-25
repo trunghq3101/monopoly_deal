@@ -1,17 +1,16 @@
-import 'package:equatable/equatable.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flame/experimental.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
+import 'package:monopoly_deal/state_machine/state_machine.dart';
 
 class Player extends Component with HasGameRef<BaseGame> {
   Player({required this.broadcaster});
 
   final PlayerBroadcaster broadcaster;
-  late final HandStateMachine _handStateMachine = HandStateMachine(this);
+  late final _handStateMachine = StateMachine<HandState, GameEvent>();
   int? _previewingCardId;
   late final HandUpOverlay _handUpOverlay;
   late final HandDownRegion _handDownRegion;
@@ -79,7 +78,7 @@ class Player extends Component with HasGameRef<BaseGame> {
         ));
     }
     add(TimerComponent(
-      onTick: () => _handStateMachine.changeState(HandState.handUp),
+      onTick: () => _handStateMachine.handle(const Event(GameEvent.handUp)),
       period: cardsAmount * timeStep + 0.4,
       removeOnFinish: true,
     ));
@@ -126,6 +125,16 @@ class Player extends Component with HasGameRef<BaseGame> {
     _handUpOverlay.enable();
   }
 
+  void transformTapCardFrontEvent(Event<GameEvent> event) {
+    final transformedEvent = Event(
+      _previewingCardId == event.payload
+          ? GameEvent.tapPreviewingCard
+          : GameEvent.tapCardInHand,
+      event.payload,
+    );
+    _handStateMachine.handle(transformedEvent);
+  }
+
   void _listenToBroadcaster() {
     switch (broadcaster.event) {
       case PlayerEvent.tapPickUpRegion:
@@ -137,6 +146,7 @@ class Player extends Component with HasGameRef<BaseGame> {
 
   @override
   void onMount() {
+    _setupStateMachine();
     broadcaster.addListener(_listenToBroadcaster);
     _handDownRegion = HandDownRegion()
       ..position = Vector2(0, GameSize.visibleAfterDealing.y * 0.5)
@@ -157,74 +167,53 @@ class Player extends Component with HasGameRef<BaseGame> {
     broadcaster.removeListener(_listenToBroadcaster);
   }
 
-  void handle(HandEvent event) {
+  void handle(Event<GameEvent> event) {
     _handStateMachine.handle(event);
+  }
+
+  void _setupStateMachine() {
+    _handStateMachine.setup({
+      HandState.initial: {
+        GameEvent.handUp: EventAction(
+          (event) => enableHandUpOverlay(),
+          HandState.handUp,
+        ),
+      },
+      HandState.handUp: {
+        GameEvent.tapHandUpOverlay: EventAction(
+          (event) => letTheHandDown(),
+          HandState.handDown,
+        ),
+        GameEvent.tapCardFront: EventAction(
+          (event) => moveSelectedCardToPreviewingPosition(event.payload),
+          HandState.previewing,
+        ),
+      },
+      HandState.handDown: {
+        GameEvent.tapHandDownRegion: EventAction(
+          (event) => letTheHandUp(),
+          HandState.handUp,
+        ),
+      },
+      HandState.previewing: {
+        GameEvent.tapCardFront: EventAction(
+          (event) => transformTapCardFrontEvent(event as Event<GameEvent>),
+          HandState.previewing,
+        ),
+        GameEvent.tapCardInHand: EventAction(
+          (event) => swapPreviewingCard(event.payload),
+          HandState.previewing,
+        ),
+        GameEvent.tapPreviewingCard: EventAction(
+          (event) => movePreviewingCardBackToHand(),
+          HandState.handUp,
+        ),
+      }
+    });
   }
 }
 
 enum HandState { initial, handUp, handDown, previewing }
-
-class HandEvent extends Equatable {
-  final Type eventType;
-  final EventSender senderId;
-  final dynamic payload;
-
-  const HandEvent(this.eventType, this.senderId, [this.payload]);
-
-  @override
-  List<Object?> get props => [eventType, senderId];
-}
-
-class HandStateMachine {
-  HandState _handState = HandState.initial;
-  final Player player;
-
-  HandStateMachine(this.player);
-
-  void changeState(HandState state) {
-    switch (state) {
-      case HandState.handUp:
-        player.enableHandUpOverlay();
-        _handState = state;
-        break;
-      default:
-    }
-  }
-
-  void handle(HandEvent event) {
-    switch (_handState) {
-      case HandState.handUp:
-        if (event == const HandEvent(TapDownEvent, EventSender.handUpOverlay)) {
-          player.letTheHandDown();
-          _handState = HandState.handDown;
-        } else if (event ==
-            const HandEvent(TapDownEvent, EventSender.cardFront)) {
-          player.moveSelectedCardToPreviewingPosition(event.payload);
-          _handState = HandState.previewing;
-        }
-        break;
-      case HandState.handDown:
-        if (event ==
-            const HandEvent(TapDownEvent, EventSender.handDownRegion)) {
-          player.letTheHandUp();
-          _handState = HandState.handUp;
-        }
-        break;
-      case HandState.previewing:
-        if (event == const HandEvent(TapDownEvent, EventSender.cardFront)) {
-          if (player._previewingCardId == event.payload) {
-            player.movePreviewingCardBackToHand();
-            _handState = HandState.handUp;
-          } else {
-            player.swapPreviewingCard(event.payload);
-            _handState = HandState.previewing;
-          }
-        }
-        break;
-      default:
-    }
-  }
-}
 
 enum PlayerEvent {
   tapPickUpRegion,

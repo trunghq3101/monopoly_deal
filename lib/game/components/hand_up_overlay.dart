@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:monopoly_deal/game/game.dart';
+import 'package:monopoly_deal/state_machine/state_machine.dart';
 
 class HandUpOverlay extends PositionComponent
     with TapCallbacks, HasGameRef<BaseGame> {
@@ -16,7 +17,7 @@ class HandUpOverlay extends PositionComponent
       gameRef.children
           .query<Player>()
           .firstOrNull
-          ?.handle(const HandEvent(TapDownEvent, EventSender.handUpOverlay));
+          ?.handle(const Event(GameEvent.tapHandUpOverlay));
     } else {
       event.continuePropagation = true;
     }

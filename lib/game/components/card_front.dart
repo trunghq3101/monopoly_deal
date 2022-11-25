@@ -4,6 +4,7 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
+import 'package:monopoly_deal/state_machine/state_machine.dart';
 
 class CardFront extends SpriteComponent
     with HoverCallbacks, TapCallbacks, HasGameRef<BaseGame> {
@@ -23,7 +24,7 @@ class CardFront extends SpriteComponent
     gameRef.children
         .query<Player>()
         .firstOrNull
-        ?.handle(HandEvent(TapDownEvent, EventSender.cardFront, id));
+        ?.handle(Event(GameEvent.tapCardFront, id));
   }
 
   @override
