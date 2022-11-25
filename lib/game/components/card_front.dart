@@ -23,7 +23,7 @@ class CardFront extends SpriteComponent
     gameRef.children
         .query<Player>()
         .firstOrNull
-        ?.handle(event, EventSender.cardFront, id);
+        ?.handle(HandEvent(TapDownEvent, EventSender.cardFront, id));
   }
 
   @override

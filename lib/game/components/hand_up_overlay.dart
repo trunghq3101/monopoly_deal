@@ -16,7 +16,7 @@ class HandUpOverlay extends PositionComponent
       gameRef.children
           .query<Player>()
           .firstOrNull
-          ?.handle(event, EventSender.handUpOverlay);
+          ?.handle(const HandEvent(TapDownEvent, EventSender.handUpOverlay));
     } else {
       event.continuePropagation = true;
     }

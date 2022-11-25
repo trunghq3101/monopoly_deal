@@ -16,7 +16,7 @@ class HandDownRegion extends PositionComponent
       gameRef.children
           .query<Player>()
           .firstOrNull
-          ?.handle(event, EventSender.handDownRegion);
+          ?.handle(const HandEvent(TapDownEvent, EventSender.handDownRegion));
     } else {
       event.continuePropagation = true;
     }

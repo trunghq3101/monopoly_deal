@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
@@ -156,12 +157,23 @@ class Player extends Component with HasGameRef<BaseGame> {
     broadcaster.removeListener(_listenToBroadcaster);
   }
 
-  void handle(dynamic event, EventSender senderId, [dynamic payload]) {
-    _handStateMachine.handle(event, senderId, payload);
+  void handle(HandEvent event) {
+    _handStateMachine.handle(event);
   }
 }
 
 enum HandState { initial, handUp, handDown, previewing }
+
+class HandEvent extends Equatable {
+  final Type eventType;
+  final EventSender senderId;
+  final dynamic payload;
+
+  const HandEvent(this.eventType, this.senderId, [this.payload]);
+
+  @override
+  List<Object?> get props => [eventType, senderId];
+}
 
 class HandStateMachine {
   HandState _handState = HandState.initial;
@@ -179,35 +191,34 @@ class HandStateMachine {
     }
   }
 
-  void handle(dynamic event, EventSender senderId, dynamic payload) {
+  void handle(HandEvent event) {
     switch (_handState) {
       case HandState.handUp:
-        if (event is TapDownEvent && senderId == EventSender.handUpOverlay) {
+        if (event == const HandEvent(TapDownEvent, EventSender.handUpOverlay)) {
           player.letTheHandDown();
           _handState = HandState.handDown;
-        }
-        if (event is TapDownEvent && senderId == EventSender.cardFront) {
-          player.moveSelectedCardToPreviewingPosition(payload);
+        } else if (event ==
+            const HandEvent(TapDownEvent, EventSender.cardFront)) {
+          player.moveSelectedCardToPreviewingPosition(event.payload);
           _handState = HandState.previewing;
         }
         break;
       case HandState.handDown:
-        if (event is TapDownEvent && senderId == EventSender.handDownRegion) {
+        if (event ==
+            const HandEvent(TapDownEvent, EventSender.handDownRegion)) {
           player.letTheHandUp();
           _handState = HandState.handUp;
         }
         break;
       case HandState.previewing:
-        if (event is TapDownEvent &&
-            senderId == EventSender.cardFront &&
-            player._previewingCardId != payload) {
-          player.swapPreviewingCard(payload);
-          _handState = HandState.previewing;
-        } else if (event is TapDownEvent &&
-            senderId == EventSender.cardFront &&
-            player._previewingCardId == payload) {
-          player.movePreviewingCardBackToHand();
-          _handState = HandState.handUp;
+        if (event == const HandEvent(TapDownEvent, EventSender.cardFront)) {
+          if (player._previewingCardId == event.payload) {
+            player.movePreviewingCardBackToHand();
+            _handState = HandState.handUp;
+          } else {
+            player.swapPreviewingCard(event.payload);
+            _handState = HandState.previewing;
+          }
         }
         break;
       default:
