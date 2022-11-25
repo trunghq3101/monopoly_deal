@@ -1,21 +1,17 @@
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/state_machine/state_machine.dart';
 
 class Player extends Component with HasGameRef<BaseGame> {
-  Player({required this.broadcaster});
-
-  final PlayerBroadcaster broadcaster;
-  late final _handStateMachine = StateMachine<HandState, GameEvent>();
-  int? _previewingCardId;
+  final _handStateMachine = StateMachine<HandState, GameEvent>();
   late final HandUpOverlay _handUpOverlay;
   late final HandDownRegion _handDownRegion;
+  int? _previewingCardId;
 
-  void _pickUpCards({required List<CardBack> facingDownCardsByTopMost}) {
+  void pickUpCards({required List<CardBack> facingDownCardsByTopMost}) {
     const timeStep = 0.1;
 
     // pull the cards out
@@ -106,14 +102,14 @@ class Player extends Component with HasGameRef<BaseGame> {
     }
   }
 
-  void moveSelectedCardToPreviewingPosition(int cardId) {
-    CardFront.findById(gameRef, cardId).moveToPreviewingPosition();
-    _previewingCardId = cardId;
+  void moveSelectedCardToPreviewingPosition({required int selectedCardId}) {
+    CardFront.findById(gameRef, selectedCardId).moveToPreviewingPosition();
+    _previewingCardId = selectedCardId;
   }
 
-  void swapPreviewingCard(int cardId) {
+  void swapPreviewingCard({required int selectedCardId}) {
     movePreviewingCardBackToHand();
-    moveSelectedCardToPreviewingPosition(cardId);
+    moveSelectedCardToPreviewingPosition(selectedCardId: selectedCardId);
   }
 
   void movePreviewingCardBackToHand() {
@@ -125,29 +121,9 @@ class Player extends Component with HasGameRef<BaseGame> {
     _handUpOverlay.enable();
   }
 
-  void transformTapCardFrontEvent(Event<GameEvent> event) {
-    final transformedEvent = Event(
-      _previewingCardId == event.payload
-          ? GameEvent.tapPreviewingCard
-          : GameEvent.tapCardInHand,
-      event.payload,
-    );
-    _handStateMachine.handle(transformedEvent);
-  }
-
-  void _listenToBroadcaster() {
-    switch (broadcaster.event) {
-      case PlayerEvent.tapPickUpRegion:
-        _pickUpCards(facingDownCardsByTopMost: broadcaster.aboutToPickUpCards!);
-        break;
-      default:
-    }
-  }
-
   @override
   void onMount() {
     _setupStateMachine();
-    broadcaster.addListener(_listenToBroadcaster);
     _handDownRegion = HandDownRegion()
       ..position = Vector2(0, GameSize.visibleAfterDealing.y * 0.5)
       ..size = Vector2(
@@ -162,11 +138,6 @@ class Player extends Component with HasGameRef<BaseGame> {
       ..addToParent(gameRef.world);
   }
 
-  @override
-  void onRemove() {
-    broadcaster.removeListener(_listenToBroadcaster);
-  }
-
   void handle(Event<GameEvent> event) {
     _handStateMachine.handle(event);
   }
@@ -174,6 +145,12 @@ class Player extends Component with HasGameRef<BaseGame> {
   void _setupStateMachine() {
     _handStateMachine.setup({
       HandState.initial: {
+        GameEvent.tapPickUpRegion: EventAction(
+          (event) => pickUpCards(facingDownCardsByTopMost: event.payload),
+          HandState.pickingUp,
+        ),
+      },
+      HandState.pickingUp: {
         GameEvent.handUp: EventAction(
           (event) => enableHandUpOverlay(),
           HandState.handUp,
@@ -185,7 +162,8 @@ class Player extends Component with HasGameRef<BaseGame> {
           HandState.handDown,
         ),
         GameEvent.tapCardFront: EventAction(
-          (event) => moveSelectedCardToPreviewingPosition(event.payload),
+          (event) => moveSelectedCardToPreviewingPosition(
+              selectedCardId: event.payload),
           HandState.previewing,
         ),
       },
@@ -197,11 +175,11 @@ class Player extends Component with HasGameRef<BaseGame> {
       },
       HandState.previewing: {
         GameEvent.tapCardFront: EventAction(
-          (event) => transformTapCardFrontEvent(event as Event<GameEvent>),
+          (event) => _transformTapCardFrontEvent(event as Event<GameEvent>),
           HandState.previewing,
         ),
         GameEvent.tapCardInHand: EventAction(
-          (event) => swapPreviewingCard(event.payload),
+          (event) => swapPreviewingCard(selectedCardId: event.payload),
           HandState.previewing,
         ),
         GameEvent.tapPreviewingCard: EventAction(
@@ -211,21 +189,16 @@ class Player extends Component with HasGameRef<BaseGame> {
       }
     });
   }
-}
 
-enum HandState { initial, handUp, handDown, previewing }
-
-enum PlayerEvent {
-  tapPickUpRegion,
-}
-
-class PlayerBroadcaster extends ChangeNotifier {
-  PlayerEvent? event;
-  List<CardBack>? aboutToPickUpCards;
-
-  void tapPickUpRegion({required List<CardBack> withCards}) {
-    event = PlayerEvent.tapPickUpRegion;
-    aboutToPickUpCards = withCards;
-    notifyListeners();
+  void _transformTapCardFrontEvent(Event<GameEvent> event) {
+    final transformedEvent = Event(
+      _previewingCardId == event.payload
+          ? GameEvent.tapPreviewingCard
+          : GameEvent.tapCardInHand,
+      event.payload,
+    );
+    _handStateMachine.handle(transformedEvent);
   }
 }
+
+enum HandState { initial, pickingUp, handUp, handDown, previewing }

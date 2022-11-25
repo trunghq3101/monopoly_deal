@@ -24,9 +24,6 @@ class MainGame extends BaseGame
       ..viewfinder.visibleGameSize = GameSize.visibleInitial.size
       ..addToParent(this);
 
-    final gameMasterBroadcaster = GameMasterBroadcaster(null);
-    final playerBroadcaster = PlayerBroadcaster();
-
     GameMaster(
       deck: Deck(
         randSeed: randSeed,
@@ -35,14 +32,13 @@ class MainGame extends BaseGame
         cardAnchor: Anchor.center,
       ),
       milestones: milestones,
-      broadcaster: gameMasterBroadcaster,
-      playerBroadcaster: playerBroadcaster,
     ).addToParent(this);
+    CameraMan().addToParent(this);
+    Player().addToParent(this);
 
-    CameraMan(gameMasterBroadcaster: gameMasterBroadcaster).addToParent(this);
-
-    Player(broadcaster: playerBroadcaster).addToParent(this);
-
+    children
+      ..register<Player>()
+      ..register<CameraMan>();
     world.children.register<CardFront>();
   }
 }

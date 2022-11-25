@@ -1,4 +1,5 @@
 enum GameEvent {
+  tapPickUpRegion,
   handUp,
   tapHandDownRegion,
   tapHandUpOverlay,

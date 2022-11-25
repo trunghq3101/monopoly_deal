@@ -1,10 +1,10 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/animation.dart';
-import 'package:flutter/foundation.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class Deck {
@@ -30,29 +30,15 @@ class Deck {
   }
 }
 
-enum GameMasterEvent {
-  startDealing,
-}
-
-class GameMasterBroadcaster extends ValueNotifier<GameMasterEvent?> {
-  GameMasterBroadcaster(super.value);
-}
-
 class GameMaster extends Component with HasGameRef<BaseGame> {
   GameMaster({
     required Milestones milestones,
     required Deck deck,
-    required GameMasterBroadcaster broadcaster,
-    required PlayerBroadcaster playerBroadcaster,
   })  : _milestones = milestones,
-        _deck = deck,
-        _broadcaster = broadcaster,
-        _playerBroadcaster = playerBroadcaster;
+        _deck = deck;
 
   final Milestones _milestones;
   final Deck _deck;
-  final GameMasterBroadcaster _broadcaster;
-  final PlayerBroadcaster _playerBroadcaster;
 
   void _putTheDeck({
     required Vector2 at,
@@ -83,7 +69,10 @@ class GameMaster extends Component with HasGameRef<BaseGame> {
     required int amountPerEach,
     required double timeStep,
   }) {
-    _broadcaster.value = GameMasterEvent.startDealing;
+    gameRef.children
+        .query<CameraMan>()
+        .firstOrNull
+        ?.zoomOutToSize(GameSize.visibleAfterDealing.size);
 
     var remaining = amountPerEach * toTargets.length;
     assert(remaining <= cardsInTopToBottomOrder.length,
@@ -131,7 +120,7 @@ class GameMaster extends Component with HasGameRef<BaseGame> {
   }
 
   void _allowPickUp({required Vector2 playerPickUpPosition}) {
-    PickUpRegion(playerBroadcaster: _playerBroadcaster)
+    PickUpRegion()
       ..position = playerPickUpPosition
       ..size = Vector2.all(GameSize.cardOnTable.y * 1.4)
       ..anchor = Anchor.center
