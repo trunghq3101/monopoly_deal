@@ -8,15 +8,6 @@ This is an on-going project. I write step-by-step tutorials on my [Miller Go Dev
 
 Updating...
 
-# To-do list
-
-- Should be able to set positions for components graphically
-- Should have these kinds of commands:
-  - Standard commands (user inputs): tap, click, hover, tap outside, ...
-  - Custom commands (actions): pick up, build, deal
-- Components should not keep logic inside. Component includes properties and rendering.
-- If there are some common logic, add extensions on the component
-
 # License
 
 ```
