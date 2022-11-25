@@ -3,7 +3,7 @@ import 'package:flame/experimental.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class MainGame extends BaseGame
-    with HasTappableComponents, HasHoverableComponents {
+    with HasTappableComponents, HasHoverableComponents, HasTappablesBridge {
   @override
   World get world => _world;
   final World _world = World();
@@ -14,6 +14,7 @@ class MainGame extends BaseGame
 
   @override
   Future<void> onLoad() async {
+    debugMode = true;
     await gameAssets.preCache();
     final milestones = Milestones();
     const randSeed = 1;

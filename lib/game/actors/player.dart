@@ -9,6 +9,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   final _handStateMachine = StateMachine<HandState, GameEvent>();
   late final HandUpOverlay _handUpOverlay;
   late final HandDownRegion _handDownRegion;
+  late final CardPlayButton _cardPlayButton;
   int? _previewingCardId;
 
   void pickUpCards({required List<CardBack> facingDownCardsByTopMost}) {
@@ -136,10 +137,24 @@ class Player extends Component with HasGameRef<BaseGame> {
       ..size = Vector2.all(10000)
       ..anchor = Anchor.center
       ..addToParent(gameRef.world);
+    _cardPlayButton = CardPlayButton()
+      ..size = Vector2(200, 300)
+      ..position = Vector2(GameSize.visibleAfterDealing.x * 0.4, 0)
+      ..priority = 100
+      ..anchor = Anchor.center
+      ..addToParent(gameRef.world);
   }
 
   void handle(Event<GameEvent> event) {
     _handStateMachine.handle(event);
+  }
+
+  void showCardPlayButton() {
+    _cardPlayButton.show();
+  }
+
+  void hideCardPlayButton() {
+    _cardPlayButton.hide();
   }
 
   void _setupStateMachine() {
@@ -162,8 +177,10 @@ class Player extends Component with HasGameRef<BaseGame> {
           HandState.handDown,
         ),
         GameEvent.tapCardFront: EventAction(
-          (event) => moveSelectedCardToPreviewingPosition(
-              selectedCardId: event.payload),
+          (event) {
+            moveSelectedCardToPreviewingPosition(selectedCardId: event.payload);
+            showCardPlayButton();
+          },
           HandState.previewing,
         ),
       },
@@ -183,7 +200,10 @@ class Player extends Component with HasGameRef<BaseGame> {
           HandState.previewing,
         ),
         GameEvent.tapPreviewingCard: EventAction(
-          (event) => movePreviewingCardBackToHand(),
+          (event) {
+            movePreviewingCardBackToHand();
+            hideCardPlayButton();
+          },
           HandState.handUp,
         ),
       }
