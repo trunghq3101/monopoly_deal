@@ -1,18 +1,17 @@
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
 
-class CardFront extends SpriteComponent with HoverCallbacks, TapCallbacks {
+class CardFront extends SpriteComponent
+    with HoverCallbacks, TapCallbacks, HasGameRef<BaseGame> {
   CardFront({
     required this.id,
-    required this.broadcaster,
   });
 
   final int id;
-  final CardFrontBroadcaster broadcaster;
 
   @override
   Future<void>? onLoad() async {
@@ -21,7 +20,10 @@ class CardFront extends SpriteComponent with HoverCallbacks, TapCallbacks {
 
   @override
   void onTapDown(TapDownEvent event) {
-    broadcaster.onTapDown(id);
+    gameRef.children
+        .query<Player>()
+        .firstOrNull
+        ?.handle(event, EventSender.cardFront, id);
   }
 
   @override
@@ -73,15 +75,4 @@ class CardFront extends SpriteComponent with HoverCallbacks, TapCallbacks {
 
 enum CardFrontEvent {
   tapped,
-}
-
-class CardFrontBroadcaster extends ChangeNotifier {
-  int? selectedCardId;
-  CardFrontEvent? event;
-
-  void onTapDown(int id) {
-    event = CardFrontEvent.tapped;
-    selectedCardId = id;
-    notifyListeners();
-  }
 }

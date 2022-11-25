@@ -10,7 +10,6 @@ class Player extends Component with HasGameRef<BaseGame> {
   Player({required this.broadcaster});
 
   final PlayerBroadcaster broadcaster;
-  final CardFrontBroadcaster cardFrontBroadcaster = CardFrontBroadcaster();
   late final HandStateMachine _handStateMachine = HandStateMachine(this);
   int? _previewingCardId;
   late final HandUpOverlay _handUpOverlay;
@@ -63,7 +62,6 @@ class Player extends Component with HasGameRef<BaseGame> {
       final inHandPosition = Vector2(tangent.position.dx, tangent.position.dy);
       CardFront(
         id: facingDownCardsByTopMost[i].id,
-        broadcaster: cardFrontBroadcaster,
       )
         ..size = GameSize.cardInHand.size
         ..position = initialPosition
@@ -108,15 +106,14 @@ class Player extends Component with HasGameRef<BaseGame> {
     }
   }
 
-  void moveSelectedCardToPreviewingPosition() {
-    CardFront.findById(gameRef, cardFrontBroadcaster.selectedCardId!)
-        .moveToPreviewingPosition();
-    _previewingCardId = cardFrontBroadcaster.selectedCardId;
+  void moveSelectedCardToPreviewingPosition(int cardId) {
+    CardFront.findById(gameRef, cardId).moveToPreviewingPosition();
+    _previewingCardId = cardId;
   }
 
-  void swapPreviewingCard() {
+  void swapPreviewingCard(int cardId) {
     movePreviewingCardBackToHand();
-    moveSelectedCardToPreviewingPosition();
+    moveSelectedCardToPreviewingPosition(cardId);
   }
 
   void movePreviewingCardBackToHand() {
@@ -137,27 +134,9 @@ class Player extends Component with HasGameRef<BaseGame> {
     }
   }
 
-  void _listenToCardFrontBroadcaster() {
-    // _handStateMachine.handle(_toHandEvent(cardFrontBroadcaster.event));
-  }
-
-  // HandEvent? _toHandEvent(CardFrontEvent? cardFrontEvent) {
-  //   switch (cardFrontEvent) {
-  //     case CardFrontEvent.tapped:
-  //       if (cardFrontBroadcaster.selectedCardId == _previewingCardId) {
-  //         return HandEvent.previewingCardTappedEvent;
-  //       } else {
-  //         return HandEvent.inHandCardTappedEvent;
-  //       }
-  //     default:
-  //       return null;
-  //   }
-  // }
-
   @override
   void onMount() {
     broadcaster.addListener(_listenToBroadcaster);
-    cardFrontBroadcaster.addListener(_listenToCardFrontBroadcaster);
     _handDownRegion = HandDownRegion()
       ..position = Vector2(0, GameSize.visibleAfterDealing.y * 0.5)
       ..size = Vector2(
@@ -175,19 +154,14 @@ class Player extends Component with HasGameRef<BaseGame> {
   @override
   void onRemove() {
     broadcaster.removeListener(_listenToBroadcaster);
-    cardFrontBroadcaster.removeListener(_listenToCardFrontBroadcaster);
   }
 
-  void handle(dynamic event, EventSender senderId) {
-    _handStateMachine.handle(event, senderId);
+  void handle(dynamic event, EventSender senderId, [dynamic payload]) {
+    _handStateMachine.handle(event, senderId, payload);
   }
 }
 
-enum HandState {
-  initial,
-  handUp,
-  handDown,
-}
+enum HandState { initial, handUp, handDown, previewing }
 
 class HandStateMachine {
   HandState _handState = HandState.initial;
@@ -205,17 +179,34 @@ class HandStateMachine {
     }
   }
 
-  void handle(dynamic event, EventSender senderId) {
+  void handle(dynamic event, EventSender senderId, dynamic payload) {
     switch (_handState) {
       case HandState.handUp:
         if (event is TapDownEvent && senderId == EventSender.handUpOverlay) {
           player.letTheHandDown();
           _handState = HandState.handDown;
         }
+        if (event is TapDownEvent && senderId == EventSender.cardFront) {
+          player.moveSelectedCardToPreviewingPosition(payload);
+          _handState = HandState.previewing;
+        }
         break;
       case HandState.handDown:
         if (event is TapDownEvent && senderId == EventSender.handDownRegion) {
           player.letTheHandUp();
+          _handState = HandState.handUp;
+        }
+        break;
+      case HandState.previewing:
+        if (event is TapDownEvent &&
+            senderId == EventSender.cardFront &&
+            player._previewingCardId != payload) {
+          player.swapPreviewingCard(payload);
+          _handState = HandState.previewing;
+        } else if (event is TapDownEvent &&
+            senderId == EventSender.cardFront &&
+            player._previewingCardId == payload) {
+          player.movePreviewingCardBackToHand();
           _handState = HandState.handUp;
         }
         break;
