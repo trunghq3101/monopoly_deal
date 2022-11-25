@@ -8,11 +8,6 @@ This is an on-going project. I write step-by-step tutorials on my [Miller Go Dev
 
 Updating...
 
-# Setup Firebase (required)
-
-This project uses Firebase distribution to distribute apps on Android and iOS. All the Firebase config files weren't commited because you shouldn't use my Firebase account when building this app on your machine. Please following
-[this documentation](https://firebase.google.com/docs/flutter/setup?platform=ios#configure-firebase) to setup your own Firebase project and integrate it with this app.
-
 # To-do list
 
 - Should be able to set positions for components graphically
