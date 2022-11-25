@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
-import 'package:flutter/foundation.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class MainGame extends BaseGame
@@ -14,13 +13,8 @@ class MainGame extends BaseGame
   late final CameraComponent _cameraComponent;
 
   @override
-  ValueNotifier<TapDownEvent?> get onTapDownBroadcaster =>
-      _onTapDownBroadcaster;
-  final ValueNotifier<TapDownEvent?> _onTapDownBroadcaster =
-      ValueNotifier(null);
-
-  @override
   Future<void> onLoad() async {
+    debugMode = true;
     await gameAssets.preCache();
     final milestones = Milestones();
     const randSeed = 1;
@@ -51,11 +45,5 @@ class MainGame extends BaseGame
     Player(broadcaster: playerBroadcaster).addToParent(this);
 
     world.children.register<CardFront>();
-  }
-
-  @override
-  void onTapDown(TapDownEvent event) {
-    _onTapDownBroadcaster.value = event;
-    super.onTapDown(event);
   }
 }

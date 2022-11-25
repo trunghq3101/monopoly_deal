@@ -11,9 +11,10 @@ class Player extends Component with HasGameRef<BaseGame> {
 
   final PlayerBroadcaster broadcaster;
   final CardFrontBroadcaster cardFrontBroadcaster = CardFrontBroadcaster();
-  late final HandStateMachine _handStateMachine =
-      HandStateMachine(player: this);
+  late final HandStateMachine _handStateMachine = HandStateMachine(this);
   int? _previewingCardId;
+  late final HandUpOverlay _handUpOverlay;
+  late final HandDownRegion _handDownRegion;
 
   void _pickUpCards({required List<CardBack> facingDownCardsByTopMost}) {
     const timeStep = 0.1;
@@ -60,7 +61,7 @@ class Player extends Component with HasGameRef<BaseGame> {
       final tangent = pathMetrics.getTangentForOffset(i * spacing)!;
       final initialPosition = Vector2(0, GameSize.visibleAfterDealing.y * 1.3);
       final inHandPosition = Vector2(tangent.position.dx, tangent.position.dy);
-      final c = CardFront(
+      CardFront(
         id: facingDownCardsByTopMost[i].id,
         broadcaster: cardFrontBroadcaster,
       )
@@ -69,30 +70,27 @@ class Player extends Component with HasGameRef<BaseGame> {
         ..angle = tangent.vector.direction
         ..anchor = Anchor.center
         ..priority = GamePriority.hand.priority
-        ..addToParent(gameRef.world);
-      MoveEffect.to(
-        inHandPosition,
-        DelayedEffectController(
-          CurvedEffectController(0.4, Curves.easeInOutCubic),
-          delay: i * timeStep,
-        ),
-      ).addToParent(c);
+        ..addToParent(gameRef.world)
+        ..add(MoveEffect.to(
+          inHandPosition,
+          DelayedEffectController(
+            CurvedEffectController(0.4, Curves.easeInOutCubic),
+            delay: i * timeStep,
+          ),
+        ));
     }
-  }
-
-  bool _isTappedOutsideHand({required TapDownEvent tapDownEvent}) {
-    final worldPosition = gameRef.worldPosition(tapDownEvent.canvasPosition);
-    return GameSize.visibleAfterDealing.y * 0.14 > worldPosition.y;
-  }
-
-  bool _isTappedInsideHand({required TapDownEvent tapDownEvent}) {
-    final worldPosition = gameRef.worldPosition(tapDownEvent.canvasPosition);
-    return GameSize.visibleAfterDealing.y * 0.42 < worldPosition.y;
+    add(TimerComponent(
+      onTick: () => _handStateMachine.changeState(HandState.handUp),
+      period: cardsAmount * timeStep + 0.4,
+      removeOnFinish: true,
+    ));
   }
 
   static const handDownOffset = 900.0;
 
   void letTheHandDown() {
+    _handUpOverlay.removeFromParent();
+    _handDownRegion.addToParent(gameRef.world);
     final cardsInHand = CardFront.findAll(gameRef);
     for (var c in cardsInHand) {
       MoveEffect.by(Vector2(0, handDownOffset), LinearEffectController(0.1))
@@ -101,6 +99,8 @@ class Player extends Component with HasGameRef<BaseGame> {
   }
 
   void letTheHandUp() {
+    _handDownRegion.removeFromParent();
+    _handUpOverlay.addToParent(gameRef.world);
     final cardsInHand = CardFront.findAll(gameRef);
     for (var c in cardsInHand) {
       MoveEffect.by(Vector2(0, -handDownOffset), LinearEffectController(0.1))
@@ -124,6 +124,10 @@ class Player extends Component with HasGameRef<BaseGame> {
     _previewingCardId = null;
   }
 
+  void enableHandUpOverlay() {
+    _handUpOverlay.addToParent(gameRef.world);
+  }
+
   void _listenToBroadcaster() {
     switch (broadcaster.event) {
       case PlayerEvent.tapPickUpRegion:
@@ -134,91 +138,83 @@ class Player extends Component with HasGameRef<BaseGame> {
   }
 
   void _listenToCardFrontBroadcaster() {
-    _handStateMachine.handle(_toHandEvent(cardFrontBroadcaster.event));
+    // _handStateMachine.handle(_toHandEvent(cardFrontBroadcaster.event));
   }
 
-  void _listenToGlobalTapDown() {
-    final tapDownEvent = gameRef.onTapDownBroadcaster.value;
-    if (tapDownEvent == null) return;
-    if (_isTappedOutsideHand(tapDownEvent: tapDownEvent)) {
-      _handStateMachine.handle(HandEvent.outsideHandTappedEvent);
-    }
-    if (_isTappedInsideHand(tapDownEvent: tapDownEvent)) {
-      _handStateMachine.handle(HandEvent.insideHandTappedEvent);
-    }
-  }
-
-  HandEvent? _toHandEvent(CardFrontEvent? cardFrontEvent) {
-    switch (cardFrontEvent) {
-      case CardFrontEvent.tapped:
-        if (cardFrontBroadcaster.selectedCardId == _previewingCardId) {
-          return HandEvent.previewingCardTappedEvent;
-        } else {
-          return HandEvent.inHandCardTappedEvent;
-        }
-      default:
-        return null;
-    }
-  }
+  // HandEvent? _toHandEvent(CardFrontEvent? cardFrontEvent) {
+  //   switch (cardFrontEvent) {
+  //     case CardFrontEvent.tapped:
+  //       if (cardFrontBroadcaster.selectedCardId == _previewingCardId) {
+  //         return HandEvent.previewingCardTappedEvent;
+  //       } else {
+  //         return HandEvent.inHandCardTappedEvent;
+  //       }
+  //     default:
+  //       return null;
+  //   }
+  // }
 
   @override
   void onMount() {
     broadcaster.addListener(_listenToBroadcaster);
-    gameRef.onTapDownBroadcaster.addListener(_listenToGlobalTapDown);
     cardFrontBroadcaster.addListener(_listenToCardFrontBroadcaster);
+    _handDownRegion = HandDownRegion()
+      ..position = Vector2(0, GameSize.visibleAfterDealing.y * 0.5)
+      ..size = Vector2(
+          GameSize.visibleAfterDealing.x, GameSize.visibleAfterDealing.y * 0.08)
+      ..anchor = Anchor.bottomCenter
+      ..priority = GamePriority.handUpRegion.priority;
+    _handUpOverlay = HandUpOverlay()
+      ..position = Vector2.zero()
+      ..size = Vector2.all(10000)
+      ..anchor = Anchor.center;
   }
 
   @override
   void onRemove() {
     broadcaster.removeListener(_listenToBroadcaster);
-    gameRef.onTapDownBroadcaster.removeListener(_listenToGlobalTapDown);
     cardFrontBroadcaster.removeListener(_listenToCardFrontBroadcaster);
+  }
+
+  void handle(dynamic event, EventSender senderId) {
+    _handStateMachine.handle(event, senderId);
   }
 }
 
-enum HandEvent {
-  outsideHandTappedEvent,
-  insideHandTappedEvent,
-  inHandCardTappedEvent,
-  previewingCardTappedEvent,
+enum HandState {
+  initial,
+  handUp,
+  handDown,
 }
 
 class HandStateMachine {
-  static const stateHandUp = 0;
-  static const stateHandDown = 1;
-  static const stateCardPreviewing = 2;
-
-  int _handState = stateHandUp;
+  HandState _handState = HandState.initial;
   final Player player;
 
-  HandStateMachine({required this.player});
+  HandStateMachine(this.player);
 
-  void handle(HandEvent? event) {
+  void changeState(HandState state) {
+    switch (state) {
+      case HandState.handUp:
+        player.enableHandUpOverlay();
+        _handState = state;
+        break;
+      default:
+    }
+  }
+
+  void handle(dynamic event, EventSender senderId) {
     switch (_handState) {
-      case stateHandUp:
-        if (event == HandEvent.outsideHandTappedEvent) {
+      case HandState.handUp:
+        if (event is TapDownEvent && senderId == EventSender.handUpOverlay) {
           player.letTheHandDown();
-          _handState = stateHandDown;
-        }
-        if (event == HandEvent.inHandCardTappedEvent) {
-          player.moveSelectedCardToPreviewingPosition();
-          _handState = stateCardPreviewing;
+          _handState = HandState.handDown;
         }
         break;
-      case stateHandDown:
-        if (event == HandEvent.insideHandTappedEvent) {
+      case HandState.handDown:
+        if (event is TapDownEvent && senderId == EventSender.handDownRegion) {
           player.letTheHandUp();
-          _handState = stateHandUp;
-        }
-        break;
-      case stateCardPreviewing:
-        if (event == HandEvent.inHandCardTappedEvent) {
-          player.swapPreviewingCard();
-          _handState = stateCardPreviewing;
-        }
-        if (event == HandEvent.previewingCardTappedEvent) {
-          player.movePreviewingCardBackToHand();
-          _handState = stateHandUp;
+          _handState = HandState.handUp;
         }
         break;
       default:
