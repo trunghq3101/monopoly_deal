@@ -89,8 +89,8 @@ class Player extends Component with HasGameRef<BaseGame> {
   static const handDownOffset = 900.0;
 
   void letTheHandDown() {
-    _handUpOverlay.removeFromParent();
-    _handDownRegion.addToParent(gameRef.world);
+    _handUpOverlay.disable();
+    _handDownRegion.enable();
     final cardsInHand = CardFront.findAll(gameRef);
     for (var c in cardsInHand) {
       MoveEffect.by(Vector2(0, handDownOffset), LinearEffectController(0.1))
@@ -99,8 +99,8 @@ class Player extends Component with HasGameRef<BaseGame> {
   }
 
   void letTheHandUp() {
-    _handDownRegion.removeFromParent();
-    _handUpOverlay.addToParent(gameRef.world);
+    _handDownRegion.disable();
+    _handUpOverlay.enable();
     final cardsInHand = CardFront.findAll(gameRef);
     for (var c in cardsInHand) {
       MoveEffect.by(Vector2(0, -handDownOffset), LinearEffectController(0.1))
@@ -125,7 +125,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   }
 
   void enableHandUpOverlay() {
-    _handUpOverlay.addToParent(gameRef.world);
+    _handUpOverlay.enable();
   }
 
   void _listenToBroadcaster() {
@@ -163,11 +163,13 @@ class Player extends Component with HasGameRef<BaseGame> {
       ..size = Vector2(
           GameSize.visibleAfterDealing.x, GameSize.visibleAfterDealing.y * 0.08)
       ..anchor = Anchor.bottomCenter
-      ..priority = GamePriority.handUpRegion.priority;
+      ..priority = GamePriority.handUpRegion.priority
+      ..addToParent(gameRef.world);
     _handUpOverlay = HandUpOverlay()
       ..position = Vector2.zero()
       ..size = Vector2.all(10000)
-      ..anchor = Anchor.center;
+      ..anchor = Anchor.center
+      ..addToParent(gameRef.world);
   }
 
   @override
