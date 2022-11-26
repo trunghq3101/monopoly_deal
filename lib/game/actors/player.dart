@@ -38,47 +38,77 @@ class Player extends Component with HasGameRef<BaseGame> {
     }
 
     // take the cards to hand
-    final handCurveWidth = GameSize.visibleAfterDealing.x / 2;
+
+    final cardsAmount = facingDownCardsByTopMost.length;
+    final cardFrontCollection = facingDownCardsByTopMost
+        .map((e) => CardFront(id: e.id)..addToParent(gameRef.world))
+        .toList();
+    _placingCardsInHand(
+      cardFrontCollection: cardFrontCollection,
+      timeStep: 0.1,
+      animationDuration: 0.4,
+      isFirstTime: true,
+    );
+    add(TimerComponent(
+      onTick: () => _handStateMachine.handle(const Event(GameEvent.handUp)),
+      period: cardsAmount * timeStep + 0.4,
+      removeOnFinish: true,
+    ));
+  }
+
+  void _placingCardsInHand({
+    required List<CardFront> cardFrontCollection,
+    required double timeStep,
+    required double animationDuration,
+    bool isFirstTime = false,
+  }) {
+    final cardsAmount = cardFrontCollection.length;
+    final needSmallerHand = cardsAmount <= 2;
+    final handCurveWidth = needSmallerHand
+        ? GameSize.visibleAfterDealing.x * 0.2
+        : GameSize.visibleAfterDealing.x / 2;
     final handCurveStart =
         Vector2(-handCurveWidth / 2, GameSize.visibleAfterDealing.y * 0.35);
     final handCurveEnd = handCurveStart + Vector2(handCurveWidth, 0);
-    final handCurveRadius =
-        Radius.elliptical(handCurveWidth, handCurveWidth / 2);
+    final handCurveRadius = needSmallerHand
+        ? Radius.elliptical(handCurveWidth, handCurveWidth * 0.2)
+        : Radius.elliptical(handCurveWidth, handCurveWidth / 2);
     final handCurve = Path()
       ..moveTo(handCurveStart.x, handCurveStart.y)
       ..arcToPoint(
         Offset(handCurveEnd.x, handCurveEnd.y),
         radius: handCurveRadius,
       );
-    final cardsAmount = facingDownCardsByTopMost.length;
     final spacing = handCurveWidth / (cardsAmount - 1);
     final pathMetrics = handCurve.computeMetrics().first;
     for (var i = 0; i < cardsAmount; i++) {
       final tangent = pathMetrics.getTangentForOffset(i * spacing)!;
-      final initialPosition = Vector2(0, GameSize.visibleAfterDealing.y * 1.3);
       final inHandPosition = Vector2(tangent.position.dx, tangent.position.dy);
-      CardFront(
-        id: facingDownCardsByTopMost[i].id,
-      )
+      if (isFirstTime) {
+        cardFrontCollection[i].position =
+            Vector2(0, GameSize.visibleAfterDealing.y * 1.3);
+      }
+      cardFrontCollection[i]
         ..size = GameSize.cardInHand.size
-        ..position = initialPosition
-        ..angle = tangent.vector.direction
         ..anchor = Anchor.center
         ..priority = GamePriority.hand.priority
-        ..addToParent(gameRef.world)
-        ..add(MoveEffect.to(
-          inHandPosition,
-          DelayedEffectController(
-            CurvedEffectController(0.4, Curves.easeInOutCubic),
-            delay: i * timeStep,
+        ..addAll([
+          MoveEffect.to(
+            inHandPosition,
+            DelayedEffectController(
+              CurvedEffectController(animationDuration, Curves.easeInOutCubic),
+              delay: i * timeStep,
+            ),
           ),
-        ));
+          RotateEffect.to(
+            tangent.vector.direction,
+            DelayedEffectController(
+              CurvedEffectController(animationDuration, Curves.easeInOutCubic),
+              delay: i * timeStep,
+            ),
+          )
+        ]);
     }
-    add(TimerComponent(
-      onTick: () => _handStateMachine.handle(const Event(GameEvent.handUp)),
-      period: cardsAmount * timeStep + 0.4,
-      removeOnFinish: true,
-    ));
   }
 
   static const handDownOffset = 900.0;
@@ -134,6 +164,11 @@ class Player extends Component with HasGameRef<BaseGame> {
         ScaleEffect.to(Vector2.all(1), LinearEffectController(0.2)),
         MoveEffect.to(Vector2(0, 700), LinearEffectController(0.2)),
       ]);
+    _placingCardsInHand(
+      cardFrontCollection: CardFront.findCardsInHand(gameRef),
+      timeStep: 0.02,
+      animationDuration: 0.1,
+    );
   }
 
   @override
