@@ -124,6 +124,7 @@ class Player extends Component with HasGameRef<BaseGame> {
 
   void playPreviewingCard() {
     if (_previewingCardId == null) return;
+    _cardPlayButton.hide();
     final previewingCard = CardFront.findById(gameRef, _previewingCardId!);
     previewingCard
       ..priority = 0
@@ -151,10 +152,8 @@ class Player extends Component with HasGameRef<BaseGame> {
       ..anchor = Anchor.center
       ..addToParent(gameRef.world);
     _cardPlayButton = CardPlayButton()
-      ..size = Vector2(200, 300)
-      ..position = Vector2(GameSize.visibleAfterDealing.x * 0.4, 0)
-      ..priority = 100
-      ..anchor = Anchor.center
+      ..size = Vector2(1.6, 1).scaled(GameSize.visibleAfterDealing.x * 0.11)
+      ..position = Vector2(GameSize.visibleAfterDealing.x * 0.3, 0)
       ..addToParent(gameRef.world);
   }
 
