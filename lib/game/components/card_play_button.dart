@@ -1,9 +1,13 @@
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
+import 'package:monopoly_deal/game/game.dart';
+import 'package:monopoly_deal/state_machine/event.dart';
 
-class CardPlayButton extends PositionComponent with TapCallbacks {
+class CardPlayButton extends PositionComponent
+    with TapCallbacks, HasGameRef<BaseGame> {
   final _paint = Paint()..color = const Color.fromARGB(255, 113, 253, 253);
 
   bool _visible = false;
@@ -17,7 +21,10 @@ class CardPlayButton extends PositionComponent with TapCallbacks {
       event.continuePropagation = true;
       return;
     }
-    print('tapped');
+    gameRef.children
+        .query<Player>()
+        .firstOrNull
+        ?.handle(const Event(GameEvent.playCard));
   }
 
   @override

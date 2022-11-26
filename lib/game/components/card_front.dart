@@ -6,6 +6,11 @@ import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/state_machine/state_machine.dart';
 
+enum CardPlace {
+  inHand,
+  onTheTable,
+}
+
 class CardFront extends SpriteComponent
     with HoverCallbacks, TapCallbacks, HasGameRef<BaseGame> {
   CardFront({
@@ -13,6 +18,7 @@ class CardFront extends SpriteComponent
   });
 
   final int id;
+  CardPlace cardPlace = CardPlace.inHand;
 
   @override
   Future<void>? onLoad() async {
@@ -45,8 +51,10 @@ class CardFront extends SpriteComponent
     decorator.removeLast();
   }
 
-  static List<CardFront> findAll(BaseGame game) =>
-      game.world.children.query<CardFront>();
+  static List<CardFront> findCardsInHand(BaseGame game) => game.world.children
+      .query<CardFront>()
+      .where((c) => c.cardPlace == CardPlace.inHand)
+      .toList();
   static CardFront findById(BaseGame game, int id) =>
       game.world.children.query<CardFront>().firstWhere((e) => e.id == id);
 
@@ -71,6 +79,10 @@ class CardFront extends SpriteComponent
       RotateEffect.to(_inHandPlaceholder!.angle, LinearEffectController(0.1)),
       ScaleEffect.to(Vector2.all(1), LinearEffectController(0.1)),
     ]);
+  }
+
+  void changePlace(CardPlace place) {
+    cardPlace = place;
   }
 }
 

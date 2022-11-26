@@ -86,7 +86,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   void letTheHandDown() {
     _handUpOverlay.disable();
     _handDownRegion.enable();
-    final cardsInHand = CardFront.findAll(gameRef);
+    final cardsInHand = CardFront.findCardsInHand(gameRef);
     for (var c in cardsInHand) {
       MoveEffect.by(Vector2(0, handDownOffset), LinearEffectController(0.1))
           .addToParent(c);
@@ -96,7 +96,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   void letTheHandUp() {
     _handDownRegion.disable();
     _handUpOverlay.enable();
-    final cardsInHand = CardFront.findAll(gameRef);
+    final cardsInHand = CardFront.findCardsInHand(gameRef);
     for (var c in cardsInHand) {
       MoveEffect.by(Vector2(0, -handDownOffset), LinearEffectController(0.1))
           .addToParent(c);
@@ -120,6 +120,19 @@ class Player extends Component with HasGameRef<BaseGame> {
 
   void enableHandUpOverlay() {
     _handUpOverlay.enable();
+  }
+
+  void playPreviewingCard() {
+    if (_previewingCardId == null) return;
+    final previewingCard = CardFront.findById(gameRef, _previewingCardId!);
+    previewingCard
+      ..priority = 0
+      ..changePlace(CardPlace.onTheTable)
+      ..addAll([
+        SizeEffect.to(GameSize.cardOnTable.size, LinearEffectController(0.2)),
+        ScaleEffect.to(Vector2.all(1), LinearEffectController(0.2)),
+        MoveEffect.to(Vector2(0, 700), LinearEffectController(0.2)),
+      ]);
   }
 
   @override
@@ -203,6 +216,12 @@ class Player extends Component with HasGameRef<BaseGame> {
           (event) {
             movePreviewingCardBackToHand();
             hideCardPlayButton();
+          },
+          HandState.handUp,
+        ),
+        GameEvent.playCard: EventAction(
+          (event) {
+            playPreviewingCard();
           },
           HandState.handUp,
         ),
