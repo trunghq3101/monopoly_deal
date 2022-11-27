@@ -11,6 +11,13 @@ enum CardPlace {
   onTheTable,
 }
 
+enum CardFrontState {
+  initial,
+  inHand,
+  previewing,
+  onTheTable,
+}
+
 class CardFront extends SpriteComponent
     with HoverCallbacks, TapCallbacks, HasGameRef<BaseGame> {
   CardFront({
@@ -19,6 +26,7 @@ class CardFront extends SpriteComponent
 
   final int id;
   CardPlace cardPlace = CardPlace.inHand;
+  final _cardStateMachine = StateMachine<CardFrontState, GameEvent>();
 
   @override
   Future<void>? onLoad() async {
@@ -26,14 +34,49 @@ class CardFront extends SpriteComponent
   }
 
   @override
+  void onMount() {
+    super.onMount();
+    _cardStateMachine.setup({
+      CardFrontState.initial: {
+        GameEvent.handUp: EventAction((_) {}, CardFrontState.inHand)
+      },
+      CardFrontState.inHand: {
+        GameEvent.tapCardFront: EventAction(
+          (event) {
+            gameRef.children
+                .query<Player>()
+                .firstOrNull
+                ?.handle(Event(GameEvent.tapCardInHand, event.payload));
+          },
+          CardFrontState.previewing,
+        ),
+      },
+      CardFrontState.previewing: {
+        GameEvent.tapCardFront: EventAction(
+          (event) {
+            gameRef.children
+                .query<Player>()
+                .firstOrNull
+                ?.handle(Event(GameEvent.tapPreviewingCard, event.payload));
+          },
+          CardFrontState.inHand,
+        ),
+        GameEvent.playCard: EventAction(
+          (event) {},
+          CardFrontState.onTheTable,
+        ),
+      },
+      CardFrontState.onTheTable: {}
+    });
+  }
+
+  void handle(Event<GameEvent> event) {
+    _cardStateMachine.handle(event);
+  }
+
+  @override
   void onTapDown(TapDownEvent event) {
-    if (cardPlace == CardPlace.onTheTable) {
-      return;
-    }
-    gameRef.children
-        .query<Player>()
-        .firstOrNull
-        ?.handle(Event(GameEvent.tapCardFront, id));
+    handle(Event(GameEvent.tapCardFront, id));
   }
 
   @override

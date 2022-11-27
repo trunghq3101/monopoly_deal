@@ -50,7 +50,12 @@ class Player extends Component with HasGameRef<BaseGame> {
       isFirstTime: true,
     );
     add(TimerComponent(
-      onTick: () => _handStateMachine.handle(const Event(GameEvent.handUp)),
+      onTick: () {
+        _handStateMachine.handle(const Event(GameEvent.handUp));
+        for (var c in CardFront.findCardsInHand(gameRef)) {
+          c.handle(const Event(GameEvent.handUp));
+        }
+      },
       period: cardsAmount * timeStep + 0.4,
       removeOnFinish: true,
     ));
@@ -156,6 +161,7 @@ class Player extends Component with HasGameRef<BaseGame> {
     if (_previewingCardId == null) return;
     _cardPlayButton.hide();
     final previewingCard = CardFront.findById(gameRef, _previewingCardId!);
+    previewingCard.handle(const Event(GameEvent.playCard));
     previewingCard
       ..priority = 0
       ..changePlace(CardPlace.onTheTable)
@@ -223,7 +229,7 @@ class Player extends Component with HasGameRef<BaseGame> {
           (event) => letTheHandDown(),
           HandState.handDown,
         ),
-        GameEvent.tapCardFront: EventAction(
+        GameEvent.tapCardInHand: EventAction(
           (event) {
             moveSelectedCardToPreviewingPosition(selectedCardId: event.payload);
             showCardPlayButton();
@@ -238,10 +244,6 @@ class Player extends Component with HasGameRef<BaseGame> {
         ),
       },
       HandState.previewing: {
-        GameEvent.tapCardFront: EventAction(
-          (event) => _transformTapCardFrontEvent(event as Event<GameEvent>),
-          HandState.previewing,
-        ),
         GameEvent.tapCardInHand: EventAction(
           (event) => swapPreviewingCard(selectedCardId: event.payload),
           HandState.previewing,
@@ -261,16 +263,6 @@ class Player extends Component with HasGameRef<BaseGame> {
         ),
       }
     });
-  }
-
-  void _transformTapCardFrontEvent(Event<GameEvent> event) {
-    final transformedEvent = Event(
-      _previewingCardId == event.payload
-          ? GameEvent.tapPreviewingCard
-          : GameEvent.tapCardInHand,
-      event.payload,
-    );
-    _handStateMachine.handle(transformedEvent);
   }
 }
 
