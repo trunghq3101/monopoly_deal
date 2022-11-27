@@ -27,6 +27,9 @@ class CardFront extends SpriteComponent
 
   @override
   void onTapDown(TapDownEvent event) {
+    if (cardPlace == CardPlace.onTheTable) {
+      return;
+    }
     gameRef.children
         .query<Player>()
         .firstOrNull
@@ -36,6 +39,9 @@ class CardFront extends SpriteComponent
   @override
   void onHoverEnter(int hoverId) {
     super.onHoverEnter(hoverId);
+    if (cardPlace == CardPlace.onTheTable) {
+      return;
+    }
     decorator.addLast(GlowingDecorator(
       component: this,
       spread: 40,
