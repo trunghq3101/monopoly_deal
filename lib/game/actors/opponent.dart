@@ -33,12 +33,11 @@ class Opponent extends Component with HasGameRef<BaseGame> {
     }
 
     // take the cards to hand
-    final cardsAmount = facingDownCardsByTopMost.length;
-    final cardFrontCollection = facingDownCardsByTopMost
-        .map((e) => CardFront(id: e.id)..addToParent(gameRef.world))
+    final cards = facingDownCardsByTopMost
+        .map((e) => CardBack(id: e.id)..addToParent(gameRef.world))
         .toList();
     _placingCardsInHand(
-      cardFrontCollection: cardFrontCollection,
+      cards: cards,
       timeStep: 0.1,
       animationDuration: 0.4,
       isFirstTime: true,
@@ -46,20 +45,20 @@ class Opponent extends Component with HasGameRef<BaseGame> {
   }
 
   void _placingCardsInHand({
-    required List<CardFront> cardFrontCollection,
+    required List<CardBack> cards,
     required double timeStep,
     required double animationDuration,
     bool isFirstTime = false,
   }) {
     final initialPosition = Vector2(0, -GameSize.visibleAfterDealing.y * 3.5);
-    final cardsAmount = cardFrontCollection.length;
+    final cardsAmount = cards.length;
     final needSmallerHand = cardsAmount <= 2;
     final handCurveWidth = needSmallerHand
         ? GameSize.visibleAfterDealing.x * 0.2
         : GameSize.visibleAfterDealing.x / 2;
-    final handCurveStart =
+    final handCurveEnd =
         Vector2(-handCurveWidth / 2, -GameSize.visibleAfterDealing.y * 0.35);
-    final handCurveEnd = handCurveStart + Vector2(handCurveWidth, 0);
+    final handCurveStart = handCurveEnd + Vector2(handCurveWidth, 0);
     final handCurveRadius = needSmallerHand
         ? Radius.elliptical(handCurveWidth, handCurveWidth * 0.2)
         : Radius.elliptical(handCurveWidth, handCurveWidth / 2);
@@ -75,9 +74,9 @@ class Opponent extends Component with HasGameRef<BaseGame> {
       final tangent = pathMetrics.getTangentForOffset(i * spacing)!;
       final inHandPosition = Vector2(tangent.position.dx, tangent.position.dy);
       if (isFirstTime) {
-        cardFrontCollection[i].position = initialPosition;
+        cards[i].position = initialPosition;
       }
-      cardFrontCollection[i]
+      cards[i]
         ..size = GameSize.cardInHand.size
         ..anchor = Anchor.center
         ..priority = GamePriority.hand.priority
