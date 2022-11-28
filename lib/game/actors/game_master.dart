@@ -153,9 +153,19 @@ class GameMaster extends Component with HasGameRef<BaseGame> {
             amountPerEach: dealCardsAmountPerEach,
             timeStep: dealCardsTimeStep,
           ),
-      finishDealing: () => _allowPickUp(
-            playerPickUpPosition: GamePosition.dealTargetMe.position,
-          ),
+      finishDealing: () {
+        _allowPickUp(
+          playerPickUpPosition: GamePosition.dealTargetMe.position,
+        );
+        final opponentFacingDownCards = gameRef.world
+            .componentsAtPoint(GamePosition.dealTarget1.position)
+            .whereType<CardBack>()
+            .toList();
+        gameRef.children
+            .query<Opponent>()
+            .firstOrNull
+            ?.pickUpCards(facingDownCardsByTopMost: opponentFacingDownCards);
+      },
     };
 
     for (var move in moves.entries) {

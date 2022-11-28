@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
+import 'package:monopoly_deal/game/actors/opponent.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class MainGame extends BaseGame
@@ -35,10 +36,12 @@ class MainGame extends BaseGame
     ).addToParent(this);
     CameraMan().addToParent(this);
     Player().addToParent(this);
+    Opponent().addToParent(this);
 
     children
       ..register<Player>()
-      ..register<CameraMan>();
+      ..register<CameraMan>()
+      ..register<Opponent>();
     world.children.register<CardFront>();
   }
 }
