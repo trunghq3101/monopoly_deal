@@ -14,6 +14,7 @@ class GameAssets {
   int? Function() randomSeed = () => null;
   final Map<String, RiveFile> _riveFiles = {};
   List<Sprite> cardSprites = [];
+  Map<String, Vector2> cardPositions = {};
   Map<String, Sprite> sprites = {};
 
   Future<void> preCache() async {
@@ -37,6 +38,10 @@ class GameAssets {
             .split(',')
             .map((e) => Sprite(Flame.images.fromCache('${e.trim()}.png')))
             .toList();
+    cardPositions = {
+      '01': Vector2(-1000, 1000),
+      '02': Vector2(-300, 1000),
+    };
   }
 
   RiveFile riveFile(String name) => _riveFiles[name]!;
