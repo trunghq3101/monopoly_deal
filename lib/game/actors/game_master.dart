@@ -6,9 +6,10 @@ import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/animation.dart';
 import 'package:monopoly_deal/game/game.dart';
+import 'package:monopoly_deal/state_machine/event.dart';
 
-class Deck {
-  Deck({
+class DeckGenerator {
+  DeckGenerator({
     required this.randSeed,
     required this.deckCapacity,
     required this.cardSize,
@@ -33,12 +34,22 @@ class Deck {
 class GameMaster extends Component with HasGameRef<BaseGame> {
   GameMaster({
     required Milestones milestones,
-    required Deck deck,
+    required DeckGenerator deck,
   })  : _milestones = milestones,
         _deck = deck;
 
   final Milestones _milestones;
-  final Deck _deck;
+  final DeckGenerator _deck;
+
+  List<CardBack> getTwoTopMostCards() {
+    final cardsInDeck = _deck.cards.where((c) => c.isMounted).toList();
+    if (cardsInDeck.length < 2) {
+      return cardsInDeck;
+    }
+    final twoTopMostCards =
+        cardsInDeck.reversed.toList().getRange(0, 2).toList();
+    return twoTopMostCards;
+  }
 
   void _putTheDeck({
     required Vector2 at,
@@ -180,5 +191,18 @@ class GameMaster extends Component with HasGameRef<BaseGame> {
   @override
   Future<void>? onLoad() async {
     _scheduleMoves();
+  }
+
+  void endTurnOf(String turnOwner) {
+    TimerComponent(
+      period: 2,
+      removeOnFinish: true,
+      onTick: () {
+        gameRef.children
+            .query<Player>()
+            .firstOrNull
+            ?.handle(const Event(GameEvent.startTurn));
+      },
+    ).addToParent(this);
   }
 }

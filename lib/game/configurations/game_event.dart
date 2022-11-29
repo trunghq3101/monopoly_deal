@@ -7,4 +7,7 @@ enum GameEvent {
   tapPreviewingCard,
   tapCardInHand,
   playCard,
+  tapEndTurnButton,
+  endTurn,
+  startTurn,
 }

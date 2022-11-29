@@ -30,7 +30,7 @@ enum GamePosition {
 
 enum GamePriority {
   hand(10000),
-  handUpRegion(10001);
+  handDownRegion(10001);
 
   final int priority;
 

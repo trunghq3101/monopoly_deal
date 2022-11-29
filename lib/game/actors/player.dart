@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
@@ -10,6 +11,7 @@ class Player extends Component with HasGameRef<BaseGame> {
   late final HandUpOverlay _handUpOverlay;
   late final HandDownRegion _handDownRegion;
   late final CardPlayButton _cardPlayButton;
+  late final EndTurnButton _endTurnButton;
   int? _previewingCardId;
 
   void pickUpCards({required List<CardBack> facingDownCardsByTopMost}) {
@@ -189,7 +191,7 @@ class Player extends Component with HasGameRef<BaseGame> {
       ..size = Vector2(
           GameSize.visibleAfterDealing.x, GameSize.visibleAfterDealing.y * 0.08)
       ..anchor = Anchor.bottomCenter
-      ..priority = GamePriority.handUpRegion.priority
+      ..priority = GamePriority.handDownRegion.priority
       ..addToParent(gameRef.world);
     _handUpOverlay = HandUpOverlay()
       ..position = Vector2.zero()
@@ -199,6 +201,10 @@ class Player extends Component with HasGameRef<BaseGame> {
     _cardPlayButton = CardPlayButton()
       ..size = Vector2(1.6, 1).scaled(GameSize.visibleAfterDealing.x * 0.11)
       ..position = Vector2(GameSize.visibleAfterDealing.x * 0.3, 0)
+      ..addToParent(gameRef.world);
+    _endTurnButton = EndTurnButton()
+      ..size = Vector2(2.7, 1).scaled(GameSize.visibleAfterDealing.x * 0.11)
+      ..position = Vector2(-GameSize.visibleAfterDealing.x * 0.47, 200)
       ..addToParent(gameRef.world);
   }
 
@@ -214,59 +220,94 @@ class Player extends Component with HasGameRef<BaseGame> {
     _cardPlayButton.hide();
   }
 
+  void showEndTurnButton() {
+    _endTurnButton.show();
+  }
+
+  void hideEndTurnButton() {
+    _endTurnButton.hide();
+  }
+
+  void endTurn() {
+    gameRef.children.query<GameMaster>().firstOrNull?.endTurnOf("player");
+  }
+
+  void drawCards() {
+    final twoTopMostCards =
+        gameRef.children.query<GameMaster>().firstOrNull?.getTwoTopMostCards();
+    if (twoTopMostCards == null) return;
+    pickUpCards(facingDownCardsByTopMost: twoTopMostCards);
+  }
+
   void _setupStateMachine() {
-    _handStateMachine.setup({
-      HandState.initial: {
-        GameEvent.tapPickUpRegion: EventAction(
-          (event) => pickUpCards(facingDownCardsByTopMost: event.payload),
-          HandState.pickingUp,
-        ),
-      },
-      HandState.pickingUp: {
-        GameEvent.handUp: EventAction(
-          (event) => enableHandUpOverlay(),
-          HandState.handUp,
-        ),
-      },
-      HandState.handUp: {
-        GameEvent.tapHandUpOverlay: EventAction(
-          (event) => letTheHandDown(),
-          HandState.handDown,
-        ),
-        GameEvent.tapCardInHand: EventAction(
-          (event) {
-            moveSelectedCardToPreviewingPosition(selectedCardId: event.payload);
-            showCardPlayButton();
-          },
-          HandState.previewing,
-        ),
-      },
-      HandState.handDown: {
-        GameEvent.tapHandDownRegion: EventAction(
-          (event) => letTheHandUp(),
-          HandState.handUp,
-        ),
-      },
-      HandState.previewing: {
-        GameEvent.tapCardInHand: EventAction(
-          (event) => swapPreviewingCard(selectedCardId: event.payload),
-          HandState.previewing,
-        ),
-        GameEvent.tapPreviewingCard: EventAction(
-          (event) {
-            movePreviewingCardBackToHand();
-            hideCardPlayButton();
-          },
-          HandState.handUp,
-        ),
-        GameEvent.playCard: EventAction(
-          (event) {
-            playPreviewingCard();
-          },
-          HandState.handUp,
-        ),
-      }
-    });
+    _handStateMachine
+      ..setup({
+        HandState.initial: {
+          GameEvent.tapPickUpRegion: EventAction(
+            (event) => pickUpCards(facingDownCardsByTopMost: event.payload),
+            HandState.pickingUp,
+          ),
+          GameEvent.startTurn: EventAction(
+            (event) {
+              drawCards();
+            },
+            HandState.pickingUp,
+          ),
+        },
+        HandState.pickingUp: {
+          GameEvent.handUp: EventAction(
+            (event) => enableHandUpOverlay(),
+            HandState.handUp,
+          ),
+        },
+        HandState.handUp: {
+          GameEvent.tapHandUpOverlay: EventAction(
+            (event) => letTheHandDown(),
+            HandState.handDown,
+          ),
+          GameEvent.tapCardInHand: EventAction(
+            (event) {
+              moveSelectedCardToPreviewingPosition(
+                  selectedCardId: event.payload);
+              showCardPlayButton();
+            },
+            HandState.previewing,
+          ),
+          GameEvent.tapEndTurnButton: EventAction(
+            (event) {
+              endTurn();
+            },
+            HandState.initial,
+          ),
+        },
+        HandState.handDown: {
+          GameEvent.tapHandDownRegion: EventAction(
+            (event) => letTheHandUp(),
+            HandState.handUp,
+          ),
+        },
+        HandState.previewing: {
+          GameEvent.tapCardInHand: EventAction(
+            (event) => swapPreviewingCard(selectedCardId: event.payload),
+            HandState.previewing,
+          ),
+          GameEvent.tapPreviewingCard: EventAction(
+            (event) {
+              movePreviewingCardBackToHand();
+              hideCardPlayButton();
+            },
+            HandState.handUp,
+          ),
+          GameEvent.playCard: EventAction(
+            (event) {
+              playPreviewingCard();
+            },
+            HandState.handUp,
+          ),
+        }
+      })
+      ..setOnEnter(HandState.handUp, showEndTurnButton)
+      ..setOnExit(HandState.handUp, hideEndTurnButton);
   }
 }
 

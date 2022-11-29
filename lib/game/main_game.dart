@@ -25,7 +25,7 @@ class MainGame extends BaseGame
       ..addToParent(this);
 
     GameMaster(
-      deck: Deck(
+      deck: DeckGenerator(
         randSeed: randSeed,
         deckCapacity: deckCapacity,
         cardSize: GameSize.cardOnTable.size,
