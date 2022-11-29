@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
-import 'package:monopoly_deal/game/actors/opponent.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class MainGame extends BaseGame
@@ -17,7 +16,7 @@ class MainGame extends BaseGame
   Future<void> onLoad() async {
     await gameAssets.preCache();
     final milestones = Milestones();
-    const randSeed = 1;
+    final randSeed = DateTime.now().second;
     const deckCapacity = 100;
 
     world.addToParent(this);

@@ -168,7 +168,11 @@ class Player extends Component with HasGameRef<BaseGame> {
       ..addAll([
         SizeEffect.to(GameSize.cardOnTable.size, LinearEffectController(0.2)),
         ScaleEffect.to(Vector2.all(1), LinearEffectController(0.2)),
-        MoveEffect.to(Vector2(0, 700), LinearEffectController(0.2)),
+        MoveEffect.to(
+            gameAssets.cardPositionsBySpriteName[
+                    gameAssets.cardSpriteNames[previewingCard.id]] ??
+                Vector2(0, 700),
+            LinearEffectController(0.2)),
       ]);
     _placingCardsInHand(
       cardFrontCollection: CardFront.findCardsInHand(gameRef),
