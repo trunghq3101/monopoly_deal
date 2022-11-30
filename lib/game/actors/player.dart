@@ -237,6 +237,16 @@ class Player extends Component with HasGameRef<BaseGame> {
         gameRef.children.query<GameMaster>().firstOrNull?.getTwoTopMostCards();
     if (twoTopMostCards == null) return;
     pickUpCards(facingDownCardsByTopMost: twoTopMostCards);
+    TimerComponent(
+        period: 0.5,
+        removeOnFinish: true,
+        onTick: () {
+          _placingCardsInHand(
+            cardFrontCollection: CardFront.findCardsInHand(gameRef),
+            timeStep: 0.02,
+            animationDuration: 0.1,
+          );
+        }).addToParent(this);
   }
 
   void _setupStateMachine() {
