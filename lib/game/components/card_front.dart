@@ -1,32 +1,29 @@
-import 'package:collection/collection.dart';
+import 'dart:async';
+
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
-import 'package:monopoly_deal/state_machine/state_machine.dart';
 
 enum CardPlace {
   inHand,
   onTheTable,
 }
 
-enum CardFrontState {
-  initial,
-  inHand,
-  previewing,
-  onTheTable,
-}
-
 class CardFront extends SpriteComponent
-    with HoverCallbacks, TapCallbacks, HasGameRef<BaseGame> {
+    with
+        HoverCallbacks,
+        TapCallbacks,
+        HasGameRef<BaseGame>,
+        CardStateCallbacks {
   CardFront({
     required this.id,
   });
 
   final int id;
+  late CardState _state = Idle(this);
   CardPlace cardPlace = CardPlace.inHand;
-  final _cardStateMachine = StateMachine<CardFrontState, GameEvent>();
 
   @override
   Future<void>? onLoad() async {
@@ -34,49 +31,8 @@ class CardFront extends SpriteComponent
   }
 
   @override
-  void onMount() {
-    super.onMount();
-    _cardStateMachine.setup({
-      CardFrontState.initial: {
-        GameEvent.handUp: EventAction((_) {}, CardFrontState.inHand)
-      },
-      CardFrontState.inHand: {
-        GameEvent.tapCardFront: EventAction(
-          (event) {
-            gameRef.children
-                .query<Player>()
-                .firstOrNull
-                ?.handle(Event(GameEvent.tapCardInHand, event.payload));
-          },
-          CardFrontState.previewing,
-        ),
-      },
-      CardFrontState.previewing: {
-        GameEvent.tapCardFront: EventAction(
-          (event) {
-            gameRef.children
-                .query<Player>()
-                .firstOrNull
-                ?.handle(Event(GameEvent.tapPreviewingCard, event.payload));
-          },
-          CardFrontState.inHand,
-        ),
-        GameEvent.playCard: EventAction(
-          (event) {},
-          CardFrontState.onTheTable,
-        ),
-      },
-      CardFrontState.onTheTable: {}
-    });
-  }
-
-  void handle(Event<GameEvent> event) {
-    _cardStateMachine.handle(event);
-  }
-
-  @override
   void onTapDown(TapDownEvent event) {
-    handle(Event(GameEvent.tapCardFront, id));
+    onTap();
   }
 
   @override
@@ -100,6 +56,15 @@ class CardFront extends SpriteComponent
     decorator.removeLast();
   }
 
+  @override
+  void onTap() {
+    _state.onTap();
+  }
+
+  void pickUp() {
+    changeState(InHand(this));
+  }
+
   static List<CardFront> findCardsInHand(BaseGame game) => game.world.children
       .query<CardFront>()
       .where((c) => c.cardPlace == CardPlace.inHand)
@@ -108,33 +73,69 @@ class CardFront extends SpriteComponent
       game.world.children.query<CardFront>().firstWhere((e) => e.id == id);
 
   PositionComponent? _inHandPlaceholder;
-  void moveToPreviewingPosition() {
-    _inHandPlaceholder = PositionComponent(
-      size: size,
-      angle: angle,
-      position: position,
+
+  void changePlace(CardPlace place) {
+    cardPlace = place;
+  }
+
+  void changeState(CardState state) {
+    _state = state;
+  }
+}
+
+class Idle extends CardState {
+  Idle(super.cardFront);
+}
+
+class InHand extends CardState {
+  InHand(super.cardFront);
+
+  @override
+  void onTap() {
+    _moveToPreviewingPosition();
+    cardFront.changeState(Previewing(cardFront));
+  }
+
+  void _moveToPreviewingPosition() {
+    cardFront._inHandPlaceholder = PositionComponent(
+      size: cardFront.size,
+      angle: cardFront.angle,
+      position: cardFront.position,
     );
-    addAll([
+    cardFront.addAll([
       MoveEffect.to(
           GamePosition.previewCard.position, LinearEffectController(0.1)),
       RotateEffect.to(0, LinearEffectController(0.1)),
       ScaleEffect.by(Vector2.all(1.6), LinearEffectController(0.1)),
     ]);
   }
+}
 
-  void moveBackToHand() {
-    addAll([
-      MoveEffect.to(_inHandPlaceholder!.position, LinearEffectController(0.1)),
-      RotateEffect.to(_inHandPlaceholder!.angle, LinearEffectController(0.1)),
+class Previewing extends CardState {
+  Previewing(super.cardFront);
+
+  @override
+  void onTap() {
+    _moveBackToHand();
+    cardFront.changeState(InHand(cardFront));
+  }
+
+  void _moveBackToHand() {
+    cardFront.addAll([
+      MoveEffect.to(
+          cardFront._inHandPlaceholder!.position, LinearEffectController(0.1)),
+      RotateEffect.to(
+          cardFront._inHandPlaceholder!.angle, LinearEffectController(0.1)),
       ScaleEffect.to(Vector2.all(1), LinearEffectController(0.1)),
     ]);
   }
-
-  void changePlace(CardPlace place) {
-    cardPlace = place;
-  }
 }
 
-enum CardFrontEvent {
-  tapped,
+class CardState with CardStateCallbacks {
+  CardState(this.cardFront);
+  final CardFront cardFront;
+}
+
+mixin CardStateCallbacks {
+  void onTap() {}
 }
