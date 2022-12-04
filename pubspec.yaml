@@ -20,6 +20,7 @@ dependencies:
   flame_rive: ^1.5.2
   flame_tiled: ^1.8.0
   meta: ^1.8.0
+  flame_behaviors: ^0.1.1
 
 dev_dependencies:
   flutter_test:
@@ -27,6 +28,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   integration_test:
     sdk: flutter
+  flame_test: ^1.9.1
 
 flutter:
   uses-material-design: true

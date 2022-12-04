@@ -5,4 +5,5 @@ export 'configurations/configurations.dart';
 export 'decorators/decorators.dart';
 export 'effects/effects.dart';
 export 'main_game.dart';
+export 'main_game_v2.dart';
 export 'mixins/mixins.dart';
