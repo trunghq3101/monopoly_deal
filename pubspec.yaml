@@ -25,6 +25,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  flame_test: ^1.9.1
   integration_test:
     sdk: flutter
 

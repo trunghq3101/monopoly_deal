@@ -140,20 +140,20 @@ class Player extends Component with HasGameRef<BaseGame> {
     }
   }
 
-  void moveSelectedCardToPreviewingPosition({required int selectedCardId}) {
-    CardFront.findById(gameRef, selectedCardId).moveToPreviewingPosition();
-    _previewingCardId = selectedCardId;
-  }
+  // void moveSelectedCardToPreviewingPosition({required int selectedCardId}) {
+  //   CardFront.findById(gameRef, selectedCardId).moveToPreviewingPosition();
+  //   _previewingCardId = selectedCardId;
+  // }
 
   void swapPreviewingCard({required int selectedCardId}) {
-    movePreviewingCardBackToHand();
-    moveSelectedCardToPreviewingPosition(selectedCardId: selectedCardId);
+    // movePreviewingCardBackToHand();
+    // moveSelectedCardToPreviewingPosition(selectedCardId: selectedCardId);
   }
 
-  void movePreviewingCardBackToHand() {
-    CardFront.findById(gameRef, _previewingCardId!).moveBackToHand();
-    _previewingCardId = null;
-  }
+  // void movePreviewingCardBackToHand() {
+  //   CardFront.findById(gameRef, _previewingCardId!).moveBackToHand();
+  //   _previewingCardId = null;
+  // }
 
   void enableHandUpOverlay() {
     _handUpOverlay.enable();
@@ -275,14 +275,14 @@ class Player extends Component with HasGameRef<BaseGame> {
             (event) => letTheHandDown(),
             HandState.handDown,
           ),
-          GameEvent.tapCardInHand: EventAction(
-            (event) {
-              moveSelectedCardToPreviewingPosition(
-                  selectedCardId: event.payload);
-              showCardPlayButton();
-            },
-            HandState.previewing,
-          ),
+          // GameEvent.tapCardInHand: EventAction(
+          //   (event) {
+          //     moveSelectedCardToPreviewingPosition(
+          //         selectedCardId: event.payload);
+          //     showCardPlayButton();
+          //   },
+          //   HandState.previewing,
+          // ),
           GameEvent.tapEndTurnButton: EventAction(
             (event) {
               endTurn();
@@ -301,13 +301,13 @@ class Player extends Component with HasGameRef<BaseGame> {
             (event) => swapPreviewingCard(selectedCardId: event.payload),
             HandState.previewing,
           ),
-          GameEvent.tapPreviewingCard: EventAction(
-            (event) {
-              movePreviewingCardBackToHand();
-              hideCardPlayButton();
-            },
-            HandState.handUp,
-          ),
+          // GameEvent.tapPreviewingCard: EventAction(
+          //   (event) {
+          //     movePreviewingCardBackToHand();
+          //     hideCardPlayButton();
+          //   },
+          //   HandState.handUp,
+          // ),
           GameEvent.playCard: EventAction(
             (event) {
               playPreviewingCard();

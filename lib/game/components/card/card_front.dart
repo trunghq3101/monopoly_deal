@@ -1,10 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/state_machine/state_machine.dart';
+
+import 'card_publisher.dart';
 
 enum CardPlace {
   inHand,
@@ -40,17 +41,6 @@ class CardFront extends SpriteComponent
       CardFrontState.initial: {
         GameEvent.handUp: EventAction((_) {}, CardFrontState.inHand)
       },
-      CardFrontState.inHand: {
-        GameEvent.tapCardFront: EventAction(
-          (event) {
-            gameRef.children
-                .query<Player>()
-                .firstOrNull
-                ?.handle(Event(GameEvent.tapCardInHand, event.payload));
-          },
-          CardFrontState.previewing,
-        ),
-      },
       CardFrontState.previewing: {
         GameEvent.tapCardFront: EventAction(
           (event) {
@@ -76,6 +66,7 @@ class CardFront extends SpriteComponent
 
   @override
   void onTapDown(TapDownEvent event) {
+    children.query<CardPublisher>().first.notify(CardEvent.tapped);
     handle(Event(GameEvent.tapCardFront, id));
   }
 
@@ -106,29 +97,6 @@ class CardFront extends SpriteComponent
       .toList();
   static CardFront findById(BaseGame game, int id) =>
       game.world.children.query<CardFront>().firstWhere((e) => e.id == id);
-
-  PositionComponent? _inHandPlaceholder;
-  void moveToPreviewingPosition() {
-    _inHandPlaceholder = PositionComponent(
-      size: size,
-      angle: angle,
-      position: position,
-    );
-    addAll([
-      MoveEffect.to(
-          GamePosition.previewCard.position, LinearEffectController(0.1)),
-      RotateEffect.to(0, LinearEffectController(0.1)),
-      ScaleEffect.by(Vector2.all(1.6), LinearEffectController(0.1)),
-    ]);
-  }
-
-  void moveBackToHand() {
-    addAll([
-      MoveEffect.to(_inHandPlaceholder!.position, LinearEffectController(0.1)),
-      RotateEffect.to(_inHandPlaceholder!.angle, LinearEffectController(0.1)),
-      ScaleEffect.to(Vector2.all(1), LinearEffectController(0.1)),
-    ]);
-  }
 
   void changePlace(CardPlace place) {
     cardPlace = place;
