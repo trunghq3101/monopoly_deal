@@ -19,14 +19,9 @@ void main() {
     });
 
     testWithFlameGame(
-      'parent is not PositionComponent, throws exception',
+      'parent is a PositionComponent',
       (game) async {
-        final mockParent = Component();
-        behavior.addToParent(mockParent);
-        expect(
-          () async => await game.ensureAdd(mockParent),
-          throwsAssertionError,
-        );
+        expect(behavior, isA<ParentIsA<PositionComponent>>());
       },
     );
 
