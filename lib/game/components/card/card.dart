@@ -1,1 +1,1 @@
-export 'card_front.dart';
+export 'card_component.dart';

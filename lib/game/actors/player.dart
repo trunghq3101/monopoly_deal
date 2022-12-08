@@ -54,9 +54,6 @@ class Player extends Component with HasGameRef<BaseGame> {
     add(TimerComponent(
       onTick: () {
         _handStateMachine.handle(const Event(GameEvent.handUp));
-        for (var c in CardFront.findCardsInHand(gameRef)) {
-          c.handle(const Event(GameEvent.handUp));
-        }
       },
       period: cardsAmount * timeStep + 0.4,
       removeOnFinish: true,
@@ -163,7 +160,6 @@ class Player extends Component with HasGameRef<BaseGame> {
     if (_previewingCardId == null) return;
     _cardPlayButton.hide();
     final previewingCard = CardFront.findById(gameRef, _previewingCardId!);
-    previewingCard.handle(const Event(GameEvent.playCard));
     previewingCard
       ..priority = 0
       ..changePlace(CardPlace.onTheTable)

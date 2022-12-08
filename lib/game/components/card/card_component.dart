@@ -5,8 +5,6 @@ import 'package:flutter/painting.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/state_machine/state_machine.dart';
 
-import 'card_publisher.dart';
-
 enum CardPlace {
   inHand,
   onTheTable,
@@ -60,15 +58,8 @@ class CardFront extends SpriteComponent
     });
   }
 
-  void handle(Event<GameEvent> event) {
-    _cardStateMachine.handle(event);
-  }
-
   @override
-  void onTapDown(TapDownEvent event) {
-    children.query<CardPublisher>().first.notify(CardEvent.tapped);
-    handle(Event(GameEvent.tapCardFront, id));
-  }
+  void onTapDown(TapDownEvent event) {}
 
   @override
   void onHoverEnter(int hoverId) {
