@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:monopoly_deal/game/components/card/card_deck_publisher.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
@@ -24,7 +23,7 @@ class AddToDeckBehavior extends Component
         parent.priority = _priority;
         parent.position = gameMap.deckBottomRight;
         parent.add(MoveEffect.to(
-            gameMap.inDeckPosition(_index), LinearEffectController(0.02)));
+            gameMap.inDeckPosition(_index), LinearEffectController(0.6)));
         break;
       default:
     }

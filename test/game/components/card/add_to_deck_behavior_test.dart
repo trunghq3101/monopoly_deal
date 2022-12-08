@@ -1,8 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:monopoly_deal/game/components/card/add_to_deck_behavior.dart';
-import 'package:monopoly_deal/game/components/card/card_deck_publisher.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
@@ -80,7 +78,7 @@ void main() {
         );
 
         testWithFlameGame(
-          'parent is moved to inDeckPosition after 0.02s',
+          'parent is moved to inDeckPosition after 0.6s',
           (game) async {
             final p = PositionComponent();
             const behaviorIndex = 4;
@@ -96,7 +94,7 @@ void main() {
 
             behavior.onNewEvent(CardDeckEvent.showUp);
             await game.ready();
-            game.update(0.02);
+            game.update(0.6);
 
             expect(p.position, inDeckPosition);
           },

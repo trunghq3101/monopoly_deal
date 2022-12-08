@@ -27,6 +27,6 @@ mixin Publisher<T> on Component {
   }
 }
 
-mixin Subscriber<T> on Component {
+mixin Subscriber<T> {
   void onNewEvent(T event);
 }
