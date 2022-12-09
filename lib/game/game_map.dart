@@ -1,8 +1,6 @@
 import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
-import 'package:flame/game.dart';
 
-class GameMap extends Component {
+class GameMap {
   final Vector2 deckBottomRight;
   final double deckSpacing;
   final Vector2 cardSize;
@@ -20,8 +18,4 @@ class GameMap extends Component {
     final ratio = deckSpacing / cardSize.distanceTo(Vector2.zero());
     return deckBottomRight - (cardSize * ratio) * index.toDouble();
   }
-}
-
-mixin HasGameMapRef implements HasGameReference<FlameGame> {
-  GameMap get gameMap => game.children.query<GameMap>().first;
 }

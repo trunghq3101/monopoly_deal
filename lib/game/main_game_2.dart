@@ -1,12 +1,12 @@
-import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class MainGame2 extends FlameGame {
+  static GameMap gameMap = GameMap();
+
   late World world;
-  late GameMap gameMap;
   late CardDeckPublisher cardDeckPublisher;
 
   @override
@@ -22,19 +22,13 @@ class MainGame2 extends FlameGame {
       deckSpacing: 0.7,
       cardSize: Vector2(300, 440),
     );
-    await add(gameMap);
 
     cardDeckPublisher = CardDeckPublisher();
     await add(cardDeckPublisher);
-  }
 
-  @override
-  void onChildrenChanged(child, type) {
-    if (child is GameMap && type == ChildrenChangeType.added) {
-      const cardTotalAmount = 110;
-      final cards = List.generate(cardTotalAmount, _setupCard);
-      world.addAll(cards);
-    }
+    const cardTotalAmount = 110;
+    final cards = List.generate(cardTotalAmount, _setupCard);
+    world.addAll(cards);
   }
 
   Card _setupCard(int index) {

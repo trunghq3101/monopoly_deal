@@ -19,7 +19,6 @@ void main() {
         await game.ready();
         expect(game.children.query<World>(), isNotEmpty);
         expect(game.children.query<CameraComponent>(), isNotEmpty);
-        expect(game.children.query<GameMap>(), isNotEmpty);
         expect(game.world.children.query<Card>().length, 110);
         expect(game.children.query<CardDeckPublisher>(), isNotEmpty);
       },

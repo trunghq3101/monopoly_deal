@@ -10,26 +10,19 @@ import '../../../utils.dart';
 void main() {
   group('$Card', () {
     late Card card;
-    late GameMap gameMap;
 
     setUp(() async {
       Flame.bundle = MockAssetBundle();
       await Flame.images.load('card.png');
       card = Card();
-      gameMap = GameMap();
     });
 
     Future<void> setupCard(FlameGame game) async {
-      await game.ensureAdd(gameMap);
       await game.ensureAdd(card);
     }
 
     test('is PositionComponent', () {
       expect(card, isA<PositionComponent>());
-    });
-
-    test('is $HasGameMapRef', () {
-      expect(card, isA<HasGameMapRef>());
     });
 
     testWithFlameGame('has SpriteComponent', (game) async {
@@ -41,7 +34,7 @@ void main() {
     testWithFlameGame('has size as $GameMap.cardSize', (game) async {
       await setupCard(game);
 
-      expect(card.size, gameMap.cardSize);
+      expect(card.size, MainGame2.gameMap.cardSize);
     });
 
     testWithFlameGame('has SpriteComponent with the size the same as its size',

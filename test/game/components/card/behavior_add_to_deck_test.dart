@@ -36,10 +36,6 @@ void main() {
       expect(behavior, isA<Subscriber<CardDeckEvent>>());
     });
 
-    test('has GameMapRef', () {
-      expect(behavior, isA<HasGameMapRef>());
-    });
-
     group('onNewEvent', () {
       group('showUp', () {
         testWithFlameGame(
@@ -48,9 +44,8 @@ void main() {
             final p = PositionComponent();
             behavior.addToParent(p);
             final deckBottomRight = Vector2.all(100);
-            final gameMap = GameMap(deckBottomRight: deckBottomRight);
+            MainGame2.gameMap = GameMap(deckBottomRight: deckBottomRight);
             await game.ensureAdd(p);
-            await game.ensureAdd(gameMap);
 
             behavior.onNewEvent(CardDeckEvent.showUp);
             await game.ready();
@@ -66,9 +61,7 @@ void main() {
             const behaviorPriority = 3;
             behavior = AddToDeckBehavior(priority: behaviorPriority);
             behavior.addToParent(p);
-            final gameMap = GameMap();
             await game.ensureAdd(p);
-            await game.ensureAdd(gameMap);
 
             behavior.onNewEvent(CardDeckEvent.showUp);
             await game.ready();
@@ -85,12 +78,11 @@ void main() {
             behavior = AddToDeckBehavior(index: behaviorIndex);
             behavior.addToParent(p);
             final inDeckPosition = Vector2.all(100);
-            final gameMap = _MockGameMap(
+            MainGame2.gameMap = _MockGameMap(
               mockInDeckPosition: (index) =>
                   index == behaviorIndex ? inDeckPosition : Vector2.zero(),
             );
             await game.ensureAdd(p);
-            await game.ensureAdd(gameMap);
 
             behavior.onNewEvent(CardDeckEvent.showUp);
             await game.ready();

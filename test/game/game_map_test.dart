@@ -2,18 +2,14 @@ import 'package:flame/components.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 
-import '../../../utils.dart';
+import '../utils.dart';
 
 void main() {
-  group('GameMapComponent', () {
+  group('GameMap', () {
     late GameMap gameMap;
 
     setUp(() {
       gameMap = GameMap();
-    });
-
-    test('is a Component', () {
-      expect(gameMap, isA<Component>());
     });
 
     group('inDeckPosition', () {
