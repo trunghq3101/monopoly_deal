@@ -2,8 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:monopoly_deal/game/components/card/card_state_machine.dart';
-import 'package:monopoly_deal/game/components/card/toggle_previewing_behavior.dart';
+import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 void main() {

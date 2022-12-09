@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-import 'card_publisher.dart';
+import 'publisher_card.dart';
 
 enum CardState {
   initial,

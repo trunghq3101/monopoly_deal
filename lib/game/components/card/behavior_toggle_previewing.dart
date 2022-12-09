@@ -3,8 +3,6 @@ import 'package:flame/effects.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-import 'card_state_machine.dart';
-
 class TogglePreviewingBehavior extends Component
     with Subscriber<CardStateMachineEvent>, ParentIsA<PositionComponent> {
   PositionComponent? _inHandPlaceholder;
