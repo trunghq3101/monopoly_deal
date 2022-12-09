@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
@@ -5,11 +6,13 @@ import 'package:monopoly_deal/game/game.dart';
 
 class MainGame2 extends FlameGame {
   late World world;
-  late CardDeckPublisher cardDeckPublisher;
   late GameMap gameMap;
+  late CardDeckPublisher cardDeckPublisher;
 
   @override
   Future<void>? onLoad() async {
+    await Flame.images.loadAll(['card.png']);
+
     world = World();
     await add(world);
     final cameraComponent = CameraComponent(world: world);
@@ -20,19 +23,22 @@ class MainGame2 extends FlameGame {
       cardSize: Vector2(300, 440),
     );
     await add(gameMap);
-    await Flame.images.load('card.png');
 
     cardDeckPublisher = CardDeckPublisher();
     await add(cardDeckPublisher);
-
-    const cardTotalAmount = 110;
-    final cards = List.generate(cardTotalAmount, setupCard);
-    await world.addAll(cards);
   }
 
-  Card setupCard(int index) {
-    final card = Card(Flame.images.fromCache('card.png'))
-      ..size = gameMap.cardSize;
+  @override
+  void onChildrenChanged(child, type) {
+    if (child is GameMap && type == ChildrenChangeType.added) {
+      const cardTotalAmount = 110;
+      final cards = List.generate(cardTotalAmount, _setupCard);
+      world.addAll(cards);
+    }
+  }
+
+  Card _setupCard(int index) {
+    final card = Card();
     final addToDeckBehavior = AddToDeckBehavior(index: index, priority: index);
     cardDeckPublisher.addSubscriber(addToDeckBehavior);
     card.add(addToDeckBehavior);

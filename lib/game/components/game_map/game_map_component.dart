@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 
 class GameMap extends Component {
@@ -19,6 +20,6 @@ class GameMap extends Component {
   }
 }
 
-mixin HasGameMapRef implements HasGameRef<FlameGame> {
+mixin HasGameMapRef implements HasGameReference<FlameGame> {
   GameMap get gameMap => game.children.query<GameMap>().first;
 }
