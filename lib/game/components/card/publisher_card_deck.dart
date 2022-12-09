@@ -14,4 +14,4 @@ class CardDeckPublisher extends Component with Publisher<CardDeckEvent> {
   }
 }
 
-enum CardDeckEvent { showUp }
+enum CardDeckEvent { showUp, deal }
