@@ -20,6 +20,7 @@ class AddToDeckBehavior extends Component
         parent.position = MainGame2.gameMap.deckBottomRight;
         parent.add(MoveEffect.to(MainGame2.gameMap.inDeckPosition(_index),
             LinearEffectController(0.6)));
+        add(RemoveEffect(delay: 0.6));
         break;
       default:
     }

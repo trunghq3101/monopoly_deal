@@ -20,6 +20,7 @@ class DealToPlayerBehavior extends Component
             LinearEffectController(0.4),
           ),
         );
+        add(RemoveEffect(delay: 0.4));
         break;
       default:
     }

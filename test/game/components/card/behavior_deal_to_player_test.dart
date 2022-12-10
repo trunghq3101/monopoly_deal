@@ -37,6 +37,22 @@ void main() {
           expect(p.position, playerPosition);
         },
       );
+
+      testWithFlameGame(
+        'removed from parent once finished',
+        (game) async {
+          final p = PositionComponent();
+          p.add(behavior);
+          await game.ensureAdd(p);
+
+          behavior.onNewEvent(CardDeckEvent.deal);
+          await game.ready();
+          game.update(0.4);
+          await game.ready();
+
+          expect(p.children.query<DealToPlayerBehavior>(), isEmpty);
+        },
+      );
     });
   });
 }

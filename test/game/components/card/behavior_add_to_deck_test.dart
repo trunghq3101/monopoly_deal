@@ -91,6 +91,22 @@ void main() {
             expect(p.position, inDeckPosition);
           },
         );
+
+        testWithFlameGame(
+          'is removed from parent once finished after 0.6s',
+          (game) async {
+            final p = PositionComponent();
+            behavior.addToParent(p);
+            await game.ensureAdd(p);
+
+            behavior.onNewEvent(CardDeckEvent.showUp);
+            await game.ready();
+            game.update(0.6);
+            await game.ready();
+
+            expect(p.children.query<AddToDeckBehavior>(), isEmpty);
+          },
+        );
       });
     });
   });
