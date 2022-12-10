@@ -12,6 +12,7 @@ mixin Publisher<T> on Component {
   }
 
   void notify(T event) {
+    _cleanRemovedComponents();
     for (var s in _subscribers) {
       s.onNewEvent(event);
     }
@@ -19,11 +20,20 @@ mixin Publisher<T> on Component {
 
   @override
   void onRemove() {
-    for (var s in _subscribers) {
-      removeSubscriber(s);
-      _subscribers.clear();
-    }
+    _subscribers.clear();
     super.onRemove();
+  }
+
+  void _cleanRemovedComponents() {
+    final pendingRemoved = [];
+    for (var s in _subscribers) {
+      if (s is Component && (s as Component).isRemoved) {
+        pendingRemoved.add(s);
+      }
+    }
+    for (var s in pendingRemoved) {
+      removeSubscriber(s);
+    }
   }
 }
 
