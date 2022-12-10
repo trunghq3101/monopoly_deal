@@ -13,7 +13,7 @@ class AddToDeckBehavior extends Component
   final int _priority;
 
   @override
-  void onNewEvent(CardDeckEvent event) {
+  void onNewEvent(CardDeckEvent event, [Object? payload]) {
     switch (event) {
       case CardDeckEvent.showUp:
         parent.priority = _priority;

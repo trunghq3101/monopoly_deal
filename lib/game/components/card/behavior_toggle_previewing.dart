@@ -7,7 +7,7 @@ class TogglePreviewingBehavior extends Component
     with Subscriber<CardStateMachineEvent>, ParentIsA<PositionComponent> {
   PositionComponent? _inHandPlaceholder;
   @override
-  void onNewEvent(CardStateMachineEvent event) {
+  void onNewEvent(CardStateMachineEvent event, [Object? payload]) {
     switch (event) {
       case CardStateMachineEvent.toPreviewing:
         _inHandPlaceholder = PositionComponent(

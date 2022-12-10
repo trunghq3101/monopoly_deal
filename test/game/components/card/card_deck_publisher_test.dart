@@ -9,7 +9,8 @@ class _MockSubscriber implements Subscriber<CardDeckEvent> {
   final Function(CardDeckEvent event) mockOnNewEvent;
 
   @override
-  void onNewEvent(CardDeckEvent event) => mockOnNewEvent(event);
+  void onNewEvent(CardDeckEvent event, [Object? payload]) =>
+      mockOnNewEvent(event);
 }
 
 void main() {

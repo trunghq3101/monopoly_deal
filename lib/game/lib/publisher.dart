@@ -1,7 +1,19 @@
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 
-mixin Publisher<T> on Component {
+class PublisherComponent<T> extends Component with Publisher<T> {
+  @override
+  void onRemove() {
+    _subscribers.clear();
+    super.onRemove();
+  }
+}
+
+mixin Publisher<T> {
   final List<Subscriber<T>> _subscribers = [];
+
+  UnmodifiableListView<Subscriber<T>> get subscribers =>
+      UnmodifiableListView(_subscribers);
 
   void addSubscriber(Subscriber<T> subscriber) {
     _subscribers.add(subscriber);
@@ -11,17 +23,11 @@ mixin Publisher<T> on Component {
     _subscribers.remove(subscriber);
   }
 
-  void notify(T event) {
+  void notify(T event, [Object? payload]) {
     _cleanRemovedComponents();
     for (var s in _subscribers) {
-      s.onNewEvent(event);
+      s.onNewEvent(event, payload);
     }
-  }
-
-  @override
-  void onRemove() {
-    _subscribers.clear();
-    super.onRemove();
   }
 
   void _cleanRemovedComponents() {
@@ -38,5 +44,5 @@ mixin Publisher<T> on Component {
 }
 
 mixin Subscriber<T> {
-  void onNewEvent(T event);
+  void onNewEvent(T event, [Object? payload]);
 }

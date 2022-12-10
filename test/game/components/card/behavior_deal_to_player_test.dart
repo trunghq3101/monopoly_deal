@@ -16,21 +16,22 @@ void main() {
       expect(behavior, isA<ParentIsA<PositionComponent>>());
     });
 
-    test('is a subscriber of $CardDeckEvent', () {
-      expect(behavior, isA<Subscriber<CardDeckEvent>>());
+    test('is a subscriber of $CardStateMachineEvent', () {
+      expect(behavior, isA<Subscriber<CardStateMachineEvent>>());
     });
 
     group('on $CardDeckEvent.deal', () {
       testWithFlameGame(
-        'given playerPosition, move parent to playerPosition',
+        'given $CardEventDealPayload, move parent to playerPosition',
         (game) async {
           final playerPosition = Vector2.all(20);
-          behavior = DealToPlayerBehavior(playerPosition: playerPosition);
+          behavior = DealToPlayerBehavior();
           final p = PositionComponent();
           p.add(behavior);
           await game.ensureAdd(p);
 
-          behavior.onNewEvent(CardDeckEvent.deal);
+          behavior.onNewEvent(CardStateMachineEvent.toPlayer,
+              CardEventDealPayload(0, playerPosition));
           await game.ready();
           game.update(0.4);
 
@@ -45,7 +46,10 @@ void main() {
           p.add(behavior);
           await game.ensureAdd(p);
 
-          behavior.onNewEvent(CardDeckEvent.deal);
+          behavior.onNewEvent(
+            CardStateMachineEvent.toPlayer,
+            CardEventDealPayload(0, Vector2.all(100)),
+          );
           await game.ready();
           game.update(0.4);
           await game.ready();

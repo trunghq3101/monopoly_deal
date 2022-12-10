@@ -17,9 +17,12 @@ void main() {
       MainGame2.new,
       (game) async {
         await game.ready();
+
         expect(game.children.query<World>(), isNotEmpty);
+
+        final world = game.children.query<World>().first;
         expect(game.children.query<CameraComponent>(), isNotEmpty);
-        expect(game.world.children.query<Card>().length, 110);
+        expect(world.children.query<Card>().length, 110);
         expect(game.children.query<CardDeckPublisher>(), isNotEmpty);
       },
     );

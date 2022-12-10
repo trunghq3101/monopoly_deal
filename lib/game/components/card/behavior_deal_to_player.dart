@@ -4,19 +4,15 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class DealToPlayerBehavior extends Component
-    with ParentIsA<PositionComponent>, Subscriber<CardDeckEvent> {
-  DealToPlayerBehavior({Vector2? playerPosition})
-      : _playerPosition = playerPosition ?? Vector2.zero();
-
-  final Vector2 _playerPosition;
-
+    with ParentIsA<PositionComponent>, Subscriber<CardStateMachineEvent> {
   @override
-  void onNewEvent(CardDeckEvent event) {
+  void onNewEvent(CardStateMachineEvent event, [Object? payload]) {
     switch (event) {
-      case CardDeckEvent.deal:
+      case CardStateMachineEvent.toPlayer:
+        payload as CardEventDealPayload;
         parent.add(
           MoveEffect.to(
-            _playerPosition,
+            payload.playerPosition,
             LinearEffectController(0.4),
           ),
         );

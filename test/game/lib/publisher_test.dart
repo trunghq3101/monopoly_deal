@@ -3,7 +3,7 @@ import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class _MockPublisher extends Component with Publisher<int> {}
+class _MockPublisher extends PublisherComponent<int> {}
 
 class _MockSubscriberComponent extends Component with Subscriber<int> {
   _MockSubscriberComponent({required this.mockOnNewEvent});
@@ -11,12 +11,12 @@ class _MockSubscriberComponent extends Component with Subscriber<int> {
   final Function(int) mockOnNewEvent;
 
   @override
-  void onNewEvent(int event) => mockOnNewEvent(event);
+  void onNewEvent(int event, [Object? payload]) => mockOnNewEvent(event);
 }
 
 void main() {
   group('Publisher', () {
-    late Publisher publisher;
+    late PublisherComponent publisher;
 
     setUp(() {
       publisher = _MockPublisher();
