@@ -1,5 +1,4 @@
 import 'package:flame/experimental.dart';
-import 'package:flame/flame.dart';
 import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
@@ -25,8 +24,7 @@ void main() {
     late List<Card> cards;
 
     setUp(() async {
-      Flame.bundle = MockAssetBundle();
-      await Flame.images.load('card.png');
+      await loadTestAssets();
       tracker = CardTracker();
       cards = [
         _MockCard(0, CardState.inDeck)..priority = 0,

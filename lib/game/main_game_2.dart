@@ -57,8 +57,9 @@ class MainGame2 extends FlameGame {
     card.add(cardStateMachine);
     card.add(addToDeckBehavior);
     card.add(dealToPlayerBehavior);
-    _selectToDeal.addSubscriber(cardStateMachine);
     _cardDeckPublisher.addSubscriber(addToDeckBehavior);
+    addToDeckBehavior.addSubscriber(_cardDeckPublisher);
+    _selectToDeal.addSubscriber(cardStateMachine);
     cardStateMachine.addSubscriber(dealToPlayerBehavior);
     return card;
   }

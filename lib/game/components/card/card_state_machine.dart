@@ -20,10 +20,10 @@ class CardStateMachine extends PublisherComponent<CardStateMachineEvent>
     switch (_state) {
       case CardState.inDeck:
         if (event == CardEvent.deal) {
-          payload as CardEventDealPayload;
-          if (payload.cardId != parent.cardId) return;
+          assert(payload is CardEventDealPayload);
+          if ((payload as CardEventDealPayload).cardId != parent.cardId) return;
           _state = CardState.inDealRegion;
-          notify(CardStateMachineEvent.toPlayer, payload);
+          notify(CardStateMachineEvent.toDealRegion, payload);
         }
         break;
       case CardState.inHand:
@@ -44,7 +44,7 @@ class CardStateMachine extends PublisherComponent<CardStateMachineEvent>
 }
 
 enum CardStateMachineEvent {
-  toPlayer,
+  toDealRegion,
   toPreviewing,
   toHand,
 }

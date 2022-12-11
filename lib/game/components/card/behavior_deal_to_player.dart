@@ -8,11 +8,11 @@ class DealToPlayerBehavior extends Component
   @override
   void onNewEvent(CardStateMachineEvent event, [Object? payload]) {
     switch (event) {
-      case CardStateMachineEvent.toPlayer:
-        payload as CardEventDealPayload;
+      case CardStateMachineEvent.toDealRegion:
+        assert(payload is CardEventDealPayload);
         parent.add(
           MoveEffect.to(
-            payload.playerPosition,
+            (payload as CardEventDealPayload).playerPosition,
             LinearEffectController(0.4),
           ),
         );

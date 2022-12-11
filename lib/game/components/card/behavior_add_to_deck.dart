@@ -3,7 +3,7 @@ import 'package:flame/effects.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class AddToDeckBehavior extends Component
+class AddToDeckBehavior extends PublisherComponent<AddToDeckEvent>
     with ParentIsA<PositionComponent>, Subscriber<CardDeckEvent> {
   AddToDeckBehavior({int index = 0, int priority = 0})
       : _index = index,
@@ -18,11 +18,21 @@ class AddToDeckBehavior extends Component
       case CardDeckEvent.showUp:
         parent.priority = _priority;
         parent.position = MainGame2.gameMap.deckBottomRight;
-        parent.add(MoveEffect.to(MainGame2.gameMap.inDeckPosition(_index),
-            LinearEffectController(0.6)));
-        add(RemoveEffect(delay: 0.6));
+        parent.add(MoveEffect.to(
+          MainGame2.gameMap.inDeckPosition(_index),
+          LinearEffectController(0.6),
+        ));
+        add(TimerComponent(
+            period: 0.6,
+            removeOnFinish: true,
+            onTick: () {
+              notify(AddToDeckEvent.done);
+              removeFromParent();
+            }));
         break;
       default:
     }
   }
 }
+
+enum AddToDeckEvent { done }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flame/experimental.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
 
@@ -26,4 +27,9 @@ class MockAssetBundle extends AssetBundle {
       String key, Future<T> Function(String value) parser) async {
     return await parser('');
   }
+}
+
+Future<void> loadTestAssets() async {
+  Flame.bundle = MockAssetBundle();
+  await Flame.images.load('card.png');
 }

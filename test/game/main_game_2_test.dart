@@ -1,5 +1,4 @@
 import 'package:flame/experimental.dart';
-import 'package:flame/flame.dart';
 import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
@@ -8,8 +7,8 @@ import '../utils.dart';
 
 void main() {
   group('MainGame2', () {
-    setUp(() {
-      Flame.bundle = MockAssetBundle();
+    setUp(() async {
+      await loadTestAssets();
     });
 
     testWithGame<MainGame2>(

@@ -20,7 +20,7 @@ void main() {
       expect(behavior, isA<Subscriber<CardStateMachineEvent>>());
     });
 
-    group('on $CardDeckEvent.deal', () {
+    group('on ${CardStateMachineEvent.toDealRegion}', () {
       testWithFlameGame(
         'given $CardEventDealPayload, move parent to playerPosition',
         (game) async {
@@ -30,7 +30,7 @@ void main() {
           p.add(behavior);
           await game.ensureAdd(p);
 
-          behavior.onNewEvent(CardStateMachineEvent.toPlayer,
+          behavior.onNewEvent(CardStateMachineEvent.toDealRegion,
               CardEventDealPayload(0, playerPosition));
           await game.ready();
           game.update(0.4);
@@ -47,7 +47,7 @@ void main() {
           await game.ensureAdd(p);
 
           behavior.onNewEvent(
-            CardStateMachineEvent.toPlayer,
+            CardStateMachineEvent.toDealRegion,
             CardEventDealPayload(0, Vector2.all(100)),
           );
           await game.ready();

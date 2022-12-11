@@ -13,6 +13,14 @@ class _MockGameMap extends GameMap {
   Vector2 inDeckPosition(int index) => mockInDeckPosition(index);
 }
 
+class _MockSubscriber implements Subscriber<AddToDeckEvent> {
+  AddToDeckEvent? receivedEvent;
+  @override
+  void onNewEvent(AddToDeckEvent event, [Object? payload]) {
+    receivedEvent = event;
+  }
+}
+
 void main() {
   group('AddToDeckBehavior', () {
     late AddToDeckBehavior behavior;
@@ -21,8 +29,8 @@ void main() {
       behavior = AddToDeckBehavior();
     });
 
-    test('is a Component', () {
-      expect(behavior, isA<Component>());
+    test('is ${PublisherComponent<AddToDeckEvent>}', () {
+      expect(behavior, isA<PublisherComponent<AddToDeckEvent>>());
     });
 
     testWithFlameGame(
@@ -32,7 +40,7 @@ void main() {
       },
     );
 
-    test('is a subscriber of CardDeckEvent', () {
+    test('is ${Subscriber<CardDeckEvent>}', () {
       expect(behavior, isA<Subscriber<CardDeckEvent>>());
     });
 
@@ -89,6 +97,24 @@ void main() {
             game.update(0.6);
 
             expect(p.position, inDeckPosition);
+          },
+        );
+
+        testWithFlameGame(
+          'notify ${AddToDeckEvent.done} after 0.6s',
+          (game) async {
+            final p = PositionComponent();
+            final s = _MockSubscriber();
+            behavior.addToParent(p);
+            behavior.addSubscriber(s);
+            await game.ensureAdd(p);
+
+            behavior.onNewEvent(CardDeckEvent.showUp);
+            await game.ready();
+            game.update(0.6);
+            await game.ready();
+
+            expect(s.receivedEvent, AddToDeckEvent.done);
           },
         );
 
