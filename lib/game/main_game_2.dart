@@ -25,7 +25,7 @@ class MainGame2 extends FlameGame {
 
     final world = World();
     final cameraComponent = CameraComponent(world: world);
-    cameraComponent.viewfinder.visibleGameSize = Vector2(2000, 3000);
+    cameraComponent.viewfinder.visibleGameSize = gameMap.intialGameVisibleSize;
 
     final cardDeckPublisher = CardDeckPublisher();
     final cardTracker = CardTracker();
@@ -36,7 +36,15 @@ class MainGame2 extends FlameGame {
     add(cardDeckPublisher);
     add(cardTracker);
 
-    cardDeckPublisher.addSubscriber(_selectToDeal);
+    final zoomOverviewBehavior = ZoomOverviewBehavior();
+    cameraComponent.add(zoomOverviewBehavior);
+
+    final cardDeckEventToCameraEventAdapter =
+        CardDeckEventToCameraEventAdapter();
+    cardDeckPublisher
+      ..addSubscriber(_selectToDeal)
+      ..addSubscriber(cardDeckEventToCameraEventAdapter);
+    cardDeckEventToCameraEventAdapter.addSubscriber(zoomOverviewBehavior);
   }
 
   @override

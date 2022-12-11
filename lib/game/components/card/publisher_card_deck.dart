@@ -29,4 +29,4 @@ class CardDeckPublisher extends PublisherComponent<CardDeckEvent>
   }
 }
 
-enum CardDeckEvent { showUp, dealStartGame, deal }
+enum CardDeckEvent { showUp, dealStartGame }
