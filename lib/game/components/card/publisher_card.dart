@@ -9,9 +9,10 @@ enum CardEvent { deal, tapped }
 class CardEventDealPayload with EquatableMixin {
   final int cardId;
   final Vector2 playerPosition;
+  final int orderIndex;
 
-  CardEventDealPayload(this.cardId, this.playerPosition);
+  CardEventDealPayload(this.cardId, this.playerPosition, {this.orderIndex = 0});
 
   @override
-  List<Object?> get props => [cardId, playerPosition];
+  List<Object?> get props => [cardId, playerPosition, orderIndex];
 }

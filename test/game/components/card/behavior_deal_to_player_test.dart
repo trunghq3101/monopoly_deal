@@ -3,13 +3,24 @@ import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
+import 'package:monopoly_deal/game/logic/randomize_deal_offset.dart';
+
+class _MockRandomizeDealOffset extends RandomizeDealOffset {
+  static final offset = Vector2.all(2);
+  @override
+  Vector2 generate() => offset;
+}
 
 void main() {
   group('$DealToPlayerBehavior', () {
+    const delayStep = 0.2;
     late DealToPlayerBehavior behavior;
 
     setUp(() {
-      behavior = DealToPlayerBehavior();
+      behavior = DealToPlayerBehavior(
+        delayStep: delayStep,
+        randomizeDealOffset: _MockRandomizeDealOffset(),
+      );
     });
 
     test('has PositionComponent parent', () {
@@ -22,10 +33,9 @@ void main() {
 
     group('on ${CardStateMachineEvent.toDealRegion}', () {
       testWithFlameGame(
-        'given $CardEventDealPayload, move parent to playerPosition',
+        'given $CardEventDealPayload, move parent to playerPosition with offset added',
         (game) async {
           final playerPosition = Vector2.all(20);
-          behavior = DealToPlayerBehavior();
           final p = PositionComponent();
           p.add(behavior);
           await game.ensureAdd(p);
@@ -35,7 +45,7 @@ void main() {
           await game.ready();
           game.update(0.4);
 
-          expect(p.position, playerPosition);
+          expect(p.position, playerPosition + _MockRandomizeDealOffset.offset);
         },
       );
 
@@ -48,10 +58,10 @@ void main() {
 
           behavior.onNewEvent(
             CardStateMachineEvent.toDealRegion,
-            CardEventDealPayload(0, Vector2.all(100)),
+            CardEventDealPayload(0, Vector2.all(100), orderIndex: 2),
           );
           await game.ready();
-          game.update(0.4);
+          game.update(2 * delayStep + 0.5);
           await game.ready();
 
           expect(p.children.query<DealToPlayerBehavior>(), isEmpty);

@@ -1,22 +1,56 @@
+import 'dart:math';
+
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flutter/animation.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
+import 'package:monopoly_deal/game/logic/randomize_deal_offset.dart';
 
 class DealToPlayerBehavior extends Component
     with ParentIsA<PositionComponent>, Subscriber<CardStateMachineEvent> {
+  DealToPlayerBehavior(
+      {double delayStep = 0.2, RandomizeDealOffset? randomizeDealOffset})
+      : _delayStep = delayStep,
+        _randomizeDealOffset = randomizeDealOffset ?? RandomizeDealOffset();
+
+  final double _delayStep;
+  final RandomizeDealOffset _randomizeDealOffset;
+
   @override
   void onNewEvent(CardStateMachineEvent event, [Object? payload]) {
     switch (event) {
       case CardStateMachineEvent.toDealRegion:
         assert(payload is CardEventDealPayload);
-        parent.add(
+        payload as CardEventDealPayload;
+        final randomOffset = _randomizeDealOffset.generate();
+        final delay = payload.orderIndex * _delayStep;
+        parent.addAll([
           MoveEffect.to(
-            (payload as CardEventDealPayload).playerPosition,
-            LinearEffectController(0.4),
+            payload.playerPosition + randomOffset,
+            EffectController(
+              duration: 0.4,
+              curve: Curves.fastOutSlowIn,
+              startDelay: delay,
+            ),
           ),
-        );
-        add(RemoveEffect(delay: 0.4));
+          RotateEffect.by(
+            pi + randomOffset.x % pi,
+            EffectController(
+              duration: 0.4,
+              curve: Curves.fastOutSlowIn,
+              startDelay: delay,
+            ),
+          ),
+          TimerComponent(
+            onTick: () {
+              parent.priority = payload.orderIndex;
+            },
+            period: delay + 0.2,
+            removeOnFinish: true,
+          )
+        ]);
+        add(RemoveEffect(delay: delay + 0.5));
         break;
       default:
     }
