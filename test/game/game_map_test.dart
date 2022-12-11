@@ -31,21 +31,26 @@ void main() {
       test(
         'given deckSpacing, returned position distanced by it',
         () {
-          const deckSpacing = 0.01;
-          final deckBottomRight = Vector2.all(10);
-          gameMap = GameMap(
-              deckBottomRight: deckBottomRight, deckSpacing: deckSpacing);
+          const deckSpacing = 10.0;
+          final deckCenter = Vector2.zero();
+          MainGame2.cardTotalAmount = 4;
+          gameMap = GameMap(deckSpacing: deckSpacing);
 
-          Vector2 inDeckPosition = gameMap.inDeckPosition(1);
-          expect(inDeckPosition.distanceTo(deckBottomRight).toFixed(2),
-              deckSpacing);
+          Vector2 inDeckPosition = gameMap.inDeckPosition(0);
+          expect(inDeckPosition.distanceTo(deckCenter).toFixed(2),
+              deckSpacing * 1.5);
+
+          inDeckPosition = gameMap.inDeckPosition(1);
+          expect(inDeckPosition.distanceTo(deckCenter).toFixed(2),
+              deckSpacing * 0.5);
 
           inDeckPosition = gameMap.inDeckPosition(2);
-          expect(inDeckPosition.distanceTo(deckBottomRight).toFixed(2),
-              deckSpacing * 2);
+          expect(inDeckPosition.distanceTo(deckCenter).toFixed(2),
+              deckSpacing * 0.5);
 
-          inDeckPosition = gameMap.inDeckPosition(0);
-          expect(inDeckPosition.distanceTo(deckBottomRight).toFixed(2), 0);
+          inDeckPosition = gameMap.inDeckPosition(3);
+          expect(inDeckPosition.distanceTo(deckCenter).toFixed(2),
+              deckSpacing * 1.5);
         },
       );
     });

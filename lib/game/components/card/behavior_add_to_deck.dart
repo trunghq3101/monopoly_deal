@@ -17,7 +17,7 @@ class AddToDeckBehavior extends PublisherComponent<AddToDeckEvent>
     switch (event) {
       case CardDeckEvent.showUp:
         parent.priority = _priority;
-        parent.position = MainGame2.gameMap.deckBottomRight;
+        parent.position = MainGame2.gameMap.inDeckPosition(0);
         parent.add(MoveEffect.to(
           MainGame2.gameMap.inDeckPosition(_index),
           LinearEffectController(0.6),

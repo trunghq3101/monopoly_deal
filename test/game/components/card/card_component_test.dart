@@ -39,10 +39,10 @@ void main() {
       expect(card.children.whereType<SpriteComponent>().first.size, card.size);
     });
 
-    testWithFlameGame('anchor is bottomRight', (game) async {
+    testWithFlameGame('anchor is center', (game) async {
       await game.ensureAdd(card);
 
-      expect(card.anchor, Anchor.bottomRight);
+      expect(card.anchor, Anchor.center);
     });
 
     testWithFlameGame('state returns correctly', (game) async {

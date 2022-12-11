@@ -15,7 +15,7 @@ class Card extends PositionComponent with HasCardId, HasCardState {
 
   @override
   Future<void>? onLoad() async {
-    anchor = Anchor.bottomRight;
+    anchor = Anchor.center;
     size = MainGame2.gameMap.cardSize;
     final img = Flame.images.fromCache('card.png');
     final spriteComponent = SpriteComponent.fromImage(img);

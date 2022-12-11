@@ -6,7 +6,7 @@ import 'package:monopoly_deal/game/game.dart';
 
 class MainGame2 extends FlameGame {
   static GameMap gameMap = GameMap();
-  static const cardTotalAmount = 110;
+  static var cardTotalAmount = 110;
 
   World get _world => children.query<World>().first;
   CardDeckPublisher get _cardDeckPublisher =>
@@ -18,7 +18,7 @@ class MainGame2 extends FlameGame {
     await Flame.images.loadAll(['card.png']);
 
     gameMap = GameMap(
-        deckBottomRight: Vector2(300, 440) * 0.5,
+        deckCenter: Vector2.zero(),
         deckSpacing: 0.7,
         cardSize: Vector2(300, 440),
         playerPositions: [Vector2(0, 1000), Vector2(0, -1000)]);

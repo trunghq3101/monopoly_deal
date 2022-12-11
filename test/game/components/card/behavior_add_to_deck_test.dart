@@ -47,18 +47,17 @@ void main() {
     group('onNewEvent', () {
       group('showUp', () {
         testWithFlameGame(
-          'parent is positioned at deckBottomRight',
+          'parent is positioned at inDeckPosition 0',
           (game) async {
             final p = PositionComponent();
             behavior.addToParent(p);
-            final deckBottomRight = Vector2.all(100);
-            MainGame2.gameMap = GameMap(deckBottomRight: deckBottomRight);
+            MainGame2.gameMap = GameMap(deckCenter: Vector2.zero());
             await game.ensureAdd(p);
 
             behavior.onNewEvent(CardDeckEvent.showUp);
             await game.ready();
 
-            expect(p.position, deckBottomRight);
+            expect(p.position, MainGame2.gameMap.inDeckPosition(0));
           },
         );
 
