@@ -1,10 +1,13 @@
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
 import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 import '../../../utils.dart';
+
+class _MockGame extends FlameGame with HasHoverableComponents {}
 
 void main() {
   group('$Card', () {
@@ -45,7 +48,8 @@ void main() {
       expect(card.anchor, Anchor.center);
     });
 
-    testWithFlameGame('state returns correctly', (game) async {
+    testWithGame<_MockGame>('state returns correctly', _MockGame.new,
+        (game) async {
       card.add(CardStateMachine());
       await game.ensureAdd(card);
 

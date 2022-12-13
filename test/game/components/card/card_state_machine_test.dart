@@ -24,6 +24,13 @@ class _MockSubscriber implements Subscriber<CardStateMachineEvent> {
   }
 }
 
+class _MockGameMap extends GameMap {
+  bool mockIsMyPosition = false;
+
+  @override
+  bool isMyPosition(Vector2 position) => mockIsMyPosition;
+}
+
 void main() {
   group('CardStateMachine', () {
     late _MockCardStateMachine machine;
@@ -40,8 +47,32 @@ void main() {
       expect(machine, isA<Subscriber<CardEvent>>());
     });
 
-    test('is ${PublisherComponent<CardStateMachineEvent>}', () {
-      expect(machine, isA<PublisherComponent<CardStateMachineEvent>>());
+    test('is $PositionComponent', () {
+      expect(machine, isA<PositionComponent>());
+    });
+
+    test('is $HoverCallbacks', () {
+      expect(machine, isA<HoverCallbacks>());
+    });
+
+    test('is ${Publisher<CardStateMachineEvent>}', () {
+      expect(machine, isA<Publisher<CardStateMachineEvent>>());
+    });
+
+    test('handCursor', () {
+      machine.turnMockStateOff = true;
+
+      machine.changeState(CardState.inDeck);
+      expect(machine.handCursor, false);
+
+      machine.changeState(CardState.inDealRegion);
+      expect(machine.handCursor, false);
+
+      machine.changeState(CardState.inMyDealRegion);
+      expect(machine.handCursor, true);
+
+      machine.changeState(CardState.inHand);
+      expect(machine.handCursor, true);
     });
 
     group('at ${CardState.inDeck}', () {
@@ -61,20 +92,44 @@ void main() {
           expect(subscriber.receivedEvent, null);
         });
 
-        test(
-            'given payload.cardId equal parent cardId, notify ${CardStateMachineEvent.toDealRegion}',
-            () {
-          final payload = CardEventDealPayload(1, Vector2.zero());
-          machine.parent = Card(cardId: 1);
+        group('given payload.cardId equal parent cardId', () {
+          test(
+              'not isMyDealRegion, change to ${CardState.inDealRegion}, notify ${CardStateMachineEvent.toDealRegion}',
+              () {
+            MainGame2.gameMap = _MockGameMap()..mockIsMyPosition = false;
+            final payload = CardEventDealPayload(1, Vector2.zero());
+            machine.parent = Card(cardId: 1);
 
-          machine.onNewEvent(CardEvent.deal, payload);
+            machine.onNewEvent(CardEvent.deal, payload);
 
-          machine.turnMockStateOff = true;
-          expect(machine.state, CardState.inDealRegion);
-          expect(subscriber.receivedEvent, CardStateMachineEvent.toDealRegion);
-          expect(subscriber.receivedPayload, payload);
+            machine.turnMockStateOff = true;
+            expect(machine.state, CardState.inDealRegion);
+            expect(
+                subscriber.receivedEvent, CardStateMachineEvent.toDealRegion);
+            expect(subscriber.receivedPayload, payload);
+          });
+
+          test(
+              'isMyDealRegion, change to ${CardState.inMyDealRegion}, notify ${CardStateMachineEvent.toDealRegion}',
+              () {
+            MainGame2.gameMap = _MockGameMap()..mockIsMyPosition = true;
+            final payload = CardEventDealPayload(1, Vector2.zero());
+            machine.parent = Card(cardId: 1);
+
+            machine.onNewEvent(CardEvent.deal, payload);
+
+            machine.turnMockStateOff = true;
+            expect(machine.state, CardState.inMyDealRegion);
+            expect(
+                subscriber.receivedEvent, CardStateMachineEvent.toDealRegion);
+            expect(subscriber.receivedPayload, payload);
+          });
         });
       });
+    });
+
+    group('at ${CardState.inMyDealRegion}', () {
+      test('onHoverEnter, ', () {});
     });
   });
 }

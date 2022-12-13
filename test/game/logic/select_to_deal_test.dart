@@ -78,16 +78,16 @@ void main() {
           behavior.onNewEvent(CardDeckEvent.dealStartGame);
 
           expect(subscriber.receivedPayloads, [
-            CardEventDealPayload(0, playerPositions[0]),
-            CardEventDealPayload(1, playerPositions[1]),
-            CardEventDealPayload(2, playerPositions[0]),
-            CardEventDealPayload(3, playerPositions[1]),
-            CardEventDealPayload(4, playerPositions[0]),
-            CardEventDealPayload(5, playerPositions[1]),
-            CardEventDealPayload(6, playerPositions[0]),
-            CardEventDealPayload(7, playerPositions[1]),
-            CardEventDealPayload(8, playerPositions[0]),
-            CardEventDealPayload(9, playerPositions[1]),
+            CardEventDealPayload(0, playerPositions[0], orderIndex: 0),
+            CardEventDealPayload(1, playerPositions[1], orderIndex: 1),
+            CardEventDealPayload(2, playerPositions[0], orderIndex: 2),
+            CardEventDealPayload(3, playerPositions[1], orderIndex: 3),
+            CardEventDealPayload(4, playerPositions[0], orderIndex: 4),
+            CardEventDealPayload(5, playerPositions[1], orderIndex: 5),
+            CardEventDealPayload(6, playerPositions[0], orderIndex: 6),
+            CardEventDealPayload(7, playerPositions[1], orderIndex: 7),
+            CardEventDealPayload(8, playerPositions[0], orderIndex: 8),
+            CardEventDealPayload(9, playerPositions[1], orderIndex: 9),
           ]);
         },
       );

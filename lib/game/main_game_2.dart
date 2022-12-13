@@ -4,7 +4,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:monopoly_deal/game/game.dart';
 
-class MainGame2 extends FlameGame {
+class MainGame2 extends FlameGame with HasHoverableComponents {
   static GameMap gameMap = GameMap();
   static var cardTotalAmount = 110;
 

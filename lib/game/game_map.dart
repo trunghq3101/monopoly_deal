@@ -27,4 +27,8 @@ class GameMap {
     return deckCenter -
         (cardSize * _ratio) * (index - (MainGame2.cardTotalAmount - 1) * 0.5);
   }
+
+  bool isMyPosition(Vector2 position) {
+    return position == playerPositions[0];
+  }
 }
