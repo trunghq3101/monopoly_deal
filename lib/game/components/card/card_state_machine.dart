@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
@@ -15,7 +16,8 @@ class CardStateMachine extends PositionComponent
         Publisher<CardStateMachineEvent>,
         Subscriber<CardEvent>,
         ParentIsA<Card>,
-        HoverCallbacks {
+        HoverCallbacks,
+        TapCallbacks {
   CardState _state = CardState.inDeck;
 
   CardState get state => _state;
@@ -28,7 +30,7 @@ class CardStateMachine extends PositionComponent
 
   @override
   void onNewEvent(CardEvent event, [Object? payload]) {
-    switch (_state) {
+    switch (state) {
       case CardState.inDeck:
         if (event == CardEvent.deal) {
           assert(payload is CardEventDealPayload);
@@ -52,6 +54,17 @@ class CardStateMachine extends PositionComponent
           changeState(CardState.inHand);
           notify(CardStateMachineEvent.toHand);
         }
+        break;
+      default:
+    }
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    switch (state) {
+      case CardState.inMyDealRegion:
+        changeState(CardState.inHand);
+        notify(CardStateMachineEvent.toHand);
         break;
       default:
     }

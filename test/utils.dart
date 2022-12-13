@@ -31,5 +31,9 @@ class MockAssetBundle extends AssetBundle {
 
 Future<void> loadTestAssets() async {
   Flame.bundle = MockAssetBundle();
-  await Flame.images.load('card.png');
+  final files = Directory('assets/images').listSync();
+  for (var f in files) {
+    final imgName = f.path.replaceAll("assets/images/", "");
+    await Flame.images.load(imgName);
+  }
 }

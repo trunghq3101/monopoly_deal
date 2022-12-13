@@ -4,6 +4,7 @@ export 'components/components.dart';
 export 'configurations/configurations.dart';
 export 'decorators/decorators.dart';
 export 'effects/effects.dart';
+export 'game_asset.dart';
 export 'game_map.dart';
 export 'logic/logic.dart';
 export 'main_game.dart';
