@@ -5,6 +5,7 @@ class GameMap {
   final Vector2 deckCenter;
   final double deckSpacing;
   final Vector2 cardSize;
+  final Vector2 cardSizeInHand;
   final List<Vector2> playerPositions;
   final Vector2 intialGameVisibleSize;
   final Vector2 overviewGameVisibleSize;
@@ -19,6 +20,7 @@ class GameMap {
     Vector2? overviewGameVisibleSize,
   })  : deckCenter = deckCenter ?? Vector2.zero(),
         cardSize = cardSize ?? Vector2(300, 440),
+        cardSizeInHand = Vector2(750, 1100),
         intialGameVisibleSize = intialGameVisibleSize ?? Vector2(600, 600),
         overviewGameVisibleSize =
             overviewGameVisibleSize ?? Vector2(2000, 3000);

@@ -4,7 +4,7 @@ import 'package:monopoly_deal/game/lib/lib.dart';
 
 class CardPublisher extends PublisherComponent<CardEvent> {}
 
-enum CardEvent { deal, tapped }
+enum CardEvent { deal, pickUp, tapped }
 
 class CardEventDealPayload with EquatableMixin {
   final int cardId;
@@ -15,4 +15,28 @@ class CardEventDealPayload with EquatableMixin {
 
   @override
   List<Object?> get props => [cardId, playerPosition, orderIndex];
+}
+
+class CardEventPickUpPayload with EquatableMixin {
+  final int cardId;
+  final int orderIndex;
+  final InHandPosition inHandPosition;
+
+  CardEventPickUpPayload(
+    this.cardId, {
+    this.orderIndex = 0,
+    InHandPosition? inHandPosition,
+  }) : inHandPosition = inHandPosition ?? InHandPosition.test();
+
+  @override
+  List<Object?> get props => [cardId, orderIndex];
+}
+
+class InHandPosition {
+  InHandPosition(this.position, this.angle);
+
+  final Vector2 position;
+  final double angle;
+
+  factory InHandPosition.test() => InHandPosition(Vector2.zero(), 0);
 }

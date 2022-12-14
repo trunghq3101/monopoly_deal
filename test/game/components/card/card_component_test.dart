@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame_test/flame_test.dart';
@@ -7,7 +8,8 @@ import 'package:monopoly_deal/game/game.dart';
 
 import '../../../utils.dart';
 
-class _MockGame extends FlameGame with HasHoverableComponents {}
+class _MockGame extends FlameGame
+    with HasHoverableComponents, HasTappableComponents {}
 
 void main() {
   group('$Card', () {

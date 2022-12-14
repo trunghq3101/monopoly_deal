@@ -21,6 +21,7 @@ void main() {
 
     setUp(() async {
       await loadTestAssets();
+      MainGame2.gameAsset = _MockGameAsset();
       behavior = PickUpBehavior();
     });
 
@@ -36,22 +37,42 @@ void main() {
       expect(behavior, isA<Subscriber<CardStateMachineEvent>>());
     });
 
-    testWithFlameGame('on ${CardStateMachineEvent.toHand}', (game) async {
-      final p = Card();
-      p.add(behavior);
-      await game.ensureAdd(p);
-      final oldSprite = p.children.query<SpriteComponent>().first.sprite;
-      MainGame2.gameAsset = _MockGameAsset();
-      await Flame.images.load('01.png');
+    group('on ${CardStateMachineEvent.pickUpToHand}', () {
+      testWithFlameGame('parent change sprite', (game) async {
+        final p = Card();
+        p.add(behavior);
+        await game.ensureAdd(p);
+        final oldSprite = p.children.query<SpriteComponent>().first.sprite;
 
-      behavior.onNewEvent(CardStateMachineEvent.toHand);
-      await game.ready();
-      game.update(2);
+        behavior.onNewEvent(
+            CardStateMachineEvent.pickUpToHand, CardEventPickUpPayload(0));
+        await game.ready();
+        game.update(2);
+        await game.ready();
 
-      expect(
-        p.children.query<SpriteComponent>().first.sprite,
-        isNot(oldSprite),
-      );
+        expect(
+          p.children.query<SpriteComponent>().first.sprite,
+          isNot(oldSprite),
+        );
+      });
+
+      testWithFlameGame('parent position change to inHandPosition',
+          (game) async {
+        final inHand = InHandPosition(Vector2.all(100), 0.8);
+        final p = Card()..angle = 0.5;
+        p.add(behavior);
+        await game.ensureAdd(p);
+
+        behavior.onNewEvent(
+          CardStateMachineEvent.pickUpToHand,
+          CardEventPickUpPayload(0, inHandPosition: inHand),
+        );
+        await game.ready();
+        game.update(4);
+
+        expect(p.position, inHand.position);
+        expect(p.angle, inHand.angle);
+      });
     });
   });
 }

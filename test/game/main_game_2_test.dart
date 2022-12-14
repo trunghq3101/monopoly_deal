@@ -5,10 +5,17 @@ import 'package:monopoly_deal/game/game.dart';
 
 import '../utils.dart';
 
+class _MockGameAsset extends GameAsset {
+  @override
+  Future<void> load() async {
+    await loadTestAssets();
+  }
+}
+
 void main() {
   group('MainGame2', () {
     setUp(() async {
-      await loadTestAssets();
+      MainGame2.gameAsset = _MockGameAsset();
     });
 
     testWithGame<MainGame2>(
@@ -21,7 +28,7 @@ void main() {
 
         final world = game.children.query<World>().first;
         expect(game.children.query<CameraComponent>(), isNotEmpty);
-        expect(world.children.query<Card>().length, 110);
+        expect(world.children.query<Card>().length, 100);
         expect(game.children.query<CardDeckPublisher>(), isNotEmpty);
       },
     );

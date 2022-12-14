@@ -14,6 +14,7 @@ class MainGame2 extends FlameGame
   CardDeckPublisher get _cardDeckPublisher =>
       children.query<CardDeckPublisher>().first;
   late SelectToDeal _selectToDeal;
+  late SelectToPickUp _selectToPickUp;
 
   @override
   Future<void>? onLoad() async {
@@ -32,6 +33,7 @@ class MainGame2 extends FlameGame
     final cardDeckPublisher = CardDeckPublisher();
     final cardTracker = CardTracker();
     _selectToDeal = SelectToDeal(cardTracker: cardTracker);
+    _selectToPickUp = SelectToPickUp(cardTracker: cardTracker);
 
     add(world);
     add(cameraComponent);
@@ -76,8 +78,11 @@ class MainGame2 extends FlameGame
     _cardDeckPublisher.addSubscriber(addToDeckBehavior);
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
     _selectToDeal.addSubscriber(cardStateMachine);
-    cardStateMachine.addSubscriber(dealToPlayerBehavior);
-    cardStateMachine.addSubscriber(pickUpBehavior);
+    _selectToPickUp.addSubscriber(cardStateMachine);
+    cardStateMachine
+      ..addSubscriber(dealToPlayerBehavior)
+      ..addSubscriber(pickUpBehavior)
+      ..addSubscriber(_selectToPickUp);
   }
 }
 

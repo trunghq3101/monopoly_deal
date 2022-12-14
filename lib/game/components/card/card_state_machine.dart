@@ -43,6 +43,16 @@ class CardStateMachine extends PositionComponent
           notify(CardStateMachineEvent.toDealRegion, payload);
         }
         break;
+      case CardState.inMyDealRegion:
+        if (event == CardEvent.pickUp) {
+          assert(payload is CardEventPickUpPayload);
+          if ((payload as CardEventPickUpPayload).cardId != parent.cardId) {
+            return;
+          }
+          changeState(CardState.inHand);
+          notify(CardStateMachineEvent.pickUpToHand, payload);
+        }
+        break;
       case CardState.inHand:
         if (event == CardEvent.tapped) {
           changeState(CardState.previewing);
@@ -63,8 +73,7 @@ class CardStateMachine extends PositionComponent
   void onTapDown(TapDownEvent event) {
     switch (state) {
       case CardState.inMyDealRegion:
-        changeState(CardState.inHand);
-        notify(CardStateMachineEvent.toHand);
+        notify(CardStateMachineEvent.tapOnMyDealRegion);
         break;
       default:
     }
@@ -92,6 +101,8 @@ class CardStateMachine extends PositionComponent
 
 enum CardStateMachineEvent {
   toDealRegion,
-  toPreviewing,
+  tapOnMyDealRegion,
+  pickUpToHand,
   toHand,
+  toPreviewing,
 }
