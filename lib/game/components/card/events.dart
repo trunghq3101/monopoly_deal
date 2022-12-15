@@ -25,23 +25,23 @@ enum CardEvent {
   previewSwap
 }
 
-class CardEventDealPayload with EquatableMixin {
+class CardDealPayload with EquatableMixin {
   final int cardId;
   final Vector2 playerPosition;
   final int orderIndex;
 
-  CardEventDealPayload(this.cardId, this.playerPosition, {this.orderIndex = 0});
+  CardDealPayload(this.cardId, this.playerPosition, {this.orderIndex = 0});
 
   @override
   List<Object?> get props => [cardId, playerPosition, orderIndex];
 }
 
-class CardEventPickUpPayload with EquatableMixin {
+class CardPickUpPayload with EquatableMixin {
   final int cardId;
   final int orderIndex;
   final InHandPosition inHandPosition;
 
-  CardEventPickUpPayload(
+  CardPickUpPayload(
     this.cardId, {
     this.orderIndex = 0,
     InHandPosition? inHandPosition,

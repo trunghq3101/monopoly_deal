@@ -20,7 +20,7 @@ class SelectToDeal with Publisher, Subscriber {
         int pIndex = 0;
         int orderIndex = 0;
         for (var c in cardsToDeal) {
-          final payload = CardEventDealPayload(
+          final payload = CardDealPayload(
             c.cardId,
             playerPositions[pIndex],
             orderIndex: orderIndex++,

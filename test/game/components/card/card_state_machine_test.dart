@@ -88,7 +88,7 @@ void main() {
 
       group('on ${CardEvent.deal}', () {
         test('given payload.cardId not equal parent cardId, do nothing', () {
-          final payload = CardEventDealPayload(0, Vector2.zero());
+          final payload = CardDealPayload(0, Vector2.zero());
           machine.parent = Card(cardId: 1);
 
           machine.onNewEvent(CardEvent.deal, payload);
@@ -103,7 +103,7 @@ void main() {
               'not isMyDealRegion, change to ${CardState.inDealRegion}, notify ${CardStateMachineEvent.toDealRegion}',
               () {
             MainGame2.gameMap = _MockGameMap()..mockIsMyPosition = false;
-            final payload = CardEventDealPayload(1, Vector2.zero());
+            final payload = CardDealPayload(1, Vector2.zero());
             machine.parent = Card(cardId: 1);
 
             machine.onNewEvent(CardEvent.deal, payload);
@@ -119,7 +119,7 @@ void main() {
               'isMyDealRegion, change to ${CardState.inMyDealRegion}, notify ${CardStateMachineEvent.toDealRegion}',
               () {
             MainGame2.gameMap = _MockGameMap()..mockIsMyPosition = true;
-            final payload = CardEventDealPayload(1, Vector2.zero());
+            final payload = CardDealPayload(1, Vector2.zero());
             machine.parent = Card(cardId: 1);
 
             machine.onNewEvent(CardEvent.deal, payload);

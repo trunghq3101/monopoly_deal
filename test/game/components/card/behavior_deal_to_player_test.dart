@@ -33,7 +33,7 @@ void main() {
 
     group('on ${CardStateMachineEvent.toDealRegion}', () {
       testWithFlameGame(
-        'given $CardEventDealPayload, move parent to playerPosition with offset added',
+        'given $CardDealPayload, move parent to playerPosition with offset added',
         (game) async {
           final playerPosition = Vector2.all(20);
           final p = PositionComponent();
@@ -41,7 +41,7 @@ void main() {
           await game.ensureAdd(p);
 
           behavior.onNewEvent(CardStateMachineEvent.toDealRegion,
-              CardEventDealPayload(0, playerPosition));
+              CardDealPayload(0, playerPosition));
           await game.ready();
           game.update(0.4);
 
@@ -58,7 +58,7 @@ void main() {
 
           behavior.onNewEvent(
             CardStateMachineEvent.toDealRegion,
-            CardEventDealPayload(0, Vector2.all(100), orderIndex: 2),
+            CardDealPayload(0, Vector2.all(100), orderIndex: 2),
           );
           await game.ready();
           game.update(2 * delayStep + 0.5);

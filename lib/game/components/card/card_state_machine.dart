@@ -29,8 +29,8 @@ class CardStateMachine extends PositionComponent
     switch (state) {
       case CardState.inDeck:
         if (event == CardEvent.deal) {
-          assert(payload is CardEventDealPayload);
-          if ((payload as CardEventDealPayload).cardId != parent.cardId) return;
+          assert(payload is CardDealPayload);
+          if ((payload as CardDealPayload).cardId != parent.cardId) return;
           final newState =
               MainGame2.gameMap.isMyPosition(payload.playerPosition)
                   ? CardState.inMyDealRegion
@@ -41,8 +41,8 @@ class CardStateMachine extends PositionComponent
         break;
       case CardState.inMyDealRegion:
         if (event == CardEvent.pickUp) {
-          assert(payload is CardEventPickUpPayload);
-          if ((payload as CardEventPickUpPayload).cardId != parent.cardId) {
+          assert(payload is CardPickUpPayload);
+          if ((payload as CardPickUpPayload).cardId != parent.cardId) {
             return;
           }
           changeState(CardState.inHand);

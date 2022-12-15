@@ -13,8 +13,8 @@ class PickUpBehavior extends Component with ParentIsA<Card>, Subscriber {
   void onNewEvent(Object event, [Object? payload]) {
     switch (event) {
       case CardStateMachineEvent.pickUpToHand:
-        assert(payload is CardEventPickUpPayload);
-        payload as CardEventPickUpPayload;
+        assert(payload is CardPickUpPayload);
+        payload as CardPickUpPayload;
         final delay = payload.orderIndex * _delayStep;
         final frontImg = MainGame2.gameAsset.frontImageForCardId(parent.cardId);
         final frontCard = SpriteComponent.fromImage(frontImg);

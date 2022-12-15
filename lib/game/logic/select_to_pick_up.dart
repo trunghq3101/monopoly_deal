@@ -20,7 +20,7 @@ class SelectToPickUp with Publisher, Subscriber {
           );
           notify(
             CardEvent.pickUp,
-            CardEventPickUpPayload(
+            CardPickUpPayload(
               c.cardId,
               orderIndex: orderIndex++,
               inHandPosition: inHandPosition,

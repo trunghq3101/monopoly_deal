@@ -4,12 +4,12 @@ import 'package:monopoly_deal/game/lib/lib.dart';
 
 class _MockSubscriber with Subscriber {
   final List<Object> receivedEvents = [];
-  final List<CardEventPickUpPayload?> receivedPayloads = [];
+  final List<CardPickUpPayload?> receivedPayloads = [];
 
   @override
   void onNewEvent(event, [Object? payload]) {
     receivedEvents.add(event);
-    receivedPayloads.add(payload as CardEventPickUpPayload?);
+    receivedPayloads.add(payload as CardPickUpPayload?);
   }
 }
 
@@ -60,9 +60,8 @@ void main() {
 
         for (var i = 0; i < 2; i++) {
           s.receivedEvents[i] = CardEvent.pickUp;
-          s.receivedPayloads[i] = CardEventPickUpPayload(
-              cardsInMyDealRegion[i].cardId,
-              orderIndex: i);
+          s.receivedPayloads[i] =
+              CardPickUpPayload(cardsInMyDealRegion[i].cardId, orderIndex: i);
         }
       });
     });

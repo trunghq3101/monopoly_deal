@@ -21,8 +21,8 @@ class DealToPlayerBehavior extends Component
   void onNewEvent(Object event, [Object? payload]) {
     switch (event) {
       case CardStateMachineEvent.toDealRegion:
-        assert(payload is CardEventDealPayload);
-        payload as CardEventDealPayload;
+        assert(payload is CardDealPayload);
+        payload as CardDealPayload;
         final randomOffset = _randomizeDealOffset.generate();
         final delay = payload.orderIndex * _delayStep;
         parent.addAll([
