@@ -94,7 +94,8 @@ class MainGame2 extends FlameGame
       ..addSubscriber(dealToPlayerBehavior)
       ..addSubscriber(pickUpBehavior)
       ..addSubscriber(_selectToPickUp)
-      ..addSubscriber(pullUpDownBehavior);
+      ..addSubscriber(pullUpDownBehavior)
+      ..addSubscriber(_handToggleButton);
   }
 }
 

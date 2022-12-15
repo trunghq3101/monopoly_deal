@@ -1,39 +1,61 @@
 import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class HandToggleButton extends PositionComponent with Publisher, TapCallbacks {
-  late _State _state;
+class HandToggleButton extends PositionComponent
+    with Subscriber, Publisher, TapCallbacks {
+  HandToggleButtonState _state = HandToggleButtonState.invisible;
+  HandToggleButtonState get state => _state;
 
   @override
   Future<void>? onLoad() async {
     anchor = Anchor.bottomRight;
     size = Vector2(380, 160);
-    _changeState(_State.hide);
+    scale = Vector2.zero();
   }
 
   @override
   void onTapDown(TapDownEvent event) {
-    switch (_state) {
-      case _State.hide:
-        _changeState(_State.show);
+    switch (state) {
+      case HandToggleButtonState.hide:
+        _changeState(HandToggleButtonState.show);
         notify(HandToggleButtonEvent.tapHide);
         break;
-      case _State.show:
-        _changeState(_State.hide);
+      case HandToggleButtonState.show:
+        _changeState(HandToggleButtonState.hide);
         notify(HandToggleButtonEvent.tapShow);
         break;
       default:
     }
   }
 
-  void _changeState(_State state) {
+  void _changeState(HandToggleButtonState state) {
     _state = state;
     children.query<ButtonComponent>().firstOrNull?.removeFromParent();
-    add(ButtonComponent(text: _state.name.toUpperCase()));
+    add(ButtonComponent(text: state.name.toUpperCase()));
+  }
+
+  @override
+  void onNewEvent(Object event, [Object? payload]) {
+    switch (state) {
+      case HandToggleButtonState.invisible:
+        switch (event) {
+          case CardStateMachineEvent.pickUpToHand:
+            _changeState(HandToggleButtonState.hide);
+            add(ScaleEffect.to(
+              Vector2.all(1),
+              EffectController(duration: 0.1, startDelay: 0.8),
+            ));
+            break;
+          default:
+        }
+        break;
+      default:
+    }
   }
 }
 
-enum _State { hide, show }
+enum HandToggleButtonState { invisible, hide, show }

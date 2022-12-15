@@ -6,16 +6,17 @@ import 'package:monopoly_deal/game/game.dart';
 import '../../../utils.dart';
 
 class _MockCard extends Card {
-  _MockCard(this._cardId, this._state);
+  _MockCard(this._cardId, this.state);
 
   final int _cardId;
-  final CardState _state;
+  @override
+  final CardState state;
 
   @override
   int get cardId => _cardId;
 
   @override
-  CardState get state => _state;
+  CardState get state => state;
 }
 
 void main() {

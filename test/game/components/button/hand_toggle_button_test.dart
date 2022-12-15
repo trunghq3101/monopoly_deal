@@ -24,19 +24,17 @@ void main() {
       button = HandToggleButton();
     });
 
-    testWithGame<_MockGame>('loaded correctly', _MockGame.new, (game) async {
-      await game.ensureAdd(button);
-
-      expect(button.children.query<ButtonComponent>(), isNotEmpty);
-    });
-
     testWithGame<_MockGame>(
-      'onTapDown, toggle hide/show',
+      'run correctly',
       _MockGame.new,
       (game) async {
         await game.ensureAdd(button);
         final s = _MockSubscriber();
         button.addSubscriber(s);
+
+        button.onNewEvent(CardStateMachineEvent.pickUpToHand);
+        await game.ready();
+        game.update(2);
 
         button.onTapDown(createTapDownEvents());
         expect(s.receivedEvent, HandToggleButtonEvent.tapHide);
