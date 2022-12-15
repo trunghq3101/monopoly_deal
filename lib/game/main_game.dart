@@ -80,11 +80,15 @@ class MainGame2 extends FlameGame
     final dealToPlayerBehavior = DealToPlayerBehavior();
     final pickUpBehavior = PickUpBehavior();
     final pullUpDownBehavior = PullUpDownBehavior();
-    card.add(cardStateMachine);
-    card.add(addToDeckBehavior);
-    card.add(dealToPlayerBehavior);
-    card.add(pickUpBehavior);
-    card.add(pullUpDownBehavior);
+    final togglePreviewing = TogglePreviewingBehavior();
+    card
+      ..add(cardStateMachine)
+      ..add(addToDeckBehavior)
+      ..add(dealToPlayerBehavior)
+      ..add(pickUpBehavior)
+      ..add(pullUpDownBehavior)
+      ..add(togglePreviewing);
+
     _cardDeckPublisher.addSubscriber(addToDeckBehavior);
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
     _selectToDeal.addSubscriber(cardStateMachine);
@@ -95,7 +99,8 @@ class MainGame2 extends FlameGame
       ..addSubscriber(pickUpBehavior)
       ..addSubscriber(_selectToPickUp)
       ..addSubscriber(pullUpDownBehavior)
-      ..addSubscriber(_handToggleButton);
+      ..addSubscriber(_handToggleButton)
+      ..addSubscriber(togglePreviewing);
   }
 }
 

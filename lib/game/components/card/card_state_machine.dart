@@ -9,7 +9,7 @@ enum CardState {
   inMyDealRegion,
   inHand,
   inHandCollapsed,
-  previewing,
+  inPreviewing,
 }
 
 class CardStateMachine extends PositionComponent
@@ -50,10 +50,6 @@ class CardStateMachine extends PositionComponent
         }
         break;
       case CardState.inHand:
-        if (event == CardEvent.tapped) {
-          changeState(CardState.previewing);
-          notify(CardStateMachineEvent.toPreviewing);
-        }
         if (event == HandToggleButtonEvent.tapHide) {
           changeState(CardState.inHandCollapsed);
           notify(CardStateMachineEvent.pullDown);
@@ -65,12 +61,6 @@ class CardStateMachine extends PositionComponent
           notify(CardStateMachineEvent.pullUp);
         }
         break;
-      case CardState.previewing:
-        if (event == CardEvent.tapped) {
-          changeState(CardState.inHand);
-          notify(CardStateMachineEvent.toHand);
-        }
-        break;
       default:
     }
   }
@@ -80,6 +70,14 @@ class CardStateMachine extends PositionComponent
     switch (state) {
       case CardState.inMyDealRegion:
         notify(CardStateMachineEvent.tapOnMyDealRegion);
+        break;
+      case CardState.inHand:
+        changeState(CardState.inPreviewing);
+        notify(CardStateMachineEvent.toPreviewing);
+        break;
+      case CardState.inPreviewing:
+        changeState(CardState.inHand);
+        notify(CardStateMachineEvent.toHand);
         break;
       default:
     }

@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
@@ -141,6 +142,19 @@ void main() {
           expect(machine.state, CardState.inHandCollapsed);
         },
       );
+
+      test(
+        'on tap, notify ${CardStateMachineEvent.toPreviewing}',
+        () {
+          machine.mockState = CardState.inHand;
+
+          machine.onTapDown(createTapDownEvents());
+
+          machine.turnMockStateOff = true;
+          expect(subscriber.receivedEvent, CardStateMachineEvent.toPreviewing);
+          expect(machine.state, CardState.inPreviewing);
+        },
+      );
     });
 
     group('at ${CardState.inHandCollapsed}', () {
@@ -153,6 +167,21 @@ void main() {
 
           machine.turnMockStateOff = true;
           expect(subscriber.receivedEvent, CardStateMachineEvent.pullUp);
+          expect(machine.state, CardState.inHand);
+        },
+      );
+    });
+
+    group('at ${CardState.inPreviewing}', () {
+      test(
+        'on tap, notify ${CardStateMachineEvent.toHand}',
+        () {
+          machine.mockState = CardState.inHand;
+
+          machine.onTapDown(createTapDownEvents());
+
+          machine.turnMockStateOff = true;
+          expect(subscriber.receivedEvent, CardStateMachineEvent.toHand);
           expect(machine.state, CardState.inHand);
         },
       );

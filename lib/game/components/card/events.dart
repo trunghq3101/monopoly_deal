@@ -13,7 +13,7 @@ enum CardStateMachineEvent {
 
 enum CardDeckEvent { showUp, dealStartGame }
 
-enum CardEvent { addedToDeck, deal, pickUp, tapped }
+enum CardEvent { addedToDeck, deal, pickUp }
 
 class CardEventDealPayload with EquatableMixin {
   final int cardId;
