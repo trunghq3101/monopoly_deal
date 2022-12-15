@@ -8,7 +8,7 @@ import 'package:monopoly_deal/game/lib/lib.dart';
 import 'package:monopoly_deal/game/logic/randomize_deal_offset.dart';
 
 class DealToPlayerBehavior extends Component
-    with ParentIsA<PositionComponent>, Subscriber<CardStateMachineEvent> {
+    with ParentIsA<PositionComponent>, Subscriber {
   DealToPlayerBehavior(
       {double delayStep = 0.2, RandomizeDealOffset? randomizeDealOffset})
       : _delayStep = delayStep,
@@ -18,7 +18,7 @@ class DealToPlayerBehavior extends Component
   final RandomizeDealOffset _randomizeDealOffset;
 
   @override
-  void onNewEvent(CardStateMachineEvent event, [Object? payload]) {
+  void onNewEvent(Object event, [Object? payload]) {
     switch (event) {
       case CardStateMachineEvent.toDealRegion:
         assert(payload is CardEventDealPayload);

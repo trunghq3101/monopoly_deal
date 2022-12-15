@@ -12,12 +12,7 @@ enum CardState {
 }
 
 class CardStateMachine extends PositionComponent
-    with
-        Publisher<CardStateMachineEvent>,
-        Subscriber<CardEvent>,
-        ParentIsA<Card>,
-        HoverCallbacks,
-        TapCallbacks {
+    with Publisher, Subscriber, ParentIsA<Card>, HoverCallbacks, TapCallbacks {
   CardState _state = CardState.inDeck;
 
   CardState get state => _state;
@@ -29,7 +24,7 @@ class CardStateMachine extends PositionComponent
   }
 
   @override
-  void onNewEvent(CardEvent event, [Object? payload]) {
+  void onNewEvent(Object event, [Object? payload]) {
     switch (state) {
       case CardState.inDeck:
         if (event == CardEvent.deal) {
@@ -97,12 +92,4 @@ class CardStateMachine extends PositionComponent
       default:
     }
   }
-}
-
-enum CardStateMachineEvent {
-  toDealRegion,
-  tapOnMyDealRegion,
-  pickUpToHand,
-  toHand,
-  toPreviewing,
 }

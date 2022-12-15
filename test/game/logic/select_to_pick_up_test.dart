@@ -2,12 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class _MockSubscriber with Subscriber<CardEvent> {
-  final List<CardEvent> receivedEvents = [];
+class _MockSubscriber with Subscriber {
+  final List<Object> receivedEvents = [];
   final List<CardEventPickUpPayload?> receivedPayloads = [];
 
   @override
-  void onNewEvent(CardEvent event, [Object? payload]) {
+  void onNewEvent(event, [Object? payload]) {
     receivedEvents.add(event);
     receivedPayloads.add(payload as CardEventPickUpPayload?);
   }
@@ -38,12 +38,12 @@ void main() {
       selector = SelectToPickUp(cardTracker: cardTracker);
     });
 
-    test('is ${Subscriber<CardStateMachineEvent>}', () {
-      expect(selector, isA<Subscriber<CardStateMachineEvent>>());
+    test('is $Subscriber', () {
+      expect(selector, isA<Subscriber>());
     });
 
-    test('is ${Publisher<CardEvent>}', () {
-      expect(selector, isA<Publisher<CardEvent>>());
+    test('is $Publisher', () {
+      expect(selector, isA<Publisher>());
     });
 
     group('on ${CardStateMachineEvent.tapOnMyDealRegion}', () {

@@ -3,12 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class _MockSubscriber implements Subscriber<CardEvent> {
+class _MockSubscriber implements Subscriber {
   int received = 0;
   final List<CardEventDealPayload> receivedPayloads = [];
 
   @override
-  void onNewEvent(CardEvent event, [Object? payload]) {
+  void onNewEvent(event, [Object? payload]) {
     received++;
     receivedPayloads.add(payload as CardEventDealPayload);
   }
@@ -43,8 +43,8 @@ void main() {
       behavior = SelectToDeal(cardTracker: cardTracker);
     });
 
-    test('is a ${Subscriber<CardDeckEvent>}', () {
-      expect(behavior, isA<Subscriber<CardDeckEvent>>());
+    test('is a $Subscriber', () {
+      expect(behavior, isA<Subscriber>());
     });
 
     group('give ${CardDeckEvent.dealStartGame}, 20 cards, 2 players', () {

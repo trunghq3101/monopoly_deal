@@ -4,5 +4,5 @@ export 'behavior_toggle_previewing.dart';
 export 'card_component.dart';
 export 'card_state_machine.dart';
 export 'card_tracker.dart';
-export 'publisher_card.dart';
+export 'events.dart';
 export 'publisher_card_deck.dart';

@@ -13,12 +13,12 @@ class _MockCardStateMachine extends CardStateMachine {
   CardState get state => turnMockStateOff ? super.state : mockState;
 }
 
-class _MockSubscriber implements Subscriber<CardStateMachineEvent> {
-  CardStateMachineEvent? receivedEvent;
+class _MockSubscriber implements Subscriber {
+  Object? receivedEvent;
   Object? receivedPayload;
 
   @override
-  void onNewEvent(CardStateMachineEvent event, [Object? payload]) {
+  void onNewEvent(event, [Object? payload]) {
     receivedEvent = event;
     receivedPayload = payload;
   }
@@ -43,8 +43,8 @@ void main() {
       machine.addSubscriber(subscriber);
     });
 
-    test('is ${Subscriber<CardEvent>}', () {
-      expect(machine, isA<Subscriber<CardEvent>>());
+    test('is $Subscriber', () {
+      expect(machine, isA<Subscriber>());
     });
 
     test('is $PositionComponent', () {
@@ -55,8 +55,8 @@ void main() {
       expect(machine, isA<HoverCallbacks>());
     });
 
-    test('is ${Publisher<CardStateMachineEvent>}', () {
-      expect(machine, isA<Publisher<CardStateMachineEvent>>());
+    test('is $Publisher', () {
+      expect(machine, isA<Publisher>());
     });
 
     test('handCursor', () {

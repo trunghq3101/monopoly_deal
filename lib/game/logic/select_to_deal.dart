@@ -1,14 +1,14 @@
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class SelectToDeal with Publisher<CardEvent>, Subscriber<CardDeckEvent> {
+class SelectToDeal with Publisher, Subscriber {
   SelectToDeal({CardTracker? cardTracker})
       : _cardTracker = cardTracker ?? CardTracker();
 
   final CardTracker _cardTracker;
 
   @override
-  void onNewEvent(CardDeckEvent event, [Object? payload]) {
+  void onNewEvent(event, [Object? payload]) {
     switch (event) {
       case CardDeckEvent.dealStartGame:
         final playerPositions = MainGame2.gameMap.playerPositions;

@@ -3,8 +3,8 @@ import 'package:flame/effects.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class AddToDeckBehavior extends PublisherComponent<AddToDeckEvent>
-    with ParentIsA<PositionComponent>, Subscriber<CardDeckEvent> {
+class AddToDeckBehavior extends PublisherComponent
+    with ParentIsA<PositionComponent>, Subscriber {
   AddToDeckBehavior({int index = 0, int priority = 0})
       : _index = index,
         _priority = priority;
@@ -13,7 +13,7 @@ class AddToDeckBehavior extends PublisherComponent<AddToDeckEvent>
   final int _priority;
 
   @override
-  void onNewEvent(CardDeckEvent event, [Object? payload]) {
+  void onNewEvent(Object event, [Object? payload]) {
     switch (event) {
       case CardDeckEvent.showUp:
         parent.priority = _priority;
@@ -26,7 +26,7 @@ class AddToDeckBehavior extends PublisherComponent<AddToDeckEvent>
             period: 0.6,
             removeOnFinish: true,
             onTick: () {
-              notify(AddToDeckEvent.done);
+              notify(CardEvent.addedToDeck);
               removeFromParent();
             }));
         break;
@@ -34,5 +34,3 @@ class AddToDeckBehavior extends PublisherComponent<AddToDeckEvent>
     }
   }
 }
-
-enum AddToDeckEvent { done }

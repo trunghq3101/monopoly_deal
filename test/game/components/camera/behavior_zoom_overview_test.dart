@@ -21,11 +21,11 @@ void main() {
       expect(behavior, isA<ParentIsA<CameraComponent>>());
     });
 
-    test('is ${Subscriber<CameraEvent>}', () {
-      expect(behavior, isA<Subscriber<CameraEvent>>());
+    test('is $Subscriber', () {
+      expect(behavior, isA<Subscriber>());
     });
 
-    group('on ${CameraEvent.toOverview}', () {
+    group('on ${CardDeckEvent.dealStartGame}', () {
       testWithFlameGame(
         'viewFinder visibleGameSize change to overviewGameSize',
         (game) async {
@@ -34,7 +34,7 @@ void main() {
           p.viewfinder.visibleGameSize = Vector2.all(10);
           await game.ensureAdd(p);
 
-          behavior.onNewEvent(CameraEvent.toOverview);
+          behavior.onNewEvent(CardDeckEvent.dealStartGame);
           await game.ready();
           game.update(1);
 
@@ -53,7 +53,7 @@ void main() {
           p.viewfinder.visibleGameSize = Vector2.all(10);
           await game.ensureAdd(p);
 
-          behavior.onNewEvent(CameraEvent.toOverview);
+          behavior.onNewEvent(CardDeckEvent.dealStartGame);
           await game.ready();
           game.update(1);
 

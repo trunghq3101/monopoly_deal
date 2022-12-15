@@ -2,8 +2,7 @@ import 'package:flame/components.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class CardDeckPublisher extends PublisherComponent<CardDeckEvent>
-    with Subscriber<AddToDeckEvent> {
+class CardDeckPublisher extends PublisherComponent with Subscriber {
   int _addToDeckCount = 0;
 
   @override
@@ -18,8 +17,8 @@ class CardDeckPublisher extends PublisherComponent<CardDeckEvent>
   }
 
   @override
-  void onNewEvent(AddToDeckEvent event, [Object? payload]) {
-    if (event == AddToDeckEvent.done) {
+  void onNewEvent(Object event, [Object? payload]) {
+    if (event == CardEvent.addedToDeck) {
       _addToDeckCount++;
 
       if (_addToDeckCount == MainGame2.cardTotalAmount) {
@@ -28,5 +27,3 @@ class CardDeckPublisher extends PublisherComponent<CardDeckEvent>
     }
   }
 }
-
-enum CardDeckEvent { showUp, dealStartGame }

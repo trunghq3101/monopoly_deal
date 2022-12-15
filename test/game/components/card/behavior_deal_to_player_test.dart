@@ -28,7 +28,7 @@ void main() {
     });
 
     test('is a subscriber of $CardStateMachineEvent', () {
-      expect(behavior, isA<Subscriber<CardStateMachineEvent>>());
+      expect(behavior, isA<Subscriber>());
     });
 
     group('on ${CardStateMachineEvent.toDealRegion}', () {

@@ -4,8 +4,7 @@ import 'package:flame/experimental.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class HandToggleButton extends PositionComponent
-    with Publisher<HandToggleButtonEvent>, TapCallbacks {
+class HandToggleButton extends PositionComponent with Publisher, TapCallbacks {
   late _State _state;
 
   @override
@@ -38,5 +37,3 @@ class HandToggleButton extends PositionComponent
 }
 
 enum _State { hide, show }
-
-enum HandToggleButtonEvent { tapHide, tapShow }

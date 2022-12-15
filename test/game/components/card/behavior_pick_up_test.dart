@@ -33,8 +33,8 @@ void main() {
       expect(behavior, isA<ParentIsA<Card>>());
     });
 
-    test('is ${Subscriber<CardStateMachineEvent>}', () {
-      expect(behavior, isA<Subscriber<CardStateMachineEvent>>());
+    test('is $Subscriber', () {
+      expect(behavior, isA<Subscriber>());
     });
 
     group('on ${CardStateMachineEvent.pickUpToHand}', () {

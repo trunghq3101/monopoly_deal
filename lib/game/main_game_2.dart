@@ -52,12 +52,9 @@ class MainGame2 extends FlameGame
     final zoomOverviewBehavior = ZoomOverviewBehavior();
     cameraComponent.add(zoomOverviewBehavior);
 
-    final cardDeckEventToCameraEventAdapter =
-        CardDeckEventToCameraEventAdapter();
     cardDeckPublisher
       ..addSubscriber(_selectToDeal)
-      ..addSubscriber(cardDeckEventToCameraEventAdapter);
-    cardDeckEventToCameraEventAdapter.addSubscriber(zoomOverviewBehavior);
+      ..addSubscriber(zoomOverviewBehavior);
   }
 
   @override

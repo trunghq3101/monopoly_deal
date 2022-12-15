@@ -4,14 +4,13 @@ import 'package:flutter/animation.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class PickUpBehavior extends Component
-    with ParentIsA<Card>, Subscriber<CardStateMachineEvent> {
+class PickUpBehavior extends Component with ParentIsA<Card>, Subscriber {
   PickUpBehavior({double delayStep = 0.1}) : _delayStep = delayStep;
 
   final double _delayStep;
 
   @override
-  void onNewEvent(CardStateMachineEvent event, [Object? payload]) {
+  void onNewEvent(Object event, [Object? payload]) {
     switch (event) {
       case CardStateMachineEvent.pickUpToHand:
         assert(payload is CardEventPickUpPayload);

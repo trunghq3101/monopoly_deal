@@ -4,10 +4,10 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class TogglePreviewingBehavior extends Component
-    with Subscriber<CardStateMachineEvent>, ParentIsA<PositionComponent> {
+    with Subscriber, ParentIsA<PositionComponent> {
   PositionComponent? _inHandPlaceholder;
   @override
-  void onNewEvent(CardStateMachineEvent event, [Object? payload]) {
+  void onNewEvent(Object event, [Object? payload]) {
     switch (event) {
       case CardStateMachineEvent.toPreviewing:
         _inHandPlaceholder = PositionComponent(

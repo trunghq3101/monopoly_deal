@@ -1,10 +1,17 @@
 import 'package:equatable/equatable.dart';
 import 'package:flame/game.dart';
-import 'package:monopoly_deal/game/lib/lib.dart';
 
-class CardPublisher extends PublisherComponent<CardEvent> {}
+enum CardStateMachineEvent {
+  toDealRegion,
+  tapOnMyDealRegion,
+  pickUpToHand,
+  toHand,
+  toPreviewing,
+}
 
-enum CardEvent { deal, pickUp, tapped }
+enum CardDeckEvent { showUp, dealStartGame }
+
+enum CardEvent { addedToDeck, deal, pickUp, tapped }
 
 class CardEventDealPayload with EquatableMixin {
   final int cardId;

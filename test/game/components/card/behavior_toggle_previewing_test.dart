@@ -14,7 +14,7 @@ void main() {
     });
 
     test('is subscriber of CardStateMachineEvent', () {
-      expect(behavior, isA<Subscriber<CardStateMachineEvent>>());
+      expect(behavior, isA<Subscriber>());
     });
 
     testWithFlameGame(

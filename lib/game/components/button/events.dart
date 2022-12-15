@@ -1,0 +1,1 @@
+enum HandToggleButtonEvent { tapHide, tapShow }

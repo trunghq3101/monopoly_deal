@@ -1,15 +1,14 @@
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class SelectToPickUp
-    with Publisher<CardEvent>, Subscriber<CardStateMachineEvent> {
+class SelectToPickUp with Publisher, Subscriber {
   SelectToPickUp({final CardTracker? cardTracker})
       : _cardTracker = cardTracker ?? CardTracker();
 
   final CardTracker _cardTracker;
 
   @override
-  void onNewEvent(CardStateMachineEvent event, [Object? payload]) {
+  void onNewEvent(event, [Object? payload]) {
     switch (event) {
       case CardStateMachineEvent.tapOnMyDealRegion:
         final cardsToPickUp = _cardTracker.cardsInMyDealRegionFromTop();
