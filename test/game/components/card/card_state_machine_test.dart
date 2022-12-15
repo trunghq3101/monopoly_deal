@@ -1,4 +1,6 @@
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
+import 'package:flame/game.dart';
 import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
@@ -24,6 +26,9 @@ class _MockSubscriber implements Subscriber {
     receivedPayload = payload;
   }
 }
+
+class _MockGame extends FlameGame
+    with HasTappableComponents, HasHoverableComponents {}
 
 class _MockGameMap extends GameMap {
   bool mockIsMyPosition = false;
@@ -143,16 +148,37 @@ void main() {
         },
       );
 
-      test(
-        'on tap, notify ${CardStateMachineEvent.toPreviewing}',
-        () {
+      testWithGame<_MockGame>(
+        'on tap, notify ${CardStateMachineEvent.tapWhileInHand}',
+        _MockGame.new,
+        (game) async {
           machine.mockState = CardState.inHand;
+          final p = Card();
+          p.add(machine);
+          await game.ensureAdd(p);
 
           machine.onTapDown(createTapDownEvents());
 
-          machine.turnMockStateOff = true;
-          expect(subscriber.receivedEvent, CardStateMachineEvent.toPreviewing);
-          expect(machine.state, CardState.inPreviewing);
+          expect(
+            subscriber.receivedEvent,
+            CardStateMachineEvent.tapWhileInHand,
+          );
+        },
+      );
+
+      testWithGame<_MockGame>(
+        'on ${CardEvent.preview}, given unmatched cardId, do nothing',
+        _MockGame.new,
+        (game) async {
+          const cardId = 1;
+          machine.mockState = CardState.inHand;
+          final p = Card();
+          p.add(machine);
+          await game.ensureAdd(p);
+
+          machine.onNewEvent(CardEvent.preview, CardIdPayload(cardId));
+
+          expect(subscriber.receivedEvent, null);
         },
       );
     });
@@ -173,16 +199,54 @@ void main() {
     });
 
     group('at ${CardState.inPreviewing}', () {
-      test(
-        'on tap, notify ${CardStateMachineEvent.toHand}',
-        () {
-          machine.mockState = CardState.inHand;
+      testWithGame<_MockGame>(
+        'on tap, notify ${CardStateMachineEvent.tapWhileInPreviewing}',
+        _MockGame.new,
+        (game) async {
+          machine.mockState = CardState.inPreviewing;
+          final p = Card();
+          p.add(machine);
+          await game.ensureAdd(p);
 
           machine.onTapDown(createTapDownEvents());
 
-          machine.turnMockStateOff = true;
-          expect(subscriber.receivedEvent, CardStateMachineEvent.toHand);
-          expect(machine.state, CardState.inHand);
+          expect(
+            subscriber.receivedEvent,
+            CardStateMachineEvent.tapWhileInPreviewing,
+          );
+        },
+      );
+
+      testWithGame<_MockGame>(
+        'on ${CardEvent.previewRevert}, given unmatched cardId, do nothing',
+        _MockGame.new,
+        (game) async {
+          const cardId = 1;
+          machine.mockState = CardState.inPreviewing;
+          final p = Card();
+          p.add(machine);
+          await game.ensureAdd(p);
+
+          machine.onNewEvent(CardEvent.previewRevert, CardIdPayload(cardId));
+
+          expect(subscriber.receivedEvent, null);
+        },
+      );
+
+      testWithGame<_MockGame>(
+        'on ${CardEvent.previewSwap}, giving matched cardId, notify ${CardStateMachineEvent.swapBackToHand}',
+        _MockGame.new,
+        (game) async {
+          const cardId = 1;
+          machine.mockState = CardState.inPreviewing;
+          final p = Card(cardId: cardId);
+          p.add(machine);
+          await game.ensureAdd(p);
+
+          machine.onNewEvent(CardEvent.previewSwap, CardIdPayload(cardId));
+
+          expect(
+              subscriber.receivedEvent, CardStateMachineEvent.swapBackToHand);
         },
       );
     });

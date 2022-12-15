@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
@@ -27,6 +28,10 @@ class CardTracker extends Component
         allCards.where((c) => c.state == CardState.inMyDealRegion).toList();
     cards.sort((a, b) => b.priority.compareTo(a.priority));
     return cards;
+  }
+
+  Card? cardInPreviewingState() {
+    return allCards.where((c) => c.state == CardState.inPreviewing).firstOrNull;
   }
 
   InHandPosition getInHandPosition({required int index, required int amount}) {

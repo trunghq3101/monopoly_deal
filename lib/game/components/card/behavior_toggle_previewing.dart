@@ -29,6 +29,7 @@ class TogglePreviewingBehavior extends Component
         ]);
         break;
       case CardStateMachineEvent.toHand:
+      case CardStateMachineEvent.swapBackToHand:
         if (_inHandPlaceholder == null) return;
         parent.add(TimerComponent(
           period: 0.01,

@@ -50,15 +50,44 @@ class CardStateMachine extends PositionComponent
         }
         break;
       case CardState.inHand:
-        if (event == HandToggleButtonEvent.tapHide) {
-          changeState(CardState.inHandCollapsed);
-          notify(CardStateMachineEvent.pullDown);
+        switch (event) {
+          case HandToggleButtonEvent.tapHide:
+            changeState(CardState.inHandCollapsed);
+            notify(CardStateMachineEvent.pullDown);
+            break;
+          case CardEvent.preview:
+            assert(payload is CardIdPayload);
+            payload as CardIdPayload;
+            if (parent.cardId != payload.cardId) break;
+            changeState(CardState.inPreviewing);
+            notify(CardStateMachineEvent.toPreviewing);
+            break;
+          default:
         }
         break;
       case CardState.inHandCollapsed:
         if (event == HandToggleButtonEvent.tapShow) {
           changeState(CardState.inHand);
           notify(CardStateMachineEvent.pullUp);
+        }
+        break;
+      case CardState.inPreviewing:
+        switch (event) {
+          case CardEvent.previewRevert:
+            assert(payload is CardIdPayload);
+            payload as CardIdPayload;
+            if (parent.cardId != payload.cardId) break;
+            changeState(CardState.inHand);
+            notify(CardStateMachineEvent.toHand);
+            break;
+          case CardEvent.previewSwap:
+            assert(payload is CardIdPayload);
+            payload as CardIdPayload;
+            if (parent.cardId != payload.cardId) break;
+            changeState(CardState.inHand);
+            notify(CardStateMachineEvent.swapBackToHand);
+            break;
+          default:
         }
         break;
       default:
@@ -72,12 +101,16 @@ class CardStateMachine extends PositionComponent
         notify(CardStateMachineEvent.tapOnMyDealRegion);
         break;
       case CardState.inHand:
-        changeState(CardState.inPreviewing);
-        notify(CardStateMachineEvent.toPreviewing);
+        notify(
+          CardStateMachineEvent.tapWhileInHand,
+          CardIdPayload(parent.cardId),
+        );
         break;
       case CardState.inPreviewing:
-        changeState(CardState.inHand);
-        notify(CardStateMachineEvent.toHand);
+        notify(
+          CardStateMachineEvent.tapWhileInPreviewing,
+          CardIdPayload(parent.cardId),
+        );
         break;
       default:
     }

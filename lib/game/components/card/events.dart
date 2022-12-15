@@ -7,13 +7,23 @@ enum CardStateMachineEvent {
   pickUpToHand,
   pullUp,
   pullDown,
+  tapWhileInHand,
+  tapWhileInPreviewing,
   toHand,
   toPreviewing,
+  swapBackToHand,
 }
 
 enum CardDeckEvent { showUp, dealStartGame }
 
-enum CardEvent { addedToDeck, deal, pickUp }
+enum CardEvent {
+  addedToDeck,
+  deal,
+  pickUp,
+  preview,
+  previewRevert,
+  previewSwap
+}
 
 class CardEventDealPayload with EquatableMixin {
   final int cardId;
@@ -48,4 +58,13 @@ class InHandPosition {
   final double angle;
 
   factory InHandPosition.test() => InHandPosition(Vector2.zero(), 0);
+}
+
+class CardIdPayload with EquatableMixin {
+  final int cardId;
+
+  CardIdPayload(this.cardId);
+
+  @override
+  List<Object?> get props => [cardId];
 }

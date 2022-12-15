@@ -16,6 +16,7 @@ class MainGame2 extends FlameGame
       children.query<CardDeckPublisher>().first;
   late SelectToDeal _selectToDeal;
   late SelectToPickUp _selectToPickUp;
+  late SelectToPreviewing _selectToPreviewing;
   late HandToggleButton _handToggleButton;
 
   @override
@@ -36,6 +37,7 @@ class MainGame2 extends FlameGame
     final cardTracker = CardTracker();
     _selectToDeal = SelectToDeal(cardTracker: cardTracker);
     _selectToPickUp = SelectToPickUp(cardTracker: cardTracker);
+    _selectToPreviewing = SelectToPreviewing(cardTracker: cardTracker);
 
     add(world);
     add(cameraComponent);
@@ -93,11 +95,13 @@ class MainGame2 extends FlameGame
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
     _selectToDeal.addSubscriber(cardStateMachine);
     _selectToPickUp.addSubscriber(cardStateMachine);
+    _selectToPreviewing.addSubscriber(cardStateMachine);
     _handToggleButton.addSubscriber(cardStateMachine);
     cardStateMachine
       ..addSubscriber(dealToPlayerBehavior)
       ..addSubscriber(pickUpBehavior)
       ..addSubscriber(_selectToPickUp)
+      ..addSubscriber(_selectToPreviewing)
       ..addSubscriber(pullUpDownBehavior)
       ..addSubscriber(_handToggleButton)
       ..addSubscriber(togglePreviewing);

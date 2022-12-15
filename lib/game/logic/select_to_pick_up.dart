@@ -2,7 +2,7 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class SelectToPickUp with Publisher, Subscriber {
-  SelectToPickUp({final CardTracker? cardTracker})
+  SelectToPickUp({CardTracker? cardTracker})
       : _cardTracker = cardTracker ?? CardTracker();
 
   final CardTracker _cardTracker;
