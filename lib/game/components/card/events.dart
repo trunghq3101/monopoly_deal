@@ -5,6 +5,8 @@ enum CardStateMachineEvent {
   toDealRegion,
   tapOnMyDealRegion,
   pickUpToHand,
+  pullUp,
+  pullDown,
   toHand,
   toPreviewing,
 }

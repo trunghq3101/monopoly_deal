@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:monopoly_deal/game/components/card/behavior_pick_up.dart';
+import 'package:monopoly_deal/game/components/card/behavior_pull_up_down.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class MainGame2 extends FlameGame
@@ -15,6 +16,7 @@ class MainGame2 extends FlameGame
       children.query<CardDeckPublisher>().first;
   late SelectToDeal _selectToDeal;
   late SelectToPickUp _selectToPickUp;
+  late HandToggleButton _handToggleButton;
 
   @override
   Future<void>? onLoad() async {
@@ -40,13 +42,13 @@ class MainGame2 extends FlameGame
     add(cardDeckPublisher);
     add(cardTracker);
 
-    final hideBtn = HandToggleButton()
+    _handToggleButton = HandToggleButton()
       ..position =
           Vector2(MainGame2.gameMap.overviewGameVisibleSize.x * 0.5, 400);
     // final endTurnBtn = ButtonComponent(text: "End turn")
     //   ..position =
     //       Vector2(MainGame2.gameMap.overviewGameVisibleSize.x * 0.5, 200);
-    world.add(hideBtn);
+    world.add(_handToggleButton);
     // world.add(endTurnBtn);
 
     final zoomOverviewBehavior = ZoomOverviewBehavior();
@@ -77,18 +79,22 @@ class MainGame2 extends FlameGame
     final addToDeckBehavior = AddToDeckBehavior(index: index, priority: index);
     final dealToPlayerBehavior = DealToPlayerBehavior();
     final pickUpBehavior = PickUpBehavior();
+    final pullUpDownBehavior = PullUpDownBehavior();
     card.add(cardStateMachine);
     card.add(addToDeckBehavior);
     card.add(dealToPlayerBehavior);
     card.add(pickUpBehavior);
+    card.add(pullUpDownBehavior);
     _cardDeckPublisher.addSubscriber(addToDeckBehavior);
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
     _selectToDeal.addSubscriber(cardStateMachine);
     _selectToPickUp.addSubscriber(cardStateMachine);
+    _handToggleButton.addSubscriber(cardStateMachine);
     cardStateMachine
       ..addSubscriber(dealToPlayerBehavior)
       ..addSubscriber(pickUpBehavior)
-      ..addSubscriber(_selectToPickUp);
+      ..addSubscriber(_selectToPickUp)
+      ..addSubscriber(pullUpDownBehavior);
   }
 }
 

@@ -128,8 +128,34 @@ void main() {
       });
     });
 
-    group('at ${CardState.inMyDealRegion}', () {
-      test('onHoverEnter, ', () {});
+    group('at ${CardState.inHand}', () {
+      test(
+        'on ${HandToggleButtonEvent.tapHide}, notify ${CardStateMachineEvent.pullDown}',
+        () {
+          machine.mockState = CardState.inHand;
+
+          machine.onNewEvent(HandToggleButtonEvent.tapHide);
+
+          machine.turnMockStateOff = true;
+          expect(subscriber.receivedEvent, CardStateMachineEvent.pullDown);
+          expect(machine.state, CardState.inHandCollapsed);
+        },
+      );
+    });
+
+    group('at ${CardState.inHandCollapsed}', () {
+      test(
+        'on ${HandToggleButtonEvent.tapHide}, notify ${CardStateMachineEvent.pullUp}',
+        () {
+          machine.mockState = CardState.inHandCollapsed;
+
+          machine.onNewEvent(HandToggleButtonEvent.tapShow);
+
+          machine.turnMockStateOff = true;
+          expect(subscriber.receivedEvent, CardStateMachineEvent.pullUp);
+          expect(machine.state, CardState.inHand);
+        },
+      );
     });
   });
 }

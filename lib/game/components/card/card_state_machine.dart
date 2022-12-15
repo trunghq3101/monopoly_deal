@@ -8,6 +8,7 @@ enum CardState {
   inDealRegion,
   inMyDealRegion,
   inHand,
+  inHandCollapsed,
   previewing,
 }
 
@@ -52,6 +53,16 @@ class CardStateMachine extends PositionComponent
         if (event == CardEvent.tapped) {
           changeState(CardState.previewing);
           notify(CardStateMachineEvent.toPreviewing);
+        }
+        if (event == HandToggleButtonEvent.tapHide) {
+          changeState(CardState.inHandCollapsed);
+          notify(CardStateMachineEvent.pullDown);
+        }
+        break;
+      case CardState.inHandCollapsed:
+        if (event == HandToggleButtonEvent.tapShow) {
+          changeState(CardState.inHand);
+          notify(CardStateMachineEvent.pullUp);
         }
         break;
       case CardState.previewing:
