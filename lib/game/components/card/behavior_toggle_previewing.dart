@@ -15,8 +15,7 @@ class TogglePreviewingBehavior extends Component
           position: parent.position,
         );
         parent.addAll([
-          MoveEffect.to(
-              GamePosition.previewCard.position, LinearEffectController(0.1)),
+          MoveEffect.to(Vector2.zero(), LinearEffectController(0.1)),
           RotateEffect.to(0, LinearEffectController(0.1)),
           ScaleEffect.by(Vector2.all(1.6), LinearEffectController(0.1)),
         ]);
