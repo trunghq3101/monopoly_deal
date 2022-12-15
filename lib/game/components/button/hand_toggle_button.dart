@@ -35,6 +35,7 @@ class HandToggleButton extends PositionComponent
   void _changeState(HandToggleButtonState state) {
     _state = state;
     children.query<ButtonComponent>().firstOrNull?.removeFromParent();
+    if (state == HandToggleButtonState.invisible) return;
     add(ButtonComponent(text: state.name.toUpperCase()));
   }
 
@@ -50,10 +51,28 @@ class HandToggleButton extends PositionComponent
               EffectController(duration: 0.1, startDelay: 0.8),
             ));
             break;
+          case CardStateMachineEvent.toHand:
+            _changeState(HandToggleButtonState.hide);
+            add(ScaleEffect.to(
+              Vector2.all(1),
+              EffectController(duration: 0.1),
+            ));
+            break;
           default:
         }
         break;
       default:
+        switch (event) {
+          case CardStateMachineEvent.toPreviewing:
+            _changeState(HandToggleButtonState.invisible);
+            add(ScaleEffect.to(
+              Vector2.all(0),
+              EffectController(duration: 0.1),
+            ));
+            break;
+          default:
+        }
+        break;
     }
   }
 }
