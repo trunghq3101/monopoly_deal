@@ -40,6 +40,15 @@ class MainGame2 extends FlameGame
     add(cardDeckPublisher);
     add(cardTracker);
 
+    final hideBtn = HandToggleButton()
+      ..position =
+          Vector2(MainGame2.gameMap.overviewGameVisibleSize.x * 0.5, 400);
+    // final endTurnBtn = ButtonComponent(text: "End turn")
+    //   ..position =
+    //       Vector2(MainGame2.gameMap.overviewGameVisibleSize.x * 0.5, 200);
+    world.add(hideBtn);
+    // world.add(endTurnBtn);
+
     final zoomOverviewBehavior = ZoomOverviewBehavior();
     cameraComponent.add(zoomOverviewBehavior);
 
