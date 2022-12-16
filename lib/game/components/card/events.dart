@@ -48,16 +48,19 @@ class CardPickUpPayload with EquatableMixin {
   }) : inHandPosition = inHandPosition ?? InHandPosition.test();
 
   @override
-  List<Object?> get props => [cardId, orderIndex];
+  List<Object?> get props => [cardId, orderIndex, inHandPosition];
 }
 
-class InHandPosition {
+class InHandPosition with EquatableMixin {
   InHandPosition(this.position, this.angle);
 
   final Vector2 position;
   final double angle;
 
   factory InHandPosition.test() => InHandPosition(Vector2.zero(), 0);
+
+  @override
+  List<Object?> get props => [position, angle];
 }
 
 class CardIdPayload with EquatableMixin {
