@@ -24,7 +24,8 @@ enum CardEvent {
   pickUp,
   preview,
   previewRevert,
-  previewSwap
+  previewSwap,
+  reposition
 }
 
 class CardDealPayload with EquatableMixin {
@@ -51,6 +52,17 @@ class CardPickUpPayload with EquatableMixin {
 
   @override
   List<Object?> get props => [cardId, orderIndex, inHandPosition];
+}
+
+class CardRepositionPayload with EquatableMixin {
+  final int cardId;
+  final InHandPosition inHandPosition;
+
+  CardRepositionPayload(this.cardId, {InHandPosition? inHandPosition})
+      : inHandPosition = inHandPosition ?? InHandPosition.test();
+
+  @override
+  List<Object?> get props => [cardId, inHandPosition];
 }
 
 class InHandPosition with EquatableMixin {

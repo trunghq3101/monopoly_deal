@@ -30,6 +30,13 @@ class CardTracker extends Component
     return cards;
   }
 
+  List<HasCardId> cardsInHandCollapsedFromTop() {
+    final cards =
+        allCards.where((c) => c.state == CardState.inHandCollapsed).toList();
+    cards.sort((a, b) => b.priority.compareTo(a.priority));
+    return cards;
+  }
+
   Card? cardInPreviewingState() {
     return allCards.where((c) => c.state == CardState.inPreviewing).firstOrNull;
   }
@@ -38,6 +45,21 @@ class CardTracker extends Component
     final spacing = handCurveWidth / (amount - 1);
     final tangent = pathMetrics.getTangentForOffset(index * spacing)!;
     final position = Vector2(tangent.position.dx, tangent.position.dy);
+    return InHandPosition(position, tangent.vector.direction);
+  }
+
+  InHandPosition getInHandCollapsedPosition(
+      {required int index, required int amount}) {
+    double offset;
+    if (amount == 1) {
+      offset = handCurveWidth / 2;
+    } else if (amount == 2) {
+      offset = handCurveWidth / 4 + index * handCurveWidth / 2;
+    } else {
+      offset = index * handCurveWidth / (amount - 1);
+    }
+    final tangent = pathMetrics.getTangentForOffset(offset)!;
+    final position = Vector2(tangent.position.dx, tangent.position.dy + 1000);
     return InHandPosition(position, tangent.vector.direction);
   }
 

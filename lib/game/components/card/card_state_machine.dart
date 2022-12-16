@@ -84,9 +84,18 @@ class CardStateMachine extends PositionComponent
         }
         break;
       case CardState.inHandCollapsed:
-        if (event.eventIdentifier == HandToggleButtonEvent.tapShow) {
-          changeState(CardState.inHand);
-          notify(Event(CardStateMachineEvent.pullUp));
+        switch (event.eventIdentifier) {
+          case HandToggleButtonEvent.tapShow:
+            changeState(CardState.inHand);
+            notify(Event(CardStateMachineEvent.pullUp));
+            break;
+          case CardEvent.reposition:
+            assert(payload is CardRepositionPayload);
+            payload as CardRepositionPayload;
+            if (parent.cardId != payload.cardId) break;
+            notify(event);
+            break;
+          default:
         }
         break;
       case CardState.inPreviewing:

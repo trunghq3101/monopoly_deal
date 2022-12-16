@@ -27,6 +27,7 @@ class PickUpBehavior extends Component
           onTick: () {
             parent.children.query<SpriteComponent>().first.removeFromParent();
             parent.add(frontCard);
+            parent.priority = parent.priority + 1;
           },
         ));
         parent.addAll([

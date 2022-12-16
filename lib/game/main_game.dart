@@ -1,9 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
-import 'package:monopoly_deal/game/components/card/behavior_pick_up.dart';
-import 'package:monopoly_deal/game/components/card/behavior_pull_up_down.dart';
-import 'package:monopoly_deal/game/components/card/behavior_to_table.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class MainGame2 extends FlameGame
@@ -18,6 +15,7 @@ class MainGame2 extends FlameGame
   late SelectToDeal _selectToDeal;
   late SelectToPickUp _selectToPickUp;
   late SelectToPreviewing _selectToPreviewing;
+  late SelectToReArrange _selectToReArrange;
   late HandToggleButton _handToggleButton;
   late PlaceCardButton _placeCardButton;
 
@@ -40,11 +38,13 @@ class MainGame2 extends FlameGame
     _selectToDeal = SelectToDeal(cardTracker: cardTracker);
     _selectToPickUp = SelectToPickUp(cardTracker: cardTracker);
     _selectToPreviewing = SelectToPreviewing(cardTracker: cardTracker);
+    _selectToReArrange = SelectToReArrange(cardTracker: cardTracker);
 
     add(world);
     add(cameraComponent);
     add(cardDeckPublisher);
     add(cardTracker);
+    add(_selectToReArrange);
 
     _handToggleButton = HandToggleButton()
       ..position =
@@ -52,6 +52,9 @@ class MainGame2 extends FlameGame
     _placeCardButton = PlaceCardButton()
       ..position =
           Vector2(MainGame2.gameMap.overviewGameVisibleSize.x * 0.5, 0);
+    _placeCardButton
+      ..addSubscriber(_handToggleButton)
+      ..addSubscriber(_selectToReArrange);
     world
       ..add(_handToggleButton)
       ..add(_placeCardButton);
@@ -87,6 +90,7 @@ class MainGame2 extends FlameGame
     final pullUpDownBehavior = PullUpDownBehavior();
     final togglePreviewingBehavior = TogglePreviewingBehavior();
     final toTableBehavior = ToTableBehavior();
+    final repositionInHand = RepositionInHandBehavior();
     card
       ..add(cardStateMachine)
       ..add(addToDeckBehavior)
@@ -94,7 +98,8 @@ class MainGame2 extends FlameGame
       ..add(pickUpBehavior)
       ..add(pullUpDownBehavior)
       ..add(togglePreviewingBehavior)
-      ..add(toTableBehavior);
+      ..add(toTableBehavior)
+      ..add(repositionInHand);
 
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
     dealToPlayerBehavior.addSubscriber(cardStateMachine);
@@ -104,9 +109,8 @@ class MainGame2 extends FlameGame
     _selectToPickUp.addSubscriber(cardStateMachine);
     _selectToPreviewing.addSubscriber(cardStateMachine);
     _handToggleButton.addSubscriber(cardStateMachine);
-    _placeCardButton
-      ..addSubscriber(cardStateMachine)
-      ..addSubscriber(_handToggleButton);
+    _placeCardButton.addSubscriber(cardStateMachine);
+    _selectToReArrange.addSubscriber(cardStateMachine);
 
     cardStateMachine
       ..addSubscriber(dealToPlayerBehavior)
@@ -117,7 +121,8 @@ class MainGame2 extends FlameGame
       ..addSubscriber(_handToggleButton)
       ..addSubscriber(togglePreviewingBehavior)
       ..addSubscriber(_placeCardButton)
-      ..addSubscriber(toTableBehavior);
+      ..addSubscriber(toTableBehavior)
+      ..addSubscriber(repositionInHand);
   }
 }
 
