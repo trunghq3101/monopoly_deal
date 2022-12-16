@@ -1,6 +1,9 @@
+import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
+
+import '../../../utils.dart';
 
 void main() {
   late PlaceCardButton button;
@@ -21,6 +24,19 @@ void main() {
       button.onNewEvent(Event(CardStateMachineEvent.toHand));
 
       expect(button.state, PlaceCardButtonState.invisible);
+    });
+
+    test(
+        'on tap, in visible state, notify ${PlaceCardButtonEvent.tap}, change to invisible state',
+        () {
+      final s = MockSingleEventSubscriber();
+      button.addSubscriber(s);
+      button.onNewEvent(Event(CardStateMachineEvent.toPreviewing));
+
+      button.onTapDown(createTapDownEvents());
+
+      expect(button.state, PlaceCardButtonState.invisible);
+      expect(s.receivedEvent, Event(PlaceCardButtonEvent.tap));
     });
   });
 }

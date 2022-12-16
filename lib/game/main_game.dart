@@ -3,6 +3,7 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:monopoly_deal/game/components/card/behavior_pick_up.dart';
 import 'package:monopoly_deal/game/components/card/behavior_pull_up_down.dart';
+import 'package:monopoly_deal/game/components/card/behavior_to_table.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class MainGame2 extends FlameGame
@@ -84,14 +85,16 @@ class MainGame2 extends FlameGame
     final dealToPlayerBehavior = DealToPlayerBehavior();
     final pickUpBehavior = PickUpBehavior();
     final pullUpDownBehavior = PullUpDownBehavior();
-    final togglePreviewing = TogglePreviewingBehavior();
+    final togglePreviewingBehavior = TogglePreviewingBehavior();
+    final toTableBehavior = ToTableBehavior();
     card
       ..add(cardStateMachine)
       ..add(addToDeckBehavior)
       ..add(dealToPlayerBehavior)
       ..add(pickUpBehavior)
       ..add(pullUpDownBehavior)
-      ..add(togglePreviewing);
+      ..add(togglePreviewingBehavior)
+      ..add(toTableBehavior);
 
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
     dealToPlayerBehavior.addSubscriber(cardStateMachine);
@@ -101,6 +104,9 @@ class MainGame2 extends FlameGame
     _selectToPickUp.addSubscriber(cardStateMachine);
     _selectToPreviewing.addSubscriber(cardStateMachine);
     _handToggleButton.addSubscriber(cardStateMachine);
+    _placeCardButton
+      ..addSubscriber(cardStateMachine)
+      ..addSubscriber(_handToggleButton);
 
     cardStateMachine
       ..addSubscriber(dealToPlayerBehavior)
@@ -109,8 +115,9 @@ class MainGame2 extends FlameGame
       ..addSubscriber(_selectToPreviewing)
       ..addSubscriber(pullUpDownBehavior)
       ..addSubscriber(_handToggleButton)
-      ..addSubscriber(togglePreviewing)
-      ..addSubscriber(_placeCardButton);
+      ..addSubscriber(togglePreviewingBehavior)
+      ..addSubscriber(_placeCardButton)
+      ..addSubscriber(toTableBehavior);
   }
 }
 

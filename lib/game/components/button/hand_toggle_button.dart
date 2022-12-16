@@ -58,6 +58,13 @@ class HandToggleButton extends PositionComponent
               EffectController(duration: 0.1),
             ));
             break;
+          case PlaceCardButtonEvent.tap:
+            _changeState(HandToggleButtonState.show);
+            add(ScaleEffect.to(
+              Vector2.all(1),
+              EffectController(duration: 0.1),
+            ));
+            break;
           default:
         }
         break;

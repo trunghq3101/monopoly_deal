@@ -9,7 +9,8 @@ enum PlaceCardButtonState {
   invisible,
 }
 
-class PlaceCardButton extends PositionComponent with TapCallbacks, Subscriber {
+class PlaceCardButton extends PositionComponent
+    with TapCallbacks, Subscriber, Publisher {
   PlaceCardButtonState _state = PlaceCardButtonState.invisible;
   PlaceCardButtonState get state => _state;
 
@@ -33,6 +34,14 @@ class PlaceCardButton extends PositionComponent with TapCallbacks, Subscriber {
         }
         break;
       default:
+    }
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    if (state == PlaceCardButtonState.visible) {
+      notify(Event(PlaceCardButtonEvent.tap));
+      _changeState(PlaceCardButtonState.invisible);
     }
   }
 

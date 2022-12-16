@@ -11,6 +11,7 @@ enum CardState {
   inHand,
   inHandCollapsed,
   inPreviewing,
+  onTable,
 }
 
 class CardStateMachine extends PositionComponent
@@ -68,6 +69,7 @@ class CardStateMachine extends PositionComponent
       case CardState.inHand:
         switch (event.eventIdentifier) {
           case HandToggleButtonEvent.tapHide:
+          case PlaceCardButtonEvent.tap:
             changeState(CardState.inHandCollapsed);
             notify(Event(CardStateMachineEvent.pullDown));
             break;
@@ -103,6 +105,10 @@ class CardStateMachine extends PositionComponent
             changeState(CardState.inHand);
             notify(Event(CardStateMachineEvent.swapBackToHand));
             break;
+          case PlaceCardButtonEvent.tap:
+            changeState(CardState.onTable);
+            notify(Event(CardStateMachineEvent.toTable));
+            break;
           default:
         }
         break;
@@ -136,14 +142,12 @@ class CardStateMachine extends PositionComponent
     _state = state;
     switch (state) {
       case CardState.inDeck:
-        handCursor = false;
-        break;
+      case CardState.inHandCollapsed:
       case CardState.inDealRegion:
+      case CardState.onTable:
         handCursor = false;
         break;
       case CardState.inMyDealRegion:
-        handCursor = true;
-        break;
       case CardState.inHand:
         handCursor = true;
         break;

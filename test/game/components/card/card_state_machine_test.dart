@@ -144,6 +144,20 @@ void main() {
         },
       );
 
+      test(
+        'on ${PlaceCardButtonEvent.tap}, notify ${CardStateMachineEvent.pullDown}',
+        () {
+          machine.mockState = CardState.inHand;
+
+          machine.onNewEvent(Event(PlaceCardButtonEvent.tap));
+
+          machine.turnMockStateOff = true;
+          expect(
+              subscriber.receivedEvent, Event(CardStateMachineEvent.pullDown));
+          expect(machine.state, CardState.inHandCollapsed);
+        },
+      );
+
       testWithGame<_MockGame>(
         'on tap, notify ${CardStateMachineEvent.tapWhileInHand}',
         _MockGame.new,
@@ -251,6 +265,24 @@ void main() {
 
           expect(subscriber.receivedEvent,
               Event(CardStateMachineEvent.swapBackToHand));
+        },
+      );
+
+      testWithGame<_MockGame>(
+        'on ${PlaceCardButtonEvent.tap}, change state to OnTable, notify ToTable',
+        _MockGame.new,
+        (game) async {
+          machine.mockState = CardState.inPreviewing;
+          final p = Card();
+          p.add(machine);
+          await game.ensureAdd(p);
+
+          machine.onNewEvent(Event(PlaceCardButtonEvent.tap));
+
+          machine.turnMockStateOff = true;
+          expect(machine.state, CardState.onTable);
+          expect(
+              subscriber.receivedEvent, Event(CardStateMachineEvent.toTable));
         },
       );
     });
