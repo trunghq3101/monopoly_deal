@@ -34,7 +34,7 @@ void main() {
           p.viewfinder.visibleGameSize = Vector2.all(10);
           await game.ensureAdd(p);
 
-          behavior.onNewEvent(CardDeckEvent.dealStartGame);
+          behavior.onNewEvent(Event(CardDeckEvent.dealStartGame));
           await game.ready();
           game.update(1);
 
@@ -53,7 +53,7 @@ void main() {
           p.viewfinder.visibleGameSize = Vector2.all(10);
           await game.ensureAdd(p);
 
-          behavior.onNewEvent(CardDeckEvent.dealStartGame);
+          behavior.onNewEvent(Event(CardDeckEvent.dealStartGame));
           await game.ready();
           game.update(1);
 

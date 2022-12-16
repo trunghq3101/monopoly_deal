@@ -7,8 +7,8 @@ class TogglePreviewingBehavior extends Component
     with Subscriber, ParentIsA<PositionComponent> {
   PositionComponent? _inHandPlaceholder;
   @override
-  void onNewEvent(Object event, [Object? payload]) {
-    switch (event) {
+  void onNewEvent(Event event) {
+    switch (event.eventIdentifier) {
       case CardStateMachineEvent.toPreviewing:
         _inHandPlaceholder = PositionComponent(
             angle: parent.angle,

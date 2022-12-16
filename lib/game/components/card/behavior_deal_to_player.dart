@@ -18,8 +18,9 @@ class DealToPlayerBehavior extends Component
   final RandomizeDealOffset _randomizeDealOffset;
 
   @override
-  void onNewEvent(Object event, [Object? payload]) {
-    switch (event) {
+  void onNewEvent(Event event) {
+    final payload = event.payload;
+    switch (event.eventIdentifier) {
       case CardStateMachineEvent.toDealRegion:
         assert(payload is CardDealPayload);
         payload as CardDealPayload;

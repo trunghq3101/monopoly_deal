@@ -7,8 +7,8 @@ import 'package:monopoly_deal/game/lib/lib.dart';
 class ZoomOverviewBehavior extends Component
     with ParentIsA<CameraComponent>, Subscriber {
   @override
-  void onNewEvent(Object event, [Object? payload]) {
-    switch (event) {
+  void onNewEvent(Event event) {
+    switch (event.eventIdentifier) {
       case CardDeckEvent.dealStartGame:
         parent.add(CameraZoomEffectTo(
           MainGame2.gameMap.overviewGameVisibleSize,

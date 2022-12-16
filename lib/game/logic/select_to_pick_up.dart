@@ -8,8 +8,8 @@ class SelectToPickUp with Publisher, Subscriber {
   final CardTracker _cardTracker;
 
   @override
-  void onNewEvent(event, [Object? payload]) {
-    switch (event) {
+  void onNewEvent(Event event, [Object? payload]) {
+    switch (event.eventIdentifier) {
       case CardStateMachineEvent.tapOnMyDealRegion:
         final cardsToPickUp = _cardTracker.cardsInMyDealRegionFromTop();
         int orderIndex = 0;
@@ -19,12 +19,12 @@ class SelectToPickUp with Publisher, Subscriber {
             amount: cardsToPickUp.length,
           );
           notify(
-            CardEvent.pickUp,
-            CardPickUpPayload(
-              c.cardId,
-              orderIndex: orderIndex++,
-              inHandPosition: inHandPosition,
-            ),
+            Event(CardEvent.pickUp)
+              ..payload = CardPickUpPayload(
+                c.cardId,
+                orderIndex: orderIndex++,
+                inHandPosition: inHandPosition,
+              ),
           );
         }
         break;

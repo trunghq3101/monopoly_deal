@@ -32,7 +32,7 @@ void main() {
           behavior.addToParent(mockParent);
           await game.ensureAdd(mockParent);
 
-          behavior.onNewEvent(CardStateMachineEvent.toPreviewing);
+          behavior.onNewEvent(Event(CardStateMachineEvent.toPreviewing));
           await game.ready();
 
           expect(mockParent.children.query<MoveEffect>(), isNotEmpty);
@@ -48,7 +48,7 @@ void main() {
           behavior.addToParent(mockParent);
           await game.ensureAdd(mockParent);
 
-          behavior.onNewEvent(CardStateMachineEvent.toHand);
+          behavior.onNewEvent(Event(CardStateMachineEvent.toHand));
           await game.ready();
 
           expect(mockParent.children.query<MoveEffect>(), isEmpty);
@@ -69,14 +69,14 @@ void main() {
           behavior.addToParent(mockParent);
           await game.ensureAdd(mockParent);
 
-          behavior.onNewEvent(CardStateMachineEvent.toPreviewing);
+          behavior.onNewEvent(Event(CardStateMachineEvent.toPreviewing));
           await game.ready();
           game.update(5);
 
           expect(mockParent.position, isNot(originalPosition));
           expect(mockParent.angle, isNot(originalAngle));
 
-          behavior.onNewEvent(CardStateMachineEvent.toHand);
+          behavior.onNewEvent(Event(CardStateMachineEvent.toHand));
           await game.ready();
           game.update(5);
 

@@ -6,10 +6,10 @@ import 'package:monopoly_deal/game/lib/lib.dart';
 class _MockPublisher extends PublisherComponent {}
 
 class _MockSubscriberComponent extends Component with Subscriber {
-  Object? receivedEvent;
+  Event? receivedEvent;
 
   @override
-  void onNewEvent(event, [Object? payload]) {
+  void onNewEvent(event) {
     receivedEvent = event;
   }
 }
@@ -33,17 +33,17 @@ void main() {
         await game.ensureAdd(sRemaining);
         publisher.addSubscriber(sRemaining);
         publisher.addSubscriber(sToRemoved);
-        publisher.notify(1);
+        publisher.notify(Event(1));
 
-        expect(sRemaining.receivedEvent, 1);
-        expect(sToRemoved.receivedEvent, 1);
+        expect(sRemaining.receivedEvent, Event(1));
+        expect(sToRemoved.receivedEvent, Event(1));
 
         p.remove(sToRemoved);
         await game.ready();
-        publisher.notify(2);
+        publisher.notify(Event(2));
 
-        expect(sRemaining.receivedEvent, 2);
-        expect(sToRemoved.receivedEvent, 1);
+        expect(sRemaining.receivedEvent, Event(2));
+        expect(sToRemoved.receivedEvent, Event(1));
       },
     );
 
@@ -52,16 +52,16 @@ void main() {
       final s1 = _MockSubscriberComponent();
       publisher.addSubscriber(s0);
       publisher.addSubscriber(s1);
-      publisher.notify(1);
+      publisher.notify(Event(1));
 
-      expect(s0.receivedEvent, 1);
-      expect(s1.receivedEvent, 1);
+      expect(s0.receivedEvent, Event(1));
+      expect(s1.receivedEvent, Event(1));
 
       publisher.onRemove();
-      publisher.notify(2);
+      publisher.notify(Event(2));
 
-      expect(s0.receivedEvent, 1);
-      expect(s1.receivedEvent, 1);
+      expect(s0.receivedEvent, Event(1));
+      expect(s1.receivedEvent, Event(1));
     });
   });
 }

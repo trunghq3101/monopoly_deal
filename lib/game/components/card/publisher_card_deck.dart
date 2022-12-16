@@ -11,18 +11,18 @@ class CardDeckPublisher extends PublisherComponent with Subscriber {
       period: 0,
       removeOnFinish: true,
       onTick: () {
-        notify(CardDeckEvent.showUp);
+        notify(Event(CardDeckEvent.showUp));
       },
     ).addToParent(this);
   }
 
   @override
-  void onNewEvent(Object event, [Object? payload]) {
-    if (event == CardEvent.addedToDeck) {
+  void onNewEvent(Event event) {
+    if (event.eventIdentifier == CardEvent.addedToDeck) {
       _addToDeckCount++;
 
       if (_addToDeckCount == MainGame2.cardTotalAmount) {
-        notify(CardDeckEvent.dealStartGame);
+        notify(Event(CardDeckEvent.dealStartGame));
       }
     }
   }

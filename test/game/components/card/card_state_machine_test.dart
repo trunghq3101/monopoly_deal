@@ -16,17 +16,6 @@ class _MockCardStateMachine extends CardStateMachine {
   CardState get state => turnMockStateOff ? super.state : mockState;
 }
 
-class _MockSubscriber implements Subscriber {
-  Object? receivedEvent;
-  Object? receivedPayload;
-
-  @override
-  void onNewEvent(event, [Object? payload]) {
-    receivedEvent = event;
-    receivedPayload = payload;
-  }
-}
-
 class _MockGame extends FlameGame
     with HasTappableComponents, HasHoverableComponents {}
 
@@ -40,12 +29,12 @@ class _MockGameMap extends GameMap {
 void main() {
   group('CardStateMachine', () {
     late _MockCardStateMachine machine;
-    late _MockSubscriber subscriber;
+    late MockSingleEventSubscriber subscriber;
 
     setUp(() async {
       await loadTestAssets();
       machine = _MockCardStateMachine();
-      subscriber = _MockSubscriber();
+      subscriber = MockSingleEventSubscriber();
       machine.addSubscriber(subscriber);
     });
 
@@ -91,7 +80,7 @@ void main() {
           final payload = CardDealPayload(0, Vector2.zero());
           machine.parent = Card(cardId: 1);
 
-          machine.onNewEvent(CardEvent.deal, payload);
+          machine.onNewEvent(Event(CardEvent.deal)..payload = payload);
 
           machine.turnMockStateOff = true;
           expect(machine.state, CardState.inDeck);
@@ -106,13 +95,12 @@ void main() {
             final payload = CardDealPayload(1, Vector2.zero());
             machine.parent = Card(cardId: 1);
 
-            machine.onNewEvent(CardEvent.deal, payload);
+            machine.onNewEvent(Event(CardEvent.deal)..payload = payload);
 
             machine.turnMockStateOff = true;
             expect(machine.state, CardState.inDealRegion);
-            expect(
-                subscriber.receivedEvent, CardStateMachineEvent.toDealRegion);
-            expect(subscriber.receivedPayload, payload);
+            expect(subscriber.receivedEvent,
+                Event(CardStateMachineEvent.toDealRegion)..payload = payload);
           });
 
           test(
@@ -122,13 +110,12 @@ void main() {
             final payload = CardDealPayload(1, Vector2.zero());
             machine.parent = Card(cardId: 1);
 
-            machine.onNewEvent(CardEvent.deal, payload);
+            machine.onNewEvent(Event(CardEvent.deal)..payload = payload);
 
             machine.turnMockStateOff = true;
             expect(machine.state, CardState.inMyDealRegion);
-            expect(
-                subscriber.receivedEvent, CardStateMachineEvent.toDealRegion);
-            expect(subscriber.receivedPayload, payload);
+            expect(subscriber.receivedEvent,
+                Event(CardStateMachineEvent.toDealRegion)..payload = payload);
           });
         });
       });
@@ -140,10 +127,11 @@ void main() {
         () {
           machine.mockState = CardState.inHand;
 
-          machine.onNewEvent(HandToggleButtonEvent.tapHide);
+          machine.onNewEvent(Event(HandToggleButtonEvent.tapHide));
 
           machine.turnMockStateOff = true;
-          expect(subscriber.receivedEvent, CardStateMachineEvent.pullDown);
+          expect(
+              subscriber.receivedEvent, Event(CardStateMachineEvent.pullDown));
           expect(machine.state, CardState.inHandCollapsed);
         },
       );
@@ -161,7 +149,8 @@ void main() {
 
           expect(
             subscriber.receivedEvent,
-            CardStateMachineEvent.tapWhileInHand,
+            Event(CardStateMachineEvent.tapWhileInHand)
+              ..payload = CardIdPayload(0),
           );
         },
       );
@@ -176,7 +165,9 @@ void main() {
           p.add(machine);
           await game.ensureAdd(p);
 
-          machine.onNewEvent(CardEvent.preview, CardIdPayload(cardId));
+          machine.onNewEvent(
+            Event(CardEvent.preview)..payload = CardIdPayload(cardId),
+          );
 
           expect(subscriber.receivedEvent, null);
         },
@@ -189,10 +180,10 @@ void main() {
         () {
           machine.mockState = CardState.inHandCollapsed;
 
-          machine.onNewEvent(HandToggleButtonEvent.tapShow);
+          machine.onNewEvent(Event(HandToggleButtonEvent.tapShow));
 
           machine.turnMockStateOff = true;
-          expect(subscriber.receivedEvent, CardStateMachineEvent.pullUp);
+          expect(subscriber.receivedEvent, Event(CardStateMachineEvent.pullUp));
           expect(machine.state, CardState.inHand);
         },
       );
@@ -212,7 +203,8 @@ void main() {
 
           expect(
             subscriber.receivedEvent,
-            CardStateMachineEvent.tapWhileInPreviewing,
+            Event(CardStateMachineEvent.tapWhileInPreviewing)
+              ..payload = CardIdPayload(0),
           );
         },
       );
@@ -227,7 +219,9 @@ void main() {
           p.add(machine);
           await game.ensureAdd(p);
 
-          machine.onNewEvent(CardEvent.previewRevert, CardIdPayload(cardId));
+          machine.onNewEvent(
+            Event(CardEvent.previewRevert)..payload = CardIdPayload(cardId),
+          );
 
           expect(subscriber.receivedEvent, null);
         },
@@ -243,10 +237,12 @@ void main() {
           p.add(machine);
           await game.ensureAdd(p);
 
-          machine.onNewEvent(CardEvent.previewSwap, CardIdPayload(cardId));
+          machine.onNewEvent(
+            Event(CardEvent.previewSwap)..payload = CardIdPayload(cardId),
+          );
 
-          expect(
-              subscriber.receivedEvent, CardStateMachineEvent.swapBackToHand);
+          expect(subscriber.receivedEvent,
+              Event(CardStateMachineEvent.swapBackToHand));
         },
       );
     });

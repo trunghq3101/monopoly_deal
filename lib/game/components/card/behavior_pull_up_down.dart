@@ -6,8 +6,8 @@ import 'package:monopoly_deal/game/lib/lib.dart';
 class PullUpDownBehavior extends Component
     with ParentIsA<PositionComponent>, Subscriber {
   @override
-  void onNewEvent(Object event, [Object? payload]) {
-    switch (event) {
+  void onNewEvent(Event event) {
+    switch (event.eventIdentifier) {
       case CardStateMachineEvent.pullDown:
         parent
             .add(MoveEffect.by(Vector2(0, 1000), LinearEffectController(0.2)));

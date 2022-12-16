@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flame/components.dart';
 
 class PublisherComponent extends Component with Publisher {
@@ -23,10 +24,10 @@ mixin Publisher {
     _subscribers.remove(subscriber);
   }
 
-  void notify(Object event, [Object? payload]) {
+  void notify(Event event) {
     _cleanRemovedComponents();
     for (var s in _subscribers) {
-      s.onNewEvent(event, payload);
+      s.onNewEvent(event);
     }
   }
 
@@ -44,5 +45,18 @@ mixin Publisher {
 }
 
 mixin Subscriber {
-  void onNewEvent(Object event, [Object? payload]);
+  void onNewEvent(Event event);
+}
+
+class Event with EquatableMixin {
+  Event(this.eventIdentifier);
+
+  final Object eventIdentifier;
+  Object? payload;
+  Object? reverseEvent;
+  Object? reversePayload;
+
+  @override
+  List<Object?> get props =>
+      [eventIdentifier, payload, reverseEvent, reversePayload];
 }

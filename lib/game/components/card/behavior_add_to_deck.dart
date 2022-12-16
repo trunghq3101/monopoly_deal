@@ -13,8 +13,8 @@ class AddToDeckBehavior extends PublisherComponent
   final int _priority;
 
   @override
-  void onNewEvent(Object event, [Object? payload]) {
-    switch (event) {
+  void onNewEvent(Event event) {
+    switch (event.eventIdentifier) {
       case CardDeckEvent.showUp:
         parent.priority = _priority;
         parent.position = MainGame2.gameMap.inDeckPosition(0);
@@ -26,7 +26,7 @@ class AddToDeckBehavior extends PublisherComponent
             period: 0.6,
             removeOnFinish: true,
             onTick: () {
-              notify(CardEvent.addedToDeck);
+              notify(Event(CardEvent.addedToDeck));
               removeFromParent();
             }));
         break;

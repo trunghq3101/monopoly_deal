@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
+import '../../../utils.dart';
+
 class _MockGameMap extends GameMap {
   final Vector2 Function(int index) mockInDeckPosition;
 
@@ -11,14 +13,6 @@ class _MockGameMap extends GameMap {
 
   @override
   Vector2 inDeckPosition(int index) => mockInDeckPosition(index);
-}
-
-class _MockSubscriber implements Subscriber {
-  Object? receivedEvent;
-  @override
-  void onNewEvent(event, [Object? payload]) {
-    receivedEvent = event;
-  }
 }
 
 void main() {
@@ -54,7 +48,7 @@ void main() {
             MainGame2.gameMap = GameMap(deckCenter: Vector2.zero());
             await game.ensureAdd(p);
 
-            behavior.onNewEvent(CardDeckEvent.showUp);
+            behavior.onNewEvent(Event(CardDeckEvent.showUp));
             await game.ready();
 
             expect(p.position, MainGame2.gameMap.inDeckPosition(0));
@@ -70,7 +64,7 @@ void main() {
             behavior.addToParent(p);
             await game.ensureAdd(p);
 
-            behavior.onNewEvent(CardDeckEvent.showUp);
+            behavior.onNewEvent(Event(CardDeckEvent.showUp));
             await game.ready();
 
             expect(p.priority, behaviorPriority);
@@ -91,7 +85,7 @@ void main() {
             );
             await game.ensureAdd(p);
 
-            behavior.onNewEvent(CardDeckEvent.showUp);
+            behavior.onNewEvent(Event(CardDeckEvent.showUp));
             await game.ready();
             game.update(0.6);
 
@@ -103,17 +97,17 @@ void main() {
           'notify ${CardEvent.addedToDeck} after 0.6s',
           (game) async {
             final p = PositionComponent();
-            final s = _MockSubscriber();
+            final s = MockSingleEventSubscriber();
             behavior.addToParent(p);
             behavior.addSubscriber(s);
             await game.ensureAdd(p);
 
-            behavior.onNewEvent(CardDeckEvent.showUp);
+            behavior.onNewEvent(Event(CardDeckEvent.showUp));
             await game.ready();
             game.update(0.6);
             await game.ready();
 
-            expect(s.receivedEvent, CardEvent.addedToDeck);
+            expect(s.receivedEvent, Event(CardEvent.addedToDeck));
           },
         );
 
@@ -124,7 +118,7 @@ void main() {
             behavior.addToParent(p);
             await game.ensureAdd(p);
 
-            behavior.onNewEvent(CardDeckEvent.showUp);
+            behavior.onNewEvent(Event(CardDeckEvent.showUp));
             await game.ready();
             game.update(0.6);
             await game.ready();

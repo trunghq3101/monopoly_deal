@@ -8,19 +8,21 @@ class SelectToPreviewing with Publisher, Subscriber {
   final CardTracker _cardTracker;
 
   @override
-  void onNewEvent(Object event, [Object? payload]) {
-    switch (event) {
+  void onNewEvent(Event event) {
+    final payload = event.payload;
+    switch (event.eventIdentifier) {
       case CardStateMachineEvent.tapWhileInHand:
         final previewingCard = _cardTracker.cardInPreviewingState();
         assert(payload is CardIdPayload);
-        notify(CardEvent.preview, payload);
+        notify(Event(CardEvent.preview)..payload = payload);
         if (previewingCard != null) {
-          notify(CardEvent.previewSwap, CardIdPayload(previewingCard.cardId));
+          notify(Event(CardEvent.previewSwap)
+            ..payload = CardIdPayload(previewingCard.cardId));
         }
         break;
       case CardStateMachineEvent.tapWhileInPreviewing:
         assert(payload is CardIdPayload);
-        notify(CardEvent.previewRevert, payload);
+        notify(Event(CardEvent.previewRevert)..payload = payload);
         break;
       default:
     }

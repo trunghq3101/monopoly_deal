@@ -5,16 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
+import '../../../utils.dart';
+
 class _MockGame extends FlameGame with HasTappableComponents {}
-
-class _MockSubscriber implements Subscriber {
-  Object? receivedEvent;
-
-  @override
-  void onNewEvent(Object event, [Object? payload]) {
-    receivedEvent = event;
-  }
-}
 
 void main() {
   group('$HandToggleButton', () {
@@ -29,18 +22,18 @@ void main() {
       _MockGame.new,
       (game) async {
         await game.ensureAdd(button);
-        final s = _MockSubscriber();
+        final s = MockSingleEventSubscriber();
         button.addSubscriber(s);
 
-        button.onNewEvent(CardStateMachineEvent.pickUpToHand);
+        button.onNewEvent(Event(CardStateMachineEvent.pickUpToHand));
         await game.ready();
         game.update(2);
 
         button.onTapDown(createTapDownEvents());
-        expect(s.receivedEvent, HandToggleButtonEvent.tapHide);
+        expect(s.receivedEvent, Event(HandToggleButtonEvent.tapHide));
 
         button.onTapDown(createTapDownEvents());
-        expect(s.receivedEvent, HandToggleButtonEvent.tapShow);
+        expect(s.receivedEvent, Event(HandToggleButtonEvent.tapShow));
       },
     );
 
@@ -49,19 +42,17 @@ void main() {
       _MockGame.new,
       (game) async {
         await game.ensureAdd(button);
-        final s = _MockSubscriber();
-        button.addSubscriber(s);
 
-        button.onNewEvent(CardStateMachineEvent.pickUpToHand);
+        button.onNewEvent(Event(CardStateMachineEvent.pickUpToHand));
         await game.ready();
         game.update(2);
 
-        button.onNewEvent(CardStateMachineEvent.toPreviewing);
+        button.onNewEvent(Event(CardStateMachineEvent.toPreviewing));
         await game.ready();
         game.update(2);
         expect(button.state, HandToggleButtonState.invisible);
 
-        button.onNewEvent(CardStateMachineEvent.toHand);
+        button.onNewEvent(Event(CardStateMachineEvent.toHand));
         await game.ready();
         game.update(2);
         expect(button.state, HandToggleButtonState.hide);

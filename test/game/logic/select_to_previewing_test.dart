@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
+import '../../utils.dart';
+
 class _MockCardTracker extends CardTracker {
   Card? mockCardInPreviewingState;
 
@@ -9,27 +11,16 @@ class _MockCardTracker extends CardTracker {
   Card? cardInPreviewingState() => mockCardInPreviewingState;
 }
 
-class _MockSubscriber implements Subscriber {
-  List<Object?> receivedEvents = [];
-  List<Object?> receivedPayloads = [];
-
-  @override
-  void onNewEvent(Object event, [Object? payload]) {
-    receivedEvents.add(event);
-    receivedPayloads.add(payload);
-  }
-}
-
 void main() {
   group('$SelectToPreviewing', () {
     late SelectToPreviewing selector;
     late _MockCardTracker cardTracker;
-    late _MockSubscriber subscriber;
+    late MockSequenceEventSubscriber subscriber;
 
     setUp(() {
       cardTracker = _MockCardTracker();
       selector = SelectToPreviewing(cardTracker: cardTracker);
-      subscriber = _MockSubscriber();
+      subscriber = MockSequenceEventSubscriber();
       selector.addSubscriber(subscriber);
     });
 
@@ -40,15 +31,12 @@ void main() {
         cardTracker.mockCardInPreviewingState = null;
 
         selector.onNewEvent(
-          CardStateMachineEvent.tapWhileInHand,
-          CardIdPayload(cardId),
+          Event(CardStateMachineEvent.tapWhileInHand)
+            ..payload = CardIdPayload(cardId),
         );
 
-        expect(subscriber.receivedEvents[0], CardEvent.preview);
-        expect(
-          subscriber.receivedPayloads[0],
-          CardIdPayload(cardId),
-        );
+        expect(subscriber.receivedEvents[0],
+            Event(CardEvent.preview)..payload = CardIdPayload(cardId));
       });
 
       test(
@@ -59,17 +47,17 @@ void main() {
         cardTracker.mockCardInPreviewingState = Card(cardId: previewingCardId);
 
         selector.onNewEvent(
-          CardStateMachineEvent.tapWhileInHand,
-          CardIdPayload(cardId),
+          Event(CardStateMachineEvent.tapWhileInHand)
+            ..payload = CardIdPayload(cardId),
         );
 
         expect(
           subscriber.receivedEvents,
-          [CardEvent.preview, CardEvent.previewSwap],
-        );
-        expect(
-          subscriber.receivedPayloads,
-          [CardIdPayload(cardId), CardIdPayload(previewingCardId)],
+          [
+            Event(CardEvent.preview)..payload = CardIdPayload(cardId),
+            Event(CardEvent.previewSwap)
+              ..payload = CardIdPayload(previewingCardId),
+          ],
         );
       });
     });
@@ -79,15 +67,12 @@ void main() {
         const cardId = 2;
 
         selector.onNewEvent(
-          CardStateMachineEvent.tapWhileInPreviewing,
-          CardIdPayload(cardId),
+          Event(CardStateMachineEvent.tapWhileInPreviewing)
+            ..payload = CardIdPayload(cardId),
         );
 
-        expect(subscriber.receivedEvents[0], CardEvent.previewRevert);
-        expect(
-          subscriber.receivedPayloads[0],
-          CardIdPayload(cardId),
-        );
+        expect(subscriber.receivedEvents[0],
+            Event(CardEvent.previewRevert)..payload = CardIdPayload(cardId));
       });
     });
   });

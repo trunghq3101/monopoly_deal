@@ -8,8 +8,8 @@ class SelectToDeal with Publisher, Subscriber {
   final CardTracker _cardTracker;
 
   @override
-  void onNewEvent(event, [Object? payload]) {
-    switch (event) {
+  void onNewEvent(Event event, [Object? payload]) {
+    switch (event.eventIdentifier) {
       case CardDeckEvent.dealStartGame:
         final playerPositions = MainGame2.gameMap.playerPositions;
         final numCardsToDeal = 5 * playerPositions.length;
@@ -25,7 +25,7 @@ class SelectToDeal with Publisher, Subscriber {
             playerPositions[pIndex],
             orderIndex: orderIndex++,
           );
-          notify(CardEvent.deal, payload);
+          notify(Event(CardEvent.deal)..payload = payload);
           pIndex = (pIndex + 1) % playerPositions.length;
         }
         break;

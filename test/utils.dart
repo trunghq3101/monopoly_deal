@@ -5,6 +5,7 @@ import 'package:flame/experimental.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/services.dart';
+import 'package:monopoly_deal/game/lib/lib.dart';
 
 class StubMainGame extends FlameGame with HasTappableComponents {}
 
@@ -35,5 +36,23 @@ Future<void> loadTestAssets() async {
   for (var f in files) {
     final imgName = f.path.replaceAll("assets/images/", "");
     await Flame.images.load(imgName);
+  }
+}
+
+class MockSingleEventSubscriber implements Subscriber {
+  Event? receivedEvent;
+
+  @override
+  void onNewEvent(Event event) {
+    receivedEvent = event;
+  }
+}
+
+class MockSequenceEventSubscriber implements Subscriber {
+  List<Event?> receivedEvents = [];
+
+  @override
+  void onNewEvent(Event event) {
+    receivedEvents.add(event);
   }
 }

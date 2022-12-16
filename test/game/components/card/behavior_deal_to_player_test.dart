@@ -40,8 +40,10 @@ void main() {
           p.add(behavior);
           await game.ensureAdd(p);
 
-          behavior.onNewEvent(CardStateMachineEvent.toDealRegion,
-              CardDealPayload(0, playerPosition));
+          behavior.onNewEvent(
+            Event(CardStateMachineEvent.toDealRegion)
+              ..payload = CardDealPayload(0, playerPosition),
+          );
           await game.ready();
           game.update(0.4);
 
@@ -57,8 +59,8 @@ void main() {
           await game.ensureAdd(p);
 
           behavior.onNewEvent(
-            CardStateMachineEvent.toDealRegion,
-            CardDealPayload(0, Vector2.all(100), orderIndex: 2),
+            Event(CardStateMachineEvent.toDealRegion)
+              ..payload = CardDealPayload(0, Vector2.all(100), orderIndex: 2),
           );
           await game.ready();
           game.update(2 * delayStep + 0.5);

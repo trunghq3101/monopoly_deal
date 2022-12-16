@@ -45,7 +45,9 @@ void main() {
         final oldSprite = p.children.query<SpriteComponent>().first.sprite;
 
         behavior.onNewEvent(
-            CardStateMachineEvent.pickUpToHand, CardPickUpPayload(0));
+          Event(CardStateMachineEvent.pickUpToHand)
+            ..payload = CardPickUpPayload(0),
+        );
         await game.ready();
         game.update(2);
         await game.ready();
@@ -64,8 +66,8 @@ void main() {
         await game.ensureAdd(p);
 
         behavior.onNewEvent(
-          CardStateMachineEvent.pickUpToHand,
-          CardPickUpPayload(0, inHandPosition: inHand),
+          Event(CardStateMachineEvent.pickUpToHand)
+            ..payload = CardPickUpPayload(0, inHandPosition: inHand),
         );
         await game.ready();
         game.update(4);

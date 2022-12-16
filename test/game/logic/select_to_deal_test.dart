@@ -3,16 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class _MockSubscriber implements Subscriber {
-  int received = 0;
-  final List<CardDealPayload> receivedPayloads = [];
-
-  @override
-  void onNewEvent(event, [Object? payload]) {
-    received++;
-    receivedPayloads.add(payload as CardDealPayload);
-  }
-}
+import '../../utils.dart';
 
 class _MockHasCardId implements HasCardId {
   _MockHasCardId({required int cardId}) : _cardId = cardId;
@@ -37,10 +28,13 @@ void main() {
   group('$SelectToDeal', () {
     late SelectToDeal behavior;
     late _MockCardTracker cardTracker;
+    late MockSequenceEventSubscriber subscriber;
 
     setUp(() async {
       cardTracker = _MockCardTracker();
       behavior = SelectToDeal(cardTracker: cardTracker);
+      subscriber = MockSequenceEventSubscriber();
+      behavior.addSubscriber(subscriber);
     });
 
     test('is a $Subscriber', () {
@@ -55,12 +49,9 @@ void main() {
             Vector2.all(0),
             Vector2.all(1),
           ]);
-          final subscriber = _MockSubscriber();
-          behavior.addSubscriber(subscriber);
+          behavior.onNewEvent(Event(CardDeckEvent.dealStartGame));
 
-          behavior.onNewEvent(CardDeckEvent.dealStartGame);
-
-          expect(subscriber.received, 10);
+          expect(subscriber.receivedEvents.length, 10);
         },
       );
 
@@ -72,12 +63,10 @@ void main() {
             Vector2.all(1),
           ];
           MainGame2.gameMap = GameMap(playerPositions: playerPositions);
-          final subscriber = _MockSubscriber();
-          behavior.addSubscriber(subscriber);
 
-          behavior.onNewEvent(CardDeckEvent.dealStartGame);
+          behavior.onNewEvent(Event(CardDeckEvent.dealStartGame));
 
-          expect(subscriber.receivedPayloads, [
+          expect(subscriber.receivedEvents.map((e) => e?.payload), [
             CardDealPayload(0, playerPositions[0], orderIndex: 0),
             CardDealPayload(1, playerPositions[1], orderIndex: 1),
             CardDealPayload(2, playerPositions[0], orderIndex: 2),

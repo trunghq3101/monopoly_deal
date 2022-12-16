@@ -10,8 +10,9 @@ class PickUpBehavior extends Component with ParentIsA<Card>, Subscriber {
   final double _delayStep;
 
   @override
-  void onNewEvent(Object event, [Object? payload]) {
-    switch (event) {
+  void onNewEvent(Event event) {
+    final payload = event.payload;
+    switch (event.eventIdentifier) {
       case CardStateMachineEvent.pickUpToHand:
         assert(payload is CardPickUpPayload);
         payload as CardPickUpPayload;

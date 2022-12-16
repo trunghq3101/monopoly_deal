@@ -2,16 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class _MockSubscriber with Subscriber {
-  final List<Object> receivedEvents = [];
-  final List<CardPickUpPayload?> receivedPayloads = [];
-
-  @override
-  void onNewEvent(event, [Object? payload]) {
-    receivedEvents.add(event);
-    receivedPayloads.add(payload as CardPickUpPayload?);
-  }
-}
+import '../../utils.dart';
 
 class _MockCardTracker extends CardTracker {
   List<HasCardId> mockCardsInMyDealRegion = [];
@@ -48,7 +39,7 @@ void main() {
 
     group('on ${CardStateMachineEvent.tapOnMyDealRegion}', () {
       test('notify ${CardEvent.pickUp} with cardId and orderIndex', () {
-        final s = _MockSubscriber();
+        final s = MockSequenceEventSubscriber();
         selector.addSubscriber(s);
         final cardsInMyDealRegion = <HasCardId>[
           _MockHasCardId(1),
@@ -56,12 +47,12 @@ void main() {
         ];
         cardTracker.mockCardsInMyDealRegion = cardsInMyDealRegion;
 
-        selector.onNewEvent(CardStateMachineEvent.tapOnMyDealRegion);
+        selector.onNewEvent(Event(CardStateMachineEvent.tapOnMyDealRegion));
 
         for (var i = 0; i < 2; i++) {
-          s.receivedEvents[i] = CardEvent.pickUp;
-          s.receivedPayloads[i] =
-              CardPickUpPayload(cardsInMyDealRegion[i].cardId, orderIndex: i);
+          s.receivedEvents[i] = Event(CardEvent.pickUp)
+            ..payload =
+                CardPickUpPayload(cardsInMyDealRegion[i].cardId, orderIndex: i);
         }
       });
     });

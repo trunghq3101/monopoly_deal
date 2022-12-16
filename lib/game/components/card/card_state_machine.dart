@@ -25,67 +25,70 @@ class CardStateMachine extends PositionComponent
   }
 
   @override
-  void onNewEvent(Object event, [Object? payload]) {
+  void onNewEvent(Event event) {
+    final payload = event.payload;
     switch (state) {
       case CardState.inDeck:
-        if (event == CardEvent.deal) {
+        if (event.eventIdentifier == CardEvent.deal) {
           assert(payload is CardDealPayload);
-          if ((payload as CardDealPayload).cardId != parent.cardId) return;
+          if ((payload as CardDealPayload).cardId != parent.cardId) {
+            return;
+          }
           final newState =
               MainGame2.gameMap.isMyPosition(payload.playerPosition)
                   ? CardState.inMyDealRegion
                   : CardState.inDealRegion;
           changeState(newState);
-          notify(CardStateMachineEvent.toDealRegion, payload);
+          notify(Event(CardStateMachineEvent.toDealRegion)..payload = payload);
         }
         break;
       case CardState.inMyDealRegion:
-        if (event == CardEvent.pickUp) {
+        if (event.eventIdentifier == CardEvent.pickUp) {
           assert(payload is CardPickUpPayload);
           if ((payload as CardPickUpPayload).cardId != parent.cardId) {
             return;
           }
           changeState(CardState.inHand);
-          notify(CardStateMachineEvent.pickUpToHand, payload);
+          notify(Event(CardStateMachineEvent.pickUpToHand)..payload = payload);
         }
         break;
       case CardState.inHand:
-        switch (event) {
+        switch (event.eventIdentifier) {
           case HandToggleButtonEvent.tapHide:
             changeState(CardState.inHandCollapsed);
-            notify(CardStateMachineEvent.pullDown);
+            notify(Event(CardStateMachineEvent.pullDown));
             break;
           case CardEvent.preview:
             assert(payload is CardIdPayload);
             payload as CardIdPayload;
             if (parent.cardId != payload.cardId) break;
             changeState(CardState.inPreviewing);
-            notify(CardStateMachineEvent.toPreviewing);
+            notify(Event(CardStateMachineEvent.toPreviewing));
             break;
           default:
         }
         break;
       case CardState.inHandCollapsed:
-        if (event == HandToggleButtonEvent.tapShow) {
+        if (event.eventIdentifier == HandToggleButtonEvent.tapShow) {
           changeState(CardState.inHand);
-          notify(CardStateMachineEvent.pullUp);
+          notify(Event(CardStateMachineEvent.pullUp));
         }
         break;
       case CardState.inPreviewing:
-        switch (event) {
+        switch (event.eventIdentifier) {
           case CardEvent.previewRevert:
             assert(payload is CardIdPayload);
             payload as CardIdPayload;
             if (parent.cardId != payload.cardId) break;
             changeState(CardState.inHand);
-            notify(CardStateMachineEvent.toHand);
+            notify(Event(CardStateMachineEvent.toHand));
             break;
           case CardEvent.previewSwap:
             assert(payload is CardIdPayload);
             payload as CardIdPayload;
             if (parent.cardId != payload.cardId) break;
             changeState(CardState.inHand);
-            notify(CardStateMachineEvent.swapBackToHand);
+            notify(Event(CardStateMachineEvent.swapBackToHand));
             break;
           default:
         }
@@ -98,18 +101,18 @@ class CardStateMachine extends PositionComponent
   void onTapDown(TapDownEvent event) {
     switch (state) {
       case CardState.inMyDealRegion:
-        notify(CardStateMachineEvent.tapOnMyDealRegion);
+        notify(Event(CardStateMachineEvent.tapOnMyDealRegion));
         break;
       case CardState.inHand:
         notify(
-          CardStateMachineEvent.tapWhileInHand,
-          CardIdPayload(parent.cardId),
+          Event(CardStateMachineEvent.tapWhileInHand)
+            ..payload = CardIdPayload(parent.cardId),
         );
         break;
       case CardState.inPreviewing:
         notify(
-          CardStateMachineEvent.tapWhileInPreviewing,
-          CardIdPayload(parent.cardId),
+          Event(CardStateMachineEvent.tapWhileInPreviewing)
+            ..payload = CardIdPayload(parent.cardId),
         );
         break;
       default:

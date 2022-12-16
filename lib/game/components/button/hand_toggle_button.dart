@@ -22,11 +22,11 @@ class HandToggleButton extends PositionComponent
     switch (state) {
       case HandToggleButtonState.hide:
         _changeState(HandToggleButtonState.show);
-        notify(HandToggleButtonEvent.tapHide);
+        notify(Event(HandToggleButtonEvent.tapHide));
         break;
       case HandToggleButtonState.show:
         _changeState(HandToggleButtonState.hide);
-        notify(HandToggleButtonEvent.tapShow);
+        notify(Event(HandToggleButtonEvent.tapShow));
         break;
       default:
     }
@@ -40,10 +40,10 @@ class HandToggleButton extends PositionComponent
   }
 
   @override
-  void onNewEvent(Object event, [Object? payload]) {
+  void onNewEvent(Event event) {
     switch (state) {
       case HandToggleButtonState.invisible:
-        switch (event) {
+        switch (event.eventIdentifier) {
           case CardStateMachineEvent.pickUpToHand:
             _changeState(HandToggleButtonState.hide);
             add(ScaleEffect.to(
@@ -62,7 +62,7 @@ class HandToggleButton extends PositionComponent
         }
         break;
       default:
-        switch (event) {
+        switch (event.eventIdentifier) {
           case CardStateMachineEvent.toPreviewing:
             _changeState(HandToggleButtonState.invisible);
             add(ScaleEffect.to(

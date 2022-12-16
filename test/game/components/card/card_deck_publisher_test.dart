@@ -3,19 +3,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class _MockSubscriber implements Subscriber {
-  Object? receivedEvent;
-
-  @override
-  void onNewEvent(event, [Object? payload]) => receivedEvent = event;
-}
+import '../../../utils.dart';
 
 void main() {
   group('$CardDeckPublisher', () {
     late CardDeckPublisher publisher;
+    late MockSingleEventSubscriber subscriber;
 
     setUp(() {
       publisher = CardDeckPublisher();
+      subscriber = MockSingleEventSubscriber();
+      publisher.addSubscriber(subscriber);
     });
 
     test('is $Subscriber', () {
@@ -23,27 +21,23 @@ void main() {
     });
 
     testWithFlameGame('at 0s, notify ${CardDeckEvent.showUp}', (game) async {
-      final s = _MockSubscriber();
-      publisher.addSubscriber(s);
       await game.ensureAdd(publisher);
 
       game.update(0);
 
-      expect(s.receivedEvent, CardDeckEvent.showUp);
+      expect(subscriber.receivedEvent, Event(CardDeckEvent.showUp));
     });
 
     testWithFlameGame(
         'receive ${CardEvent.addedToDeck} for ${MainGame2.cardTotalAmount} times, notify ${CardDeckEvent.dealStartGame}',
         (game) async {
-      final s = _MockSubscriber();
-      publisher.addSubscriber(s);
       await game.ensureAdd(publisher);
 
       for (var i = 0; i < MainGame2.cardTotalAmount; i++) {
-        publisher.onNewEvent(CardEvent.addedToDeck);
+        publisher.onNewEvent(Event(CardEvent.addedToDeck));
       }
 
-      expect(s.receivedEvent, CardDeckEvent.dealStartGame);
+      expect(subscriber.receivedEvent, Event(CardDeckEvent.dealStartGame));
     });
   });
 }
