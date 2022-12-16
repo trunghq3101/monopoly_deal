@@ -18,6 +18,7 @@ class MainGame2 extends FlameGame
   late SelectToPickUp _selectToPickUp;
   late SelectToPreviewing _selectToPreviewing;
   late HandToggleButton _handToggleButton;
+  late PlaceCardButton _placeCardButton;
 
   @override
   Future<void>? onLoad() async {
@@ -47,11 +48,12 @@ class MainGame2 extends FlameGame
     _handToggleButton = HandToggleButton()
       ..position =
           Vector2(MainGame2.gameMap.overviewGameVisibleSize.x * 0.5, 400);
-    // final endTurnBtn = ButtonComponent(text: "End turn")
-    //   ..position =
-    //       Vector2(MainGame2.gameMap.overviewGameVisibleSize.x * 0.5, 200);
-    world.add(_handToggleButton);
-    // world.add(endTurnBtn);
+    _placeCardButton = PlaceCardButton()
+      ..position =
+          Vector2(MainGame2.gameMap.overviewGameVisibleSize.x * 0.5, 0);
+    world
+      ..add(_handToggleButton)
+      ..add(_placeCardButton);
 
     final zoomOverviewBehavior = ZoomOverviewBehavior();
     cameraComponent.add(zoomOverviewBehavior);
@@ -107,7 +109,8 @@ class MainGame2 extends FlameGame
       ..addSubscriber(_selectToPreviewing)
       ..addSubscriber(pullUpDownBehavior)
       ..addSubscriber(_handToggleButton)
-      ..addSubscriber(togglePreviewing);
+      ..addSubscriber(togglePreviewing)
+      ..addSubscriber(_placeCardButton);
   }
 }
 

@@ -3,15 +3,16 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 
 class ButtonComponent extends PositionComponent {
-  ButtonComponent({this.text = ""}) {
-    size = Vector2(380, 160);
+  ButtonComponent({this.text = "", TextAlign textAlign = TextAlign.right}) {
+    size = Vector2(380, 200);
     final builder = ParagraphBuilder(ParagraphStyle(
-      textAlign: TextAlign.right,
+      textAlign: textAlign,
       fontSize: 80,
     ))
       ..pushStyle(TextStyle(color: const Color(0xFF000000)))
       ..addText(text);
     _paragraph = builder.build()..layout(ParagraphConstraints(width: size.x));
+    offsetX = textAlign == TextAlign.right ? -size.x * 0.1 : 0;
   }
 
   final String text;
@@ -19,11 +20,12 @@ class ButtonComponent extends PositionComponent {
     ..color = const Color(0xFFFFFFFF)
     ..style = PaintingStyle.fill;
   late final Paragraph _paragraph;
+  late double offsetX;
 
   @override
   void render(Canvas canvas) {
     canvas.drawRect(size.toRect(), _paint);
     canvas.drawParagraph(
-        _paragraph, Vector2(-size.x * 0.1, size.y * 0.2).toOffset());
+        _paragraph, Vector2(offsetX, size.y * 0.25).toOffset());
   }
 }
