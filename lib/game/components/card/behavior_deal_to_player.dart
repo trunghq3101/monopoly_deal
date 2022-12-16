@@ -8,7 +8,7 @@ import 'package:monopoly_deal/game/lib/lib.dart';
 import 'package:monopoly_deal/game/logic/randomize_deal_offset.dart';
 
 class DealToPlayerBehavior extends Component
-    with ParentIsA<PositionComponent>, Subscriber {
+    with ParentIsA<PositionComponent>, Subscriber, Publisher {
   DealToPlayerBehavior(
       {double delayStep = 0.2, RandomizeDealOffset? randomizeDealOffset})
       : _delayStep = delayStep,
@@ -49,9 +49,16 @@ class DealToPlayerBehavior extends Component
             },
             period: delay + 0.2,
             removeOnFinish: true,
-          )
+          ),
+          TimerComponent(
+            period: delay + 0.5,
+            onTick: () {
+              notify(
+                  Event(event.reverseEvent!)..payload = event.reversePayload);
+            },
+            removeOnFinish: true,
+          ),
         ]);
-        add(RemoveEffect(delay: delay + 0.5));
         break;
       default:
     }

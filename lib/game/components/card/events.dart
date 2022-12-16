@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flame/game.dart';
 
 enum CardStateMachineEvent {
+  animationCompleted,
   toDealRegion,
   tapOnMyDealRegion,
   pickUpToHand,

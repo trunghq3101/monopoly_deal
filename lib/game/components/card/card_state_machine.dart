@@ -4,6 +4,7 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 enum CardState {
+  inAnimation,
   inDeck,
   inDealRegion,
   inMyDealRegion,
@@ -28,6 +29,12 @@ class CardStateMachine extends PositionComponent
   void onNewEvent(Event event) {
     final payload = event.payload;
     switch (state) {
+      case CardState.inAnimation:
+        if (event.eventIdentifier == CardStateMachineEvent.animationCompleted) {
+          assert(payload is CardState);
+          changeState(payload as CardState);
+        }
+        break;
       case CardState.inDeck:
         if (event.eventIdentifier == CardEvent.deal) {
           assert(payload is CardDealPayload);
@@ -38,8 +45,11 @@ class CardStateMachine extends PositionComponent
               MainGame2.gameMap.isMyPosition(payload.playerPosition)
                   ? CardState.inMyDealRegion
                   : CardState.inDealRegion;
-          changeState(newState);
-          notify(Event(CardStateMachineEvent.toDealRegion)..payload = payload);
+          changeState(CardState.inAnimation);
+          notify(Event(CardStateMachineEvent.toDealRegion)
+            ..payload = payload
+            ..reverseEvent = CardStateMachineEvent.animationCompleted
+            ..reversePayload = newState);
         }
         break;
       case CardState.inMyDealRegion:
@@ -48,8 +58,11 @@ class CardStateMachine extends PositionComponent
           if ((payload as CardPickUpPayload).cardId != parent.cardId) {
             return;
           }
-          changeState(CardState.inHand);
-          notify(Event(CardStateMachineEvent.pickUpToHand)..payload = payload);
+          changeState(CardState.inAnimation);
+          notify(Event(CardStateMachineEvent.pickUpToHand)
+            ..payload = payload
+            ..reverseEvent = CardStateMachineEvent.animationCompleted
+            ..reversePayload = CardState.inHand);
         }
         break;
       case CardState.inHand:

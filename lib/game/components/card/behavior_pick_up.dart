@@ -4,7 +4,8 @@ import 'package:flutter/animation.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class PickUpBehavior extends Component with ParentIsA<Card>, Subscriber {
+class PickUpBehavior extends Component
+    with ParentIsA<Card>, Subscriber, Publisher {
   PickUpBehavior({double delayStep = 0.1}) : _delayStep = delayStep;
 
   final double _delayStep;
@@ -53,6 +54,10 @@ class PickUpBehavior extends Component with ParentIsA<Card>, Subscriber {
             MoveEffect.to(
               payload.inHandPosition.position,
               CurvedEffectController(0.4, Curves.easeInOutCubic),
+              onComplete: () {
+                notify(
+                    Event(event.reverseEvent!)..payload = event.reversePayload);
+              },
             ),
           ]),
           ScaleEffect.to(

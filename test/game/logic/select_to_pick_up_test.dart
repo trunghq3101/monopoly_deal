@@ -6,8 +6,12 @@ import '../../utils.dart';
 
 class _MockCardTracker extends CardTracker {
   List<HasCardId> mockCardsInMyDealRegion = [];
+  bool mockHasCardInAnimationState = false;
   @override
   List<HasCardId> cardsInMyDealRegionFromTop() => mockCardsInMyDealRegion;
+
+  @override
+  bool hasCardInAnimationState() => mockHasCardInAnimationState;
 }
 
 class _MockHasCardId implements HasCardId {
@@ -46,6 +50,7 @@ void main() {
           _MockHasCardId(2)
         ];
         cardTracker.mockCardsInMyDealRegion = cardsInMyDealRegion;
+        cardTracker.mockHasCardInAnimationState = false;
 
         selector.onNewEvent(Event(CardStateMachineEvent.tapOnMyDealRegion));
 
@@ -54,6 +59,16 @@ void main() {
             ..payload =
                 CardPickUpPayload(cardsInMyDealRegion[i].cardId, orderIndex: i);
         }
+      });
+
+      test('given has animating cards, do nothing', () {
+        final s = MockSequenceEventSubscriber();
+        selector.addSubscriber(s);
+        cardTracker.mockHasCardInAnimationState = true;
+
+        selector.onNewEvent(Event(CardStateMachineEvent.tapOnMyDealRegion));
+
+        expect(s.receivedEvents, isEmpty);
       });
     });
   });

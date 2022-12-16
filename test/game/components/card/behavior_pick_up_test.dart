@@ -46,7 +46,8 @@ void main() {
 
         behavior.onNewEvent(
           Event(CardStateMachineEvent.pickUpToHand)
-            ..payload = CardPickUpPayload(0),
+            ..payload = CardPickUpPayload(0)
+            ..reverseEvent = 0,
         );
         await game.ready();
         game.update(2);
@@ -67,7 +68,8 @@ void main() {
 
         behavior.onNewEvent(
           Event(CardStateMachineEvent.pickUpToHand)
-            ..payload = CardPickUpPayload(0, inHandPosition: inHand),
+            ..payload = CardPickUpPayload(0, inHandPosition: inHand)
+            ..reverseEvent = 0,
         );
         await game.ready();
         game.update(4);

@@ -89,7 +89,7 @@ void main() {
 
         group('given payload.cardId equal parent cardId', () {
           test(
-              'not isMyDealRegion, change to ${CardState.inDealRegion}, notify ${CardStateMachineEvent.toDealRegion}',
+              'not isMyDealRegion, change to ${CardState.inAnimation}, notify ${CardStateMachineEvent.toDealRegion}',
               () {
             MainGame2.gameMap = _MockGameMap()..mockIsMyPosition = false;
             final payload = CardDealPayload(1, Vector2.zero());
@@ -98,13 +98,17 @@ void main() {
             machine.onNewEvent(Event(CardEvent.deal)..payload = payload);
 
             machine.turnMockStateOff = true;
-            expect(machine.state, CardState.inDealRegion);
-            expect(subscriber.receivedEvent,
-                Event(CardStateMachineEvent.toDealRegion)..payload = payload);
+            expect(machine.state, CardState.inAnimation);
+            expect(
+                subscriber.receivedEvent,
+                Event(CardStateMachineEvent.toDealRegion)
+                  ..payload = payload
+                  ..reverseEvent = CardStateMachineEvent.animationCompleted
+                  ..reversePayload = CardState.inDealRegion);
           });
 
           test(
-              'isMyDealRegion, change to ${CardState.inMyDealRegion}, notify ${CardStateMachineEvent.toDealRegion}',
+              'isMyDealRegion, change to ${CardState.inAnimation}, notify ${CardStateMachineEvent.toDealRegion}',
               () {
             MainGame2.gameMap = _MockGameMap()..mockIsMyPosition = true;
             final payload = CardDealPayload(1, Vector2.zero());
@@ -113,9 +117,13 @@ void main() {
             machine.onNewEvent(Event(CardEvent.deal)..payload = payload);
 
             machine.turnMockStateOff = true;
-            expect(machine.state, CardState.inMyDealRegion);
-            expect(subscriber.receivedEvent,
-                Event(CardStateMachineEvent.toDealRegion)..payload = payload);
+            expect(machine.state, CardState.inAnimation);
+            expect(
+                subscriber.receivedEvent,
+                Event(CardStateMachineEvent.toDealRegion)
+                  ..payload = payload
+                  ..reverseEvent = CardStateMachineEvent.animationCompleted
+                  ..reversePayload = CardState.inMyDealRegion);
           });
         });
       });

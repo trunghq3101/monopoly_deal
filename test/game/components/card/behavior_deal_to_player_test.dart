@@ -50,25 +50,6 @@ void main() {
           expect(p.position, playerPosition + _MockRandomizeDealOffset.offset);
         },
       );
-
-      testWithFlameGame(
-        'removed from parent once finished',
-        (game) async {
-          final p = PositionComponent();
-          p.add(behavior);
-          await game.ensureAdd(p);
-
-          behavior.onNewEvent(
-            Event(CardStateMachineEvent.toDealRegion)
-              ..payload = CardDealPayload(0, Vector2.all(100), orderIndex: 2),
-          );
-          await game.ready();
-          game.update(2 * delayStep + 0.5);
-          await game.ready();
-
-          expect(p.children.query<DealToPlayerBehavior>(), isEmpty);
-        },
-      );
     });
   });
 }

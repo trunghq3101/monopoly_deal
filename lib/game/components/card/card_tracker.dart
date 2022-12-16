@@ -41,6 +41,10 @@ class CardTracker extends Component
     return InHandPosition(position, tangent.vector.direction);
   }
 
+  bool hasCardInAnimationState() {
+    return allCards.any((c) => c.state == CardState.inAnimation);
+  }
+
   void _setupHandCurve() {
     handCurveWidth = MainGame2.gameMap.overviewGameVisibleSize.x / 2;
     final handCurveStart = Vector2(-handCurveWidth / 2,

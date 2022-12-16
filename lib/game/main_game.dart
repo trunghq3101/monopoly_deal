@@ -91,12 +91,15 @@ class MainGame2 extends FlameGame
       ..add(pullUpDownBehavior)
       ..add(togglePreviewing);
 
-    _cardDeckPublisher.addSubscriber(addToDeckBehavior);
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
+    dealToPlayerBehavior.addSubscriber(cardStateMachine);
+    pickUpBehavior.addSubscriber(cardStateMachine);
+    _cardDeckPublisher.addSubscriber(addToDeckBehavior);
     _selectToDeal.addSubscriber(cardStateMachine);
     _selectToPickUp.addSubscriber(cardStateMachine);
     _selectToPreviewing.addSubscriber(cardStateMachine);
     _handToggleButton.addSubscriber(cardStateMachine);
+
     cardStateMachine
       ..addSubscriber(dealToPlayerBehavior)
       ..addSubscriber(pickUpBehavior)
