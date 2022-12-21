@@ -19,6 +19,7 @@ void main() {
         connection.stateStream,
         emitsInOrder([const Connecting(), const Connected()]),
       );
+      expect(connection.messageStream, emits(isA<ConnectedPacket>()));
     });
   });
 }
