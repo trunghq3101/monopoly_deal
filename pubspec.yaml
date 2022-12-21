@@ -20,6 +20,8 @@ dependencies:
   flame_rive: ^1.5.2
   flame_tiled: ^1.8.0
   meta: ^1.8.0
+  web_socket_channel: ^2.2.0
+  web_socket_client: ^0.1.0-dev.1
 
 dev_dependencies:
   flutter_test:
