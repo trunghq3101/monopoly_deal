@@ -23,10 +23,12 @@ class WsAdapter {
     switch (type) {
       case PacketType.connected:
         return ConnectedPacket.from(dto.data);
-      case PacketType.connectedRoom:
-        return ConnectedRoomPacket.from(dto.data);
+      case PacketType.createdRoom:
+        return CreatedRoomPacket.from(dto.data);
+      case PacketType.joinedRoom:
+        return JoinedRoomPacket.from(dto.data);
       default:
-        throw ArgumentError('Packet type is invalid');
+        throw UnimplementedError('Unimplemented decoder for this type: $type');
     }
   }
 

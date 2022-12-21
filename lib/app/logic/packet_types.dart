@@ -2,9 +2,10 @@ import 'package:equatable/equatable.dart';
 
 enum PacketType {
   connected,
-  connectedRoom,
   createRoom,
+  createdRoom,
   joinRoom,
+  joinedRoom,
 }
 
 mixin ServerPacket {}
@@ -22,12 +23,30 @@ class ConnectedPacket with EquatableMixin, ServerPacket {
   List<Object?> get props => [sid];
 }
 
-class ConnectedRoomPacket with EquatableMixin, ServerPacket {
-  ConnectedRoomPacket({required this.roomId, required this.memberIds});
+class CreatedRoomPacket with EquatableMixin, ServerPacket {
+  CreatedRoomPacket({required this.roomId, required this.memberIds});
 
-  factory ConnectedRoomPacket.from(Object? data) {
+  factory CreatedRoomPacket.from(Object? data) {
     final parts = (data as String).split(",");
-    return ConnectedRoomPacket(
+    return CreatedRoomPacket(
+      roomId: int.parse(parts[0]),
+      memberIds: parts.sublist(1),
+    );
+  }
+
+  final int roomId;
+  final List<String> memberIds;
+
+  @override
+  List<Object?> get props => [roomId, memberIds];
+}
+
+class JoinedRoomPacket with EquatableMixin, ServerPacket {
+  JoinedRoomPacket({required this.roomId, required this.memberIds});
+
+  factory JoinedRoomPacket.from(Object? data) {
+    final parts = (data as String).split(",");
+    return JoinedRoomPacket(
       roomId: int.parse(parts[0]),
       memberIds: parts.sublist(1),
     );
