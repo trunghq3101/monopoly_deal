@@ -18,6 +18,7 @@ class WsConnection {
   Stream<String> get sidStream => _sidStreamController.stream;
   final List<Function(String sid)> _pendingRequests = [];
 
+  //TO-DO: handle connection close and error
   WsConnection() {
     sidStream.listen((event) {
       sid = event;
@@ -33,18 +34,15 @@ class WsConnection {
   }
 
   void createRoom() {
-    request(String sid) =>
-        socket.send(wsAdapter.encode(CreateRoomPacket(sid: sid)));
-    if (sid == null) {
-      _pendingRequests.add(request);
-      return;
-    }
-    request(sid!);
+    _ensureSendPacketWithSid((sid) => CreateRoomPacket(sid: sid));
   }
 
   void joinRoom(int roomId) {
-    request(String sid) =>
-        socket.send(wsAdapter.encode(JoinRoomPacket(sid: sid, roomId: roomId)));
+    _ensureSendPacketWithSid((sid) => JoinRoomPacket(sid: sid, roomId: roomId));
+  }
+
+  void _ensureSendPacketWithSid(Function(String sid) buildPacket) {
+    request(String sid) => socket.send(wsAdapter.encode(buildPacket(sid)));
     if (sid == null) {
       _pendingRequests.add(request);
       return;
