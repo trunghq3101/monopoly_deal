@@ -65,6 +65,14 @@ class MainGame2 extends FlameGame
     cardDeckPublisher
       ..addSubscriber(_selectToDeal)
       ..addSubscriber(zoomOverviewBehavior);
+
+    add(TimerComponent(
+      period: 2,
+      onTick: () {
+        overlays.add('startMenu');
+      },
+      removeOnFinish: true,
+    ));
   }
 
   @override
