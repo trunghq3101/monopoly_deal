@@ -13,8 +13,8 @@ class MainApp extends StatelessWidget {
       home: GameWidget(
         game: MainGame2(),
         overlayBuilderMap: {
-          'startMenu': (_, game) {
-            return const StartMenu();
+          'startPage': (_, game) {
+            return const StartPage();
           }
         },
       ),

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
@@ -18,6 +20,9 @@ class MainGame2 extends FlameGame
   late SelectToReArrange _selectToReArrange;
   late HandToggleButton _handToggleButton;
   late PlaceCardButton _placeCardButton;
+
+  @override
+  backgroundColor() => const Color.fromARGB(255, 192, 50, 50);
 
   @override
   Future<void>? onLoad() async {
@@ -69,7 +74,7 @@ class MainGame2 extends FlameGame
     add(TimerComponent(
       period: 2,
       onTick: () {
-        overlays.add('startMenu');
+        overlays.add('startPage');
       },
       removeOnFinish: true,
     ));
