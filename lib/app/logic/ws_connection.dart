@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
 class WsConnection {
+  final _sidStreamController = StreamController<String>.broadcast();
+  final _logger = Logger("$WsConnection");
+  final List<Function(String sid)> _pendingRequests = [];
+
   final socket = WebSocket(Uri.parse("ws://localhost:3000/game"));
   final wsAdapter = WsAdapter();
   String? sid;
-
-  final _sidStreamController = StreamController<String>.broadcast();
 
   Stream<ConnectionState> get stateStream =>
       socket.connection.asBroadcastStream();
@@ -16,17 +19,21 @@ class WsConnection {
       .asBroadcastStream()
       .map((event) => wsAdapter.decode(event));
   Stream<String> get sidStream => _sidStreamController.stream;
-  final List<Function(String sid)> _pendingRequests = [];
 
   //TO-DO: handle connection close and error
   WsConnection() {
     sidStream.listen((event) {
       sid = event;
-      for (var r in _pendingRequests) {
-        r(sid!);
+      _logger.info("Sid: $sid");
+      for (var request in _pendingRequests) {
+        _sendPacket(sid!, request);
       }
     });
+    stateStream.listen((event) {
+      _logger.info(event);
+    });
     messageStream.listen((event) {
+      _logger.info(event);
       if (event is ConnectedPacket) {
         _sidStreamController.add(event.sid);
       }
@@ -46,12 +53,17 @@ class WsConnection {
     socket.close();
   }
 
-  void _ensureSendPacketWithSid(Function(String sid) buildPacket) {
-    request(String sid) => socket.send(wsAdapter.encode(buildPacket(sid)));
+  void _ensureSendPacketWithSid(Function(String sid) request) {
     if (sid == null) {
       _pendingRequests.add(request);
       return;
     }
-    request(sid!);
+    _sendPacket(sid!, request);
+  }
+
+  void _sendPacket(String sid, Function(String sid) buildPacket) {
+    final message = wsAdapter.encode(buildPacket(sid));
+    _logger.info(message);
+    socket.send(message);
   }
 }

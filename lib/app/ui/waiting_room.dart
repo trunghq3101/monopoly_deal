@@ -37,11 +37,10 @@ class WaitingRoom extends StatelessWidget {
                       .connection()
                       .sidStream,
                   builder: (_, snapshot) {
-                    return snapshot.data != null
+                    final data = snapshot.data;
+                    return data != null
                         ? const WaitingRoomContent()
-                        : const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                        : const Center(child: CircularProgressIndicator());
                   },
                 ),
               ),
