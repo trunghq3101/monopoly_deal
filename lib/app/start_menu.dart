@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/app/lib/lib.dart';
 
 class StartMenu extends StatelessWidget {
@@ -15,15 +14,15 @@ class StartMenu extends StatelessWidget {
         children: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const WaitingRoom()),
-              );
+              Navigator.of(context).pushNamed('/waitingRoom');
             },
             child: const Text('Create room'),
           ),
           const SizedBox(height: 12),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed('/joinRoom');
+            },
             child: const Text('Join room'),
           ),
         ],

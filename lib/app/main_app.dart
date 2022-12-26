@@ -11,6 +11,8 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(0, 15, 228, 232)),
       ),
       home: GameWidget(
         game: MainGame2(),

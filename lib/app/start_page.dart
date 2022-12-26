@@ -9,25 +9,53 @@ class StartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: Stack(
-        children: [
-          TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0.0, end: 1.0),
-            duration: M3Duration.short4,
-            builder: (context, value, child) => Opacity(
-              opacity: value,
-              child: child,
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints.expand(),
-              child: const ColoredBox(
-                color: Colors.black54,
-              ),
+      child: Stack(children: [
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: M3Duration.short4,
+          builder: (context, value, child) => Opacity(
+            opacity: value,
+            child: child,
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints.expand(),
+            child: const ColoredBox(
+              color: Colors.black54,
             ),
           ),
-          const StartMenu()
-        ],
-      ),
+        ),
+        Navigator(
+          initialRoute: '/',
+          onGenerateRoute: (settings) {
+            switch (settings.name) {
+              case '/':
+                return MaterialPageRoute(
+                  builder: (_) {
+                    return const StartMenu();
+                  },
+                  settings: const RouteSettings(name: '/'),
+                );
+              case '/waitingRoom':
+                return MaterialPageRoute(
+                  builder: (_) {
+                    return const WaitingRoom();
+                  },
+                  settings: const RouteSettings(name: '/waitingRoom'),
+                );
+
+              case '/joinRoom':
+                return MaterialPageRoute(
+                  builder: (_) {
+                    return const JoinRoom();
+                  },
+                  settings: const RouteSettings(name: '/joinRoom'),
+                );
+              default:
+                throw ArgumentError();
+            }
+          },
+        ),
+      ]),
     );
   }
 }

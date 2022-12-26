@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/app/styles.dart';
 
-class WaitingRoom extends StatelessWidget {
-  const WaitingRoom({super.key});
+class JoinRoom extends StatelessWidget {
+  const JoinRoom({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,16 +18,6 @@ class WaitingRoom extends StatelessWidget {
               appBar: AppBar(
                 backgroundColor:
                     Theme.of(context).colorScheme.surfaceTint.withOpacity(0.08),
-                leading: Align(
-                  child: TextButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).popUntil(ModalRoute.withName('/'));
-                    },
-                    icon: const Icon(Icons.close),
-                    label: const Text("Leave"),
-                  ),
-                ),
-                leadingWidth: 100,
               ),
               body: Padding(
                 padding: const EdgeInsets.all(Insets.large),
@@ -39,9 +29,11 @@ class WaitingRoom extends StatelessWidget {
                       elevation: 0,
                       color: Theme.of(context).colorScheme.tertiaryContainer,
                       child: Padding(
-                        padding: const EdgeInsets.all(Insets.medium),
-                        child: Text(
-                          'A8DIZ',
+                        padding: const EdgeInsets.symmetric(
+                          vertical: Insets.medium,
+                          horizontal: Insets.extraLarge,
+                        ),
+                        child: TextField(
                           style: Theme.of(context)
                               .textTheme
                               .headline3
@@ -50,29 +42,12 @@ class WaitingRoom extends StatelessWidget {
                                       .colorScheme
                                       .onTertiaryContainer),
                           textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    Card(
-                      elevation: 0,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surfaceTint
-                          .withOpacity(0.08),
-                      child: Padding(
-                        padding: const EdgeInsets.all(Insets.medium),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                WaitingIndicator(),
-                                WaitingIndicator(),
-                              ],
-                            ),
-                            const SizedBox(height: Insets.medium),
-                            const LinearProgressIndicator(),
-                          ],
+                          autofocus: true,
+                          maxLength: 10,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter code',
+                            counterText: '',
+                          ),
                         ),
                       ),
                     ),
@@ -80,7 +55,9 @@ class WaitingRoom extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/waitingRoom');
+                        },
                         style: ElevatedButton.styleFrom(
                           foregroundColor:
                               Theme.of(context).colorScheme.onPrimary,
@@ -88,7 +65,7 @@ class WaitingRoom extends StatelessWidget {
                               Theme.of(context).colorScheme.primary,
                         ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
                         icon: const Icon(Icons.navigate_next_rounded),
-                        label: const Text('Start game'),
+                        label: const Text('Join'),
                       ),
                     ),
                   ],
@@ -97,22 +74,6 @@ class WaitingRoom extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class WaitingIndicator extends StatelessWidget {
-  const WaitingIndicator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(Insets.small),
-      child: Icon(
-        Icons.person,
-        size: 40,
-        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.11),
       ),
     );
   }
