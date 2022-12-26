@@ -21,6 +21,7 @@ class WaitingRoom extends StatelessWidget {
                 leading: Align(
                   child: TextButton.icon(
                     onPressed: () {
+                      InheritedStartPage.wsConnectionManagerOf(context).close();
                       Navigator.of(context).popUntil(ModalRoute.withName('/'));
                     },
                     icon: const Icon(Icons.close),
@@ -31,73 +32,85 @@ class WaitingRoom extends StatelessWidget {
               ),
               body: Padding(
                 padding: const EdgeInsets.all(Insets.large),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: Insets.medium),
-                    Card(
-                      elevation: 0,
-                      color: Theme.of(context).colorScheme.tertiaryContainer,
-                      child: Padding(
-                        padding: const EdgeInsets.all(Insets.medium),
-                        child: Text(
-                          'A8DIZ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline3
-                              ?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onTertiaryContainer),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    Card(
-                      elevation: 0,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surfaceTint
-                          .withOpacity(0.08),
-                      child: Padding(
-                        padding: const EdgeInsets.all(Insets.medium),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                WaitingIndicator(),
-                                WaitingIndicator(),
-                              ],
-                            ),
-                            const SizedBox(height: Insets.medium),
-                            const LinearProgressIndicator(),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton.icon(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                        ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-                        icon: const Icon(Icons.navigate_next_rounded),
-                        label: const Text('Start game'),
-                      ),
-                    ),
-                  ],
+                child: StreamBuilder<String>(
+                  stream: InheritedStartPage.wsConnectionManagerOf(context)
+                      .connection()
+                      .sidStream,
+                  builder: (_, snapshot) {
+                    return snapshot.data != null
+                        ? const WaitingRoomContent()
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                  },
                 ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class WaitingRoomContent extends StatelessWidget {
+  const WaitingRoomContent({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: Insets.medium),
+        Card(
+          elevation: 0,
+          color: Theme.of(context).colorScheme.tertiaryContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(Insets.medium),
+            child: Text(
+              'A8DIZ',
+              style: Theme.of(context).textTheme.headline3?.copyWith(
+                  color: Theme.of(context).colorScheme.onTertiaryContainer),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        Card(
+          elevation: 0,
+          color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.08),
+          child: Padding(
+            padding: const EdgeInsets.all(Insets.medium),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    WaitingIndicator(),
+                    WaitingIndicator(),
+                  ],
+                ),
+                const SizedBox(height: Insets.medium),
+                const LinearProgressIndicator(),
+              ],
+            ),
+          ),
+        ),
+        const Spacer(),
+        Align(
+          alignment: Alignment.centerRight,
+          child: ElevatedButton.icon(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
+            icon: const Icon(Icons.navigate_next_rounded),
+            label: const Text('Start game'),
+          ),
+        ),
+      ],
     );
   }
 }

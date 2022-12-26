@@ -41,6 +41,11 @@ class WsConnection {
     _ensureSendPacketWithSid((sid) => JoinRoomPacket(sid: sid, roomId: roomId));
   }
 
+  void close() {
+    _sidStreamController.close();
+    socket.close();
+  }
+
   void _ensureSendPacketWithSid(Function(String sid) buildPacket) {
     request(String sid) => socket.send(wsAdapter.encode(buildPacket(sid)));
     if (sid == null) {
