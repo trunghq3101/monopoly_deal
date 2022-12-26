@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monopoly_deal/app/ui/ui.dart';
+import 'package:monopoly_deal/app/app.dart';
 
 class WaitingRoom extends StatelessWidget {
   const WaitingRoom({super.key});
@@ -21,7 +21,7 @@ class WaitingRoom extends StatelessWidget {
                 leading: Align(
                   child: TextButton.icon(
                     onPressed: () {
-                      InheritedStartPage.wsConnectionManagerOf(context).close();
+                      GameRoomModel.of(context).closeWsConnection();
                       Navigator.of(context).popUntil(ModalRoute.withName('/'));
                     },
                     icon: const Icon(Icons.close),
@@ -32,17 +32,9 @@ class WaitingRoom extends StatelessWidget {
               ),
               body: Padding(
                 padding: const EdgeInsets.all(Insets.large),
-                child: StreamBuilder<String>(
-                  stream: InheritedStartPage.wsConnectionManagerOf(context)
-                      .connection()
-                      .sidStream,
-                  builder: (_, snapshot) {
-                    final data = snapshot.data;
-                    return data != null
-                        ? const WaitingRoomContent()
-                        : const Center(child: CircularProgressIndicator());
-                  },
-                ),
+                child: GameRoomModel.of(context).roomId != null
+                    ? const WaitingRoomContent()
+                    : const Center(child: CircularProgressIndicator()),
               ),
             ),
           ),
@@ -86,8 +78,8 @@ class WaitingRoomContent extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    WaitingIndicator(),
-                    WaitingIndicator(),
+                    WaitingIndicator(index: 0),
+                    WaitingIndicator(index: 1),
                   ],
                 ),
                 const SizedBox(height: Insets.medium),
@@ -115,7 +107,9 @@ class WaitingRoomContent extends StatelessWidget {
 }
 
 class WaitingIndicator extends StatelessWidget {
-  const WaitingIndicator({super.key});
+  const WaitingIndicator({super.key, required this.index});
+
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +118,9 @@ class WaitingIndicator extends StatelessWidget {
       child: Icon(
         Icons.person,
         size: 40,
-        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.11),
+        color: GameRoomModel.of(context).members.length - 1 < index
+            ? Theme.of(context).colorScheme.onSurface.withOpacity(0.11)
+            : Theme.of(context).primaryColor,
       ),
     );
   }

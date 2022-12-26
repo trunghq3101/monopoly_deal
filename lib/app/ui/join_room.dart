@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monopoly_deal/app/ui/ui.dart';
+import 'package:monopoly_deal/app/app.dart';
 
 class JoinRoom extends StatelessWidget {
   const JoinRoom({super.key});
@@ -56,6 +56,7 @@ class JoinRoom extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: ElevatedButton.icon(
                         onPressed: () {
+                          GameRoomModel.of(context).joinRoom(1);
                           Navigator.of(context).pushNamed('/waitingRoom');
                         },
                         style: ElevatedButton.styleFrom(

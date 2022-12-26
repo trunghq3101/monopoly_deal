@@ -15,9 +15,7 @@ class StartMenu extends StatelessWidget {
         children: [
           TextButton(
             onPressed: () {
-              InheritedStartPage.wsConnectionManagerOf(context)
-                  .connection()
-                  .createRoom();
+              GameRoomModel.of(context).creatRoom();
               Navigator.of(context).pushNamed('/waitingRoom');
             },
             child: const Text('Create room'),
