@@ -44,7 +44,7 @@ class WsConnection {
     _ensureSendPacketWithSid((sid) => CreateRoomPacket(sid: sid));
   }
 
-  void joinRoom(int roomId) {
+  void joinRoom(String roomId) {
     _ensureSendPacketWithSid((sid) => JoinRoomPacket(sid: sid, roomId: roomId));
   }
 

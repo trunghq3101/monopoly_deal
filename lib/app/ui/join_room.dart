@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/app/app.dart';
 
-class JoinRoom extends StatelessWidget {
+class JoinRoom extends StatefulWidget {
   const JoinRoom({super.key});
+
+  @override
+  State<JoinRoom> createState() => _JoinRoomState();
+}
+
+class _JoinRoomState extends State<JoinRoom> {
+  static const roomIdLength = 6;
+  String _roomId = '';
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +41,12 @@ class JoinRoom extends StatelessWidget {
                           vertical: Insets.medium,
                           horizontal: Insets.extraLarge,
                         ),
-                        child: TextField(
+                        child: TextFormField(
+                          onChanged: (value) {
+                            setState(() {
+                              _roomId = value;
+                            });
+                          },
                           style: Theme.of(context)
                               .textTheme
                               .headline3
@@ -43,7 +56,7 @@ class JoinRoom extends StatelessWidget {
                                       .onTertiaryContainer),
                           textAlign: TextAlign.center,
                           autofocus: true,
-                          maxLength: 10,
+                          maxLength: roomIdLength,
                           decoration: const InputDecoration(
                             hintText: 'Enter code',
                             counterText: '',
@@ -55,16 +68,20 @@ class JoinRoom extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: ElevatedButton.icon(
-                        onPressed: () {
-                          GameRoomModel.of(context).joinRoom(1);
-                          Navigator.of(context).pushNamed('/waitingRoom');
-                        },
+                        onPressed: _roomId.length == roomIdLength
+                            ? () {
+                                GameRoomModel.of(context).joinRoom(_roomId);
+                                Navigator.of(context).pushNamed('/waitingRoom');
+                              }
+                            : null,
                         style: ElevatedButton.styleFrom(
                           foregroundColor:
                               Theme.of(context).colorScheme.onPrimary,
                           backgroundColor:
                               Theme.of(context).colorScheme.primary,
-                        ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
+                        ).copyWith(
+                          elevation: ButtonStyleButton.allOrNull(0.0),
+                        ),
                         icon: const Icon(Icons.navigate_next_rounded),
                         label: const Text('Join'),
                       ),

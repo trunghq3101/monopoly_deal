@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:monopoly_deal/app/app.dart';
 
 class WaitingRoom extends StatelessWidget {
@@ -21,6 +22,7 @@ class WaitingRoom extends StatelessWidget {
                 leading: Align(
                   child: TextButton.icon(
                     onPressed: () {
+                      ScaffoldMessenger.of(context).clearSnackBars();
                       GameRoomModel.of(context).closeWsConnection();
                       Navigator.of(context).popUntil(ModalRoute.withName('/'));
                     },
@@ -58,13 +60,27 @@ class WaitingRoomContent extends StatelessWidget {
         Card(
           elevation: 0,
           color: Theme.of(context).colorScheme.tertiaryContainer,
-          child: Padding(
-            padding: const EdgeInsets.all(Insets.medium),
-            child: Text(
-              'A8DIZ',
-              style: Theme.of(context).textTheme.headline3?.copyWith(
-                  color: Theme.of(context).colorScheme.onTertiaryContainer),
-              textAlign: TextAlign.center,
+          clipBehavior: Clip.hardEdge,
+          child: InkWell(
+            onTap: () {
+              Clipboard.setData(
+                ClipboardData(text: GameRoomModel.of(context).roomId!),
+              ).then(
+                (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Copied!')),
+                  );
+                },
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(Insets.medium),
+              child: Text(
+                GameRoomModel.of(context).roomId!,
+                style: Theme.of(context).textTheme.headline3?.copyWith(
+                    color: Theme.of(context).colorScheme.onTertiaryContainer),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),

@@ -17,7 +17,7 @@ class GameRoomModel extends InheritedNotifier<GameRoomNotifier> {
 
 class GameRoomNotifier extends ChangeNotifier {
   WsConnection? _wsConnection;
-  int? roomId;
+  String? roomId;
   List<String> members = [];
 
   void creatRoom() {
@@ -32,7 +32,7 @@ class GameRoomNotifier extends ChangeNotifier {
     });
   }
 
-  void joinRoom(int roomId) {
+  void joinRoom(String roomId) {
     _wsConnection = WsConnection();
     _wsConnection?.joinRoom(roomId);
     _wsConnection?.messageStream.listen((event) {

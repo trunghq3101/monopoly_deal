@@ -29,12 +29,12 @@ class CreatedRoomPacket with EquatableMixin, ServerPacket {
   factory CreatedRoomPacket.from(Object? data) {
     final parts = (data as String).split(",");
     return CreatedRoomPacket(
-      roomId: int.parse(parts[0]),
+      roomId: parts[0],
       memberIds: parts.sublist(1),
     );
   }
 
-  final int roomId;
+  final String roomId;
   final List<String> memberIds;
 
   @override
@@ -47,12 +47,12 @@ class JoinedRoomPacket with EquatableMixin, ServerPacket {
   factory JoinedRoomPacket.from(Object? data) {
     final parts = (data as String).split(",");
     return JoinedRoomPacket(
-      roomId: int.parse(parts[0]),
+      roomId: parts[0],
       memberIds: parts.sublist(1),
     );
   }
 
-  final int roomId;
+  final String roomId;
   final List<String> memberIds;
 
   @override
@@ -77,7 +77,7 @@ class JoinRoomPacket extends ClientPacket with EquatableMixin {
     required this.roomId,
   });
 
-  final int roomId;
+  final String roomId;
 
   @override
   List<Object?> get props => [...super.props, roomId];

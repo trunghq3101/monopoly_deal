@@ -28,7 +28,7 @@ void main() {
 
     test('join room', () async {
       connection.createRoom();
-      final completer = Completer<int>();
+      final completer = Completer<String>();
       connection.messageStream.listen((event) {
         if (event is CreatedRoomPacket) {
           completer.complete(event.roomId);

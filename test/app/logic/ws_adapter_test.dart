@@ -15,12 +15,12 @@ void main() {
         ConnectedPacket(sid: 'abc'),
       );
       expect(
-        adapter.decode("""{"event": "createdRoom", "data": "1,id1,id2"}"""),
-        CreatedRoomPacket(roomId: 1, memberIds: ['id1', 'id2']),
+        adapter.decode("""{"event": "createdRoom", "data": "room,id1,id2"}"""),
+        CreatedRoomPacket(roomId: 'room', memberIds: ['id1', 'id2']),
       );
       expect(
-        adapter.decode("""{"event": "joinedRoom", "data": "1,id1,id2"}"""),
-        JoinedRoomPacket(roomId: 1, memberIds: ['id1', 'id2']),
+        adapter.decode("""{"event": "joinedRoom", "data": "room,id1,id2"}"""),
+        JoinedRoomPacket(roomId: 'room', memberIds: ['id1', 'id2']),
       );
     });
 
@@ -30,8 +30,8 @@ void main() {
         """{"event":"createRoom","data":"sid"}""",
       );
       expect(
-        adapter.encode(JoinRoomPacket(sid: 'sid', roomId: 1)),
-        """{"event":"joinRoom","data":"sid,1"}""",
+        adapter.encode(JoinRoomPacket(sid: 'sid', roomId: 'room')),
+        """{"event":"joinRoom","data":"sid,room"}""",
       );
     });
   });
