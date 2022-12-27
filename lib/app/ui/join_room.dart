@@ -10,22 +10,24 @@ class JoinRoom extends StatefulWidget {
 
 class _JoinRoomState extends State<JoinRoom> {
   static const roomIdLength = 6;
-  String _roomId = '';
+  String _enteredRoomId = '';
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final gameModel = GameRoomModel.of(context);
+
     return SafeArea(
       child: ColoredBox(
-        color: Theme.of(context).colorScheme.surface,
+        color: theme.colorScheme.surface,
         child: Align(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 600),
             child: Scaffold(
-              backgroundColor:
-                  Theme.of(context).colorScheme.surfaceTint.withOpacity(0.05),
+              backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.05),
               appBar: AppBar(
                 backgroundColor:
-                    Theme.of(context).colorScheme.surfaceTint.withOpacity(0.08),
+                    theme.colorScheme.surfaceTint.withOpacity(0.08),
               ),
               body: Padding(
                 padding: const EdgeInsets.all(Insets.large),
@@ -35,7 +37,7 @@ class _JoinRoomState extends State<JoinRoom> {
                     const SizedBox(height: Insets.medium),
                     Card(
                       elevation: 0,
-                      color: Theme.of(context).colorScheme.tertiaryContainer,
+                      color: theme.colorScheme.tertiaryContainer,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: Insets.medium,
@@ -43,17 +45,10 @@ class _JoinRoomState extends State<JoinRoom> {
                         ),
                         child: TextFormField(
                           onChanged: (value) {
-                            setState(() {
-                              _roomId = value;
-                            });
+                            setState(() => _enteredRoomId = value);
                           },
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline3
-                              ?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onTertiaryContainer),
+                          style: theme.textTheme.headline3?.copyWith(
+                              color: theme.colorScheme.onTertiaryContainer),
                           textAlign: TextAlign.center,
                           autofocus: true,
                           maxLength: roomIdLength,
@@ -68,17 +63,12 @@ class _JoinRoomState extends State<JoinRoom> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: ElevatedButton.icon(
-                        onPressed: _roomId.length == roomIdLength
-                            ? () {
-                                GameRoomModel.of(context).joinRoom(_roomId);
-                                Navigator.of(context).pushNamed('/waitingRoom');
-                              }
+                        onPressed: _enteredRoomId.length == roomIdLength
+                            ? () => gameModel.joinRoom(_enteredRoomId)
                             : null,
                         style: ElevatedButton.styleFrom(
-                          foregroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
+                          foregroundColor: theme.colorScheme.onPrimary,
+                          backgroundColor: theme.colorScheme.primary,
                         ).copyWith(
                           elevation: ButtonStyleButton.allOrNull(0.0),
                         ),

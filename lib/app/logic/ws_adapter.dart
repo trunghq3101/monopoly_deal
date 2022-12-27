@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:monopoly_deal/app/app.dart';
 
 class WsDto {
@@ -19,8 +20,10 @@ class WsDto {
 class WsAdapter {
   ServerPacket decode(String raw) {
     final dto = WsDto.from(jsonDecode(raw));
-    final type = PacketType.values.firstWhere((e) => dto.event == e.name);
+    final type = PacketType.values.firstWhereOrNull((e) => dto.event == e.name);
     switch (type) {
+      case PacketType.error:
+        return ErrorPacket.from(dto.data);
       case PacketType.connected:
         return ConnectedPacket.from(dto.data);
       case PacketType.createdRoom:

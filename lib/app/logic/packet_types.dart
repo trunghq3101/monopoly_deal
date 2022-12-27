@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 enum PacketType {
+  error,
   connected,
   createRoom,
   createdRoom,
@@ -8,7 +9,23 @@ enum PacketType {
   joinedRoom,
 }
 
+enum ErrorCode { roomNotExist }
+
 mixin ServerPacket {}
+
+class ErrorPacket with EquatableMixin, ServerPacket {
+  ErrorPacket(this.errorCode);
+
+  factory ErrorPacket.from(Object? data) {
+    final errorCodeIndex = int.parse(data as String);
+    return ErrorPacket(ErrorCode.values[errorCodeIndex]);
+  }
+
+  final ErrorCode errorCode;
+
+  @override
+  List<Object?> get props => [errorCode];
+}
 
 class ConnectedPacket with EquatableMixin, ServerPacket {
   ConnectedPacket({required this.sid});
