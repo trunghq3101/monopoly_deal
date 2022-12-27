@@ -20,7 +20,7 @@ class GameRoomNotifier extends ChangeNotifier {
   String? roomId;
   List<String> members = [];
 
-  void creatRoom() {
+  void createRoom() {
     _wsConnection = WsConnection();
     _wsConnection?.createRoom();
     _wsConnection?.messageStream.listen((event) {

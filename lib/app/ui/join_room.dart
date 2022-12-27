@@ -15,7 +15,6 @@ class _JoinRoomState extends State<JoinRoom> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final gameModel = GameRoomModel.of(context);
 
     return SafeArea(
       child: ColoredBox(
@@ -62,19 +61,22 @@ class _JoinRoomState extends State<JoinRoom> {
                     const Spacer(),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: ElevatedButton.icon(
-                        onPressed: _enteredRoomId.length == roomIdLength
-                            ? () => gameModel.joinRoom(_enteredRoomId)
-                            : null,
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: theme.colorScheme.onPrimary,
-                          backgroundColor: theme.colorScheme.primary,
-                        ).copyWith(
-                          elevation: ButtonStyleButton.allOrNull(0.0),
-                        ),
-                        icon: const Icon(Icons.navigate_next_rounded),
-                        label: const Text('Join'),
-                      ),
+                      child: Builder(builder: (context) {
+                        return ElevatedButton.icon(
+                          onPressed: _enteredRoomId.length == roomIdLength
+                              ? () => GameRoomModel.of(context)
+                                  .joinRoom(_enteredRoomId)
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: theme.colorScheme.onPrimary,
+                            backgroundColor: theme.colorScheme.primary,
+                          ).copyWith(
+                            elevation: ButtonStyleButton.allOrNull(0.0),
+                          ),
+                          icon: const Icon(Icons.navigate_next_rounded),
+                          label: const Text('Join'),
+                        );
+                      }),
                     ),
                   ],
                 ),

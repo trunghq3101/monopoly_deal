@@ -13,20 +13,24 @@ class StartMenu extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextButton(
-            onPressed: () {
-              GameRoomModel.of(context).creatRoom();
-              Navigator.of(context).pushNamed('/waitingRoom');
-            },
-            child: const Text('Create room'),
-          ),
+          Builder(builder: (context) {
+            return TextButton(
+              onPressed: () {
+                GameRoomModel.of(context).createRoom();
+                Navigator.of(context).pushNamed('/waitingRoom');
+              },
+              child: const Text('Create room'),
+            );
+          }),
           const SizedBox(height: 12),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/joinRoom');
-            },
-            child: const Text('Join room'),
-          ),
+          Builder(builder: (context) {
+            return TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/joinRoom');
+              },
+              child: const Text('Join room'),
+            );
+          }),
         ],
       ),
     );
