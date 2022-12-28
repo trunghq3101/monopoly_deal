@@ -16,37 +16,29 @@ class GameRoomModel extends InheritedNotifier<GameRoomNotifier> {
 }
 
 class GameRoomNotifier extends ChangeNotifier {
-  WsConnection? _wsConnection;
   String? roomId;
   List<String> members = [];
 
-  void createRoom() {
-    _wsConnection = WsConnection();
-    _wsConnection?.createRoom();
-    _wsConnection?.messageStream.listen((event) {
-      if (event is CreatedRoomPacket) {
-        roomId = (event).roomId;
-        members = (event).memberIds;
-        notifyListeners();
-      }
-    });
+  GameRoomNotifier() {
+    wsGateway.addListener(_listener);
   }
 
-  void joinRoom(String roomId) {
-    _wsConnection = WsConnection();
-    _wsConnection?.joinRoom(roomId);
-    _wsConnection?.messageStream.listen((event) {
-      if (event is JoinedRoomPacket) {
-        this.roomId = (event).roomId;
-        members = (event).memberIds;
-        notifyListeners();
-      }
-    });
+  @override
+  void dispose() {
+    wsGateway.removeListener(_listener);
+    super.dispose();
   }
 
-  void closeWsConnection() {
-    _wsConnection?.close();
-    _wsConnection = null;
-    roomId = null;
+  void _listener() {
+    final packet = wsGateway.serverPacket;
+    if (packet is CreatedRoomPacket) {
+      roomId = packet.roomId;
+      members = packet.memberIds;
+      notifyListeners();
+    } else if (packet is JoinedRoomPacket) {
+      roomId = packet.roomId;
+      members = packet.memberIds;
+      notifyListeners();
+    }
   }
 }

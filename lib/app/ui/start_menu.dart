@@ -16,7 +16,9 @@ class StartMenu extends StatelessWidget {
           Builder(builder: (context) {
             return TextButton(
               onPressed: () {
-                GameRoomModel.of(context).createRoom();
+                wsGateway
+                  ..connect()
+                  ..send((sid) => CreateRoomPacket(sid: sid));
                 Navigator.of(context).pushNamed('/waitingRoom');
               },
               child: const Text('Create room'),

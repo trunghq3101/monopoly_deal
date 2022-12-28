@@ -24,36 +24,39 @@ class StartPage extends StatelessWidget {
             ),
           ),
         ),
-        Navigator(
-          initialRoute: '/',
-          onGenerateRoute: (settings) {
-            switch (settings.name) {
-              case '/':
-                return MaterialPageRoute(
-                  builder: (_) {
-                    return const StartMenu();
-                  },
-                  settings: const RouteSettings(name: '/'),
-                );
-              case '/waitingRoom':
-                return MaterialPageRoute(
-                  builder: (_) {
-                    return const WaitingRoom();
-                  },
-                  settings: const RouteSettings(name: '/waitingRoom'),
-                );
+        GameRoomModel(
+          notifier: GameRoomNotifier(),
+          child: Navigator(
+            initialRoute: '/',
+            onGenerateRoute: (settings) {
+              switch (settings.name) {
+                case '/':
+                  return MaterialPageRoute(
+                    builder: (_) {
+                      return const StartMenu();
+                    },
+                    settings: const RouteSettings(name: '/'),
+                  );
+                case '/waitingRoom':
+                  return MaterialPageRoute(
+                    builder: (_) {
+                      return const WaitingRoom();
+                    },
+                    settings: const RouteSettings(name: '/waitingRoom'),
+                  );
 
-              case '/joinRoom':
-                return MaterialPageRoute(
-                  builder: (_) {
-                    return const JoinRoom();
-                  },
-                  settings: const RouteSettings(name: '/joinRoom'),
-                );
-              default:
-                throw ArgumentError();
-            }
-          },
+                case '/joinRoom':
+                  return MaterialPageRoute(
+                    builder: (_) {
+                      return const JoinRoom();
+                    },
+                    settings: const RouteSettings(name: '/joinRoom'),
+                  );
+                default:
+                  throw ArgumentError();
+              }
+            },
+          ),
         )
       ]),
     );

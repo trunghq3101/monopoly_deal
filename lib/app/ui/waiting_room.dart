@@ -24,7 +24,7 @@ class WaitingRoom extends StatelessWidget {
                     return TextButton.icon(
                       onPressed: () {
                         ScaffoldMessenger.of(context).clearSnackBars();
-                        GameRoomModel.of(context).closeWsConnection();
+                        wsGateway.close();
                         Navigator.of(context)
                             .popUntil(ModalRoute.withName('/'));
                       },

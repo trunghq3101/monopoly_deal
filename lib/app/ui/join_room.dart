@@ -27,6 +27,13 @@ class _JoinRoomState extends State<JoinRoom> {
               appBar: AppBar(
                 backgroundColor:
                     theme.colorScheme.surfaceTint.withOpacity(0.08),
+                leading: IconButton(
+                  onPressed: () {
+                    wsGateway.close();
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(Icons.adaptive.arrow_back),
+                ),
               ),
               body: Padding(
                 padding: const EdgeInsets.all(Insets.large),
@@ -64,8 +71,12 @@ class _JoinRoomState extends State<JoinRoom> {
                       child: Builder(builder: (context) {
                         return ElevatedButton.icon(
                           onPressed: _enteredRoomId.length == roomIdLength
-                              ? () => GameRoomModel.of(context)
-                                  .joinRoom(_enteredRoomId)
+                              ? () {
+                                  wsGateway
+                                    ..connect()
+                                    ..send((sid) => JoinRoomPacket(
+                                        sid: sid, roomId: _enteredRoomId));
+                                }
                               : null,
                           style: ElevatedButton.styleFrom(
                             foregroundColor: theme.colorScheme.onPrimary,

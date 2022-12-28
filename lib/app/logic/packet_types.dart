@@ -9,22 +9,24 @@ enum PacketType {
   joinedRoom,
 }
 
-enum ErrorCode { roomNotExist }
+enum PacketErrorType {
+  roomNotExist;
+}
 
 mixin ServerPacket {}
 
 class ErrorPacket with EquatableMixin, ServerPacket {
-  ErrorPacket(this.errorCode);
+  ErrorPacket(this.type);
 
   factory ErrorPacket.from(Object? data) {
     final errorCodeIndex = int.parse(data as String);
-    return ErrorPacket(ErrorCode.values[errorCodeIndex]);
+    return ErrorPacket(PacketErrorType.values[errorCodeIndex]);
   }
 
-  final ErrorCode errorCode;
+  final PacketErrorType type;
 
   @override
-  List<Object?> get props => [errorCode];
+  List<Object?> get props => [type];
 }
 
 class ConnectedPacket with EquatableMixin, ServerPacket {

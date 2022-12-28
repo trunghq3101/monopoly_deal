@@ -14,16 +14,18 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(0, 15, 228, 232)),
       ),
-      home: GameRoomModel(
-        notifier: GameRoomNotifier(),
-        child: GameWidget(
-          game: MainGame2(),
-          overlayBuilderMap: {
-            'startPage': (_, game) {
-              return const StartPage();
-            }
-          },
-        ),
+      home: Stack(
+        children: [
+          const WsErrorDisplay(),
+          GameWidget(
+            game: MainGame2(),
+            overlayBuilderMap: {
+              'startPage': (_, game) {
+                return const StartPage();
+              }
+            },
+          ),
+        ],
       ),
     );
   }
