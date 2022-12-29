@@ -68,26 +68,10 @@ class _JoinRoomState extends State<JoinRoom> {
                     const Spacer(),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: Builder(builder: (context) {
-                        return ElevatedButton.icon(
-                          onPressed: _enteredRoomId.length == roomIdLength
-                              ? () {
-                                  wsGateway
-                                    ..connect()
-                                    ..send((sid) => JoinRoomPacket(
-                                        sid: sid, roomId: _enteredRoomId));
-                                }
-                              : null,
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: theme.colorScheme.onPrimary,
-                            backgroundColor: theme.colorScheme.primary,
-                          ).copyWith(
-                            elevation: ButtonStyleButton.allOrNull(0.0),
-                          ),
-                          icon: const Icon(Icons.navigate_next_rounded),
-                          label: const Text('Join'),
-                        );
-                      }),
+                      child: JoinRoomButton(
+                        enteredRoomId: _enteredRoomId,
+                        enabled: _enteredRoomId.length == roomIdLength,
+                      ),
                     ),
                   ],
                 ),
@@ -96,6 +80,55 @@ class _JoinRoomState extends State<JoinRoom> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class JoinRoomButton extends StatelessWidget {
+  const JoinRoomButton({
+    Key? key,
+    required this.enabled,
+    required this.enteredRoomId,
+  }) : super(key: key);
+
+  final String enteredRoomId;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    if (GameRoomModel.of(context).loading) {
+      return const ElevatedButton(
+        onPressed: null,
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 16,
+            height: 16,
+            child: RepaintBoundary(child: CircularProgressIndicator()),
+          ),
+        ),
+      );
+    }
+    return ElevatedButton.icon(
+      onPressed: enabled
+          ? () {
+              wsGateway
+                ..connect()
+                ..send(
+                    (sid) => JoinRoomPacket(sid: sid, roomId: enteredRoomId));
+              GameRoomModel.of(context).waitingForNewState();
+            }
+          : null,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: theme.colorScheme.onPrimary,
+        backgroundColor: theme.colorScheme.primary,
+      ).copyWith(
+        elevation: ButtonStyleButton.allOrNull(0.0),
+      ),
+      icon: const Icon(Icons.navigate_next_rounded),
+      label: const Text('Join'),
     );
   }
 }

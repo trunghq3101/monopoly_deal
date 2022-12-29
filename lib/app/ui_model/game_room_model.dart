@@ -18,18 +18,29 @@ class GameRoomModel extends InheritedNotifier<GameRoomNotifier> {
 class GameRoomNotifier extends ChangeNotifier {
   String? roomId;
   List<String> members = [];
+  bool loading = false;
 
   GameRoomNotifier() {
-    wsGateway.addListener(_listener);
+    _getRoomInfo();
+    wsGateway.addListener(_getRoomInfo);
+  }
+
+  void waitingForNewState() {
+    loading = true;
   }
 
   @override
   void dispose() {
-    wsGateway.removeListener(_listener);
+    wsGateway.removeListener(_getRoomInfo);
     super.dispose();
   }
 
-  void _listener() {
+  void _getRoomInfo() {
+    loading = false;
+    if (wsGateway.sid == null) {
+      roomId = null;
+      members.clear();
+    }
     final packet = wsGateway.serverPacket;
     if (packet is CreatedRoomPacket) {
       roomId = packet.roomId;

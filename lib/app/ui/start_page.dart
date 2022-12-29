@@ -2,31 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/app/lib/lib.dart';
 
-class StartPage extends StatelessWidget {
+class StartPage extends StatefulWidget {
   const StartPage({super.key});
 
   @override
+  State<StartPage> createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
+  final GameRoomNotifier _gameRoomNotifier = GameRoomNotifier();
+
+  @override
+  void dispose() {
+    _gameRoomNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Stack(children: [
-        TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0.0, end: 1.0),
-          duration: M3Duration.short4,
-          builder: (context, value, child) => Opacity(
-            opacity: value,
-            child: child,
-          ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints.expand(),
-            child: const ColoredBox(
-              color: Colors.black54,
+    return GameRoomModel(
+      notifier: _gameRoomNotifier,
+      child: Material(
+        color: Colors.transparent,
+        child: Stack(children: [
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: M3Duration.short4,
+            builder: (context, value, child) => Opacity(
+              opacity: value,
+              child: child,
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints.expand(),
+              child: const ColoredBox(
+                color: Colors.black54,
+              ),
             ),
           ),
-        ),
-        GameRoomModel(
-          notifier: GameRoomNotifier(),
-          child: Navigator(
+          Navigator(
             initialRoute: '/',
             onGenerateRoute: (settings) {
               switch (settings.name) {
@@ -56,9 +69,9 @@ class StartPage extends StatelessWidget {
                   throw ArgumentError();
               }
             },
-          ),
-        )
-      ]),
+          )
+        ]),
+      ),
     );
   }
 }
