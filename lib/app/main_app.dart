@@ -4,30 +4,47 @@ import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 final errorDisplayKey = GlobalKey<AppErrorDisplayState>();
+final navigatorKey = GlobalKey<NavigatorState>();
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
   @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  final _gameRoomNotifier = GameRoomNotifier();
+
+  @override
+  void dispose() {
+    _gameRoomNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(0, 15, 228, 232)),
-      ),
-      home: Stack(
-        children: [
-          AppErrorDisplay(key: errorDisplayKey),
-          GameWidget(
-            game: MainGame2(),
-            overlayBuilderMap: {
-              'startPage': (_, game) {
-                return const StartPage();
-              }
-            },
+    return GameRoomModel(
+      notifier: _gameRoomNotifier,
+      child: AppErrorDisplay(
+        key: errorDisplayKey,
+        child: MaterialApp(
+          navigatorKey: navigatorKey,
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color.fromARGB(0, 15, 228, 232)),
           ),
-        ],
+          routes: {
+            '/': (context) => Stack(
+                  children: [
+                    GameWidget(game: MainGame2()),
+                    const StartPage(),
+                  ],
+                ),
+            '/game': (context) => GameWidget(game: MainGame2()),
+          },
+        ),
       ),
     );
   }

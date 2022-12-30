@@ -35,7 +35,6 @@ class _WaitingRoomState extends State<WaitingRoom> {
 
   @override
   void dispose() {
-    wsGateway.close();
     errorDisplayKey.currentState?.unset();
     super.dispose();
   }
@@ -44,40 +43,47 @@ class _WaitingRoomState extends State<WaitingRoom> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SafeArea(
-      child: ColoredBox(
-        color: theme.colorScheme.surface,
-        child: Align(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: Scaffold(
-              backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.05),
-              appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () async {
+        wsGateway.close();
+        return true;
+      },
+      child: SafeArea(
+        child: ColoredBox(
+          color: theme.colorScheme.surface,
+          child: Align(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Scaffold(
                 backgroundColor:
-                    theme.colorScheme.surfaceTint.withOpacity(0.08),
-                leading: Align(
-                  child: Builder(builder: (context) {
-                    return TextButton.icon(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).clearSnackBars();
-                        Navigator.of(context)
-                            .popUntil(ModalRoute.withName('/'));
-                      },
-                      icon: const Icon(Icons.close),
-                      label: const Text("Leave"),
-                    );
-                  }),
+                    theme.colorScheme.surfaceTint.withOpacity(0.05),
+                appBar: AppBar(
+                  backgroundColor:
+                      theme.colorScheme.surfaceTint.withOpacity(0.08),
+                  leading: Align(
+                    child: Builder(builder: (context) {
+                      return TextButton.icon(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          Navigator.of(context)
+                              .popUntil(ModalRoute.withName('/'));
+                        },
+                        icon: const Icon(Icons.close),
+                        label: const Text("Leave"),
+                      );
+                    }),
+                  ),
+                  leadingWidth: 100,
                 ),
-                leadingWidth: 100,
+                body: Builder(builder: (context) {
+                  return Padding(
+                    padding: const EdgeInsets.all(Insets.large),
+                    child: GameRoomModel.of(context).roomId != null
+                        ? const WaitingRoomContent()
+                        : const Center(child: CircularProgressIndicator()),
+                  );
+                }),
               ),
-              body: Builder(builder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.all(Insets.large),
-                  child: GameRoomModel.of(context).roomId != null
-                      ? const WaitingRoomContent()
-                      : const Center(child: CircularProgressIndicator()),
-                );
-              }),
             ),
           ),
         ),
@@ -185,7 +191,12 @@ class StartButton extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: ElevatedButton.icon(
-        onPressed: GameRoomModel.of(context).isFull ? () {} : null,
+        onPressed: GameRoomModel.of(context).isFull
+            ? () {
+                Navigator.of(context, rootNavigator: true)
+                    .pushReplacementNamed('/game');
+              }
+            : null,
         style: ElevatedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimary,
           backgroundColor: theme.colorScheme.primary,

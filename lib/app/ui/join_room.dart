@@ -23,66 +23,67 @@ class _JoinRoomState extends State<JoinRoom> {
   }
 
   @override
-  void dispose() {
-    wsGateway.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SafeArea(
-      child: ColoredBox(
-        color: theme.colorScheme.surface,
-        child: Align(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: Scaffold(
-              backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.05),
-              appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () async {
+        wsGateway.close();
+        return true;
+      },
+      child: SafeArea(
+        child: ColoredBox(
+          color: theme.colorScheme.surface,
+          child: Align(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Scaffold(
                 backgroundColor:
-                    theme.colorScheme.surfaceTint.withOpacity(0.08),
-              ),
-              body: Padding(
-                padding: const EdgeInsets.all(Insets.large),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: Insets.medium),
-                    Card(
-                      elevation: 0,
-                      color: theme.colorScheme.tertiaryContainer,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: Insets.medium,
-                          horizontal: Insets.extraLarge,
-                        ),
-                        child: TextField(
-                          focusNode: _focusNode,
-                          onChanged: (value) {
-                            setState(() => _enteredRoomId = value);
-                          },
-                          style: theme.textTheme.headline3?.copyWith(
-                              color: theme.colorScheme.onTertiaryContainer),
-                          textAlign: TextAlign.center,
-                          maxLength: roomIdLength,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter code',
-                            counterText: '',
+                    theme.colorScheme.surfaceTint.withOpacity(0.05),
+                appBar: AppBar(
+                  backgroundColor:
+                      theme.colorScheme.surfaceTint.withOpacity(0.08),
+                ),
+                body: Padding(
+                  padding: const EdgeInsets.all(Insets.large),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: Insets.medium),
+                      Card(
+                        elevation: 0,
+                        color: theme.colorScheme.tertiaryContainer,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: Insets.medium,
+                            horizontal: Insets.extraLarge,
+                          ),
+                          child: TextField(
+                            focusNode: _focusNode,
+                            onChanged: (value) {
+                              setState(() => _enteredRoomId = value);
+                            },
+                            style: theme.textTheme.headline3?.copyWith(
+                                color: theme.colorScheme.onTertiaryContainer),
+                            textAlign: TextAlign.center,
+                            maxLength: roomIdLength,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter code',
+                              counterText: '',
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const Spacer(),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: JoinRoomButton(
-                        enteredRoomId: _enteredRoomId,
-                        enabled: _enteredRoomId.length == roomIdLength,
+                      const Spacer(),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: JoinRoomButton(
+                          enteredRoomId: _enteredRoomId,
+                          enabled: _enteredRoomId.length == roomIdLength,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

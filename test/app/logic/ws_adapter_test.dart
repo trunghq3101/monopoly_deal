@@ -15,12 +15,9 @@ void main() {
         ConnectedPacket(sid: 'abc'),
       );
       expect(
-        adapter.decode("""{"event": "createdRoom", "data": "room,id1,id2"}"""),
-        CreatedRoomPacket(roomId: 'room', memberIds: ['id1', 'id2']),
-      );
-      expect(
-        adapter.decode("""{"event": "joinedRoom", "data": "room,id1,id2"}"""),
-        JoinedRoomPacket(roomId: 'room', memberIds: ['id1', 'id2']),
+        adapter.decode("""{"event": "roomInfo", "data": "room,2,id1,id2"}"""),
+        RoomInfoPacket(
+            roomId: 'room', maxMembers: 2, memberIds: ['id1', 'id2']),
       );
     });
 

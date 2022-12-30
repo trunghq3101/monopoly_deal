@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/app/app.dart';
+import 'package:monopoly_deal/app/main_app.dart';
 
 class AppErrorDisplay extends StatefulWidget {
-  const AppErrorDisplay({super.key});
+  const AppErrorDisplay({super.key, required this.child});
+
+  final Widget child;
 
   @override
   State<AppErrorDisplay> createState() => AppErrorDisplayState();
@@ -29,7 +32,7 @@ class AppErrorDisplayState extends State<AppErrorDisplay> {
   }
 
   void dismiss() {
-    Navigator.of(context).pop();
+    navigatorKey.currentState?.pop();
   }
 
   void setActions(List<Widget> actions) {
@@ -57,14 +60,14 @@ class AppErrorDisplayState extends State<AppErrorDisplay> {
 
   void _showErrorDialog(AppError error) {
     showDialog(
-      context: context,
+      context: navigatorKey.currentContext!,
       builder: (context) => _errorDialogBuilder(error),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return widget.child;
   }
 }
 
