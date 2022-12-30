@@ -18,6 +18,8 @@ class GameRoomModel extends InheritedNotifier<GameRoomNotifier> {
 class GameRoomNotifier extends ChangeNotifier {
   String? roomId;
   List<String> members = [];
+  int? maxMembers;
+  bool get isFull => maxMembers == members.length;
   bool loading = false;
 
   GameRoomNotifier() {
@@ -39,12 +41,14 @@ class GameRoomNotifier extends ChangeNotifier {
     loading = false;
     if (wsGateway.sid == null) {
       roomId = null;
+      maxMembers = null;
       members.clear();
     }
     final packet = wsGateway.serverPacket;
     if (packet is CreatedRoomPacket) {
       roomId = packet.roomId;
       members = packet.memberIds;
+      maxMembers = packet.maxMembers;
       notifyListeners();
     } else if (packet is JoinedRoomPacket) {
       roomId = packet.roomId;

@@ -85,6 +85,8 @@ extension AppErrorDisplayContent on AppError {
     switch (type) {
       case AppErrorType.roomNotExist:
         return 'Room does not exist. Please recheck the room code';
+      case AppErrorType.alreadyInRoom:
+        return 'You are already in a room. Please quit that room first.';
       case AppErrorType.general:
       case AppErrorType.socketConnection:
       default:

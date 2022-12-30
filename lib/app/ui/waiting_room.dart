@@ -140,36 +140,65 @@ class WaitingRoomContent extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    WaitingIndicator(index: 0),
-                    WaitingIndicator(index: 1),
+                    Member(index: 0),
+                    Member(index: 1),
                   ],
                 ),
                 const SizedBox(height: Insets.medium),
-                const RepaintBoundary(child: LinearProgressIndicator()),
+                const WaitingProgressIndicator(),
               ],
             ),
           ),
         ),
         const Spacer(),
-        Align(
-          alignment: Alignment.centerRight,
-          child: ElevatedButton.icon(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              foregroundColor: theme.colorScheme.onPrimary,
-              backgroundColor: theme.colorScheme.primary,
-            ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-            icon: const Icon(Icons.navigate_next_rounded),
-            label: const Text('Start game'),
-          ),
-        ),
+        const StartButton(),
       ],
     );
   }
 }
 
-class WaitingIndicator extends StatelessWidget {
-  const WaitingIndicator({super.key, required this.index});
+class WaitingProgressIndicator extends StatelessWidget {
+  const WaitingProgressIndicator({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GameRoomModel.of(context).isFull
+        ? Text(
+            'Ready!',
+            style: Theme.of(context).textTheme.headline5,
+          )
+        : const RepaintBoundary(child: LinearProgressIndicator());
+  }
+}
+
+class StartButton extends StatelessWidget {
+  const StartButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Align(
+      alignment: Alignment.centerRight,
+      child: ElevatedButton.icon(
+        onPressed: GameRoomModel.of(context).isFull ? () {} : null,
+        style: ElevatedButton.styleFrom(
+          foregroundColor: theme.colorScheme.onPrimary,
+          backgroundColor: theme.colorScheme.primary,
+        ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
+        icon: const Icon(Icons.navigate_next_rounded),
+        label: const Text('Start game'),
+      ),
+    );
+  }
+}
+
+class Member extends StatelessWidget {
+  const Member({super.key, required this.index});
 
   final int index;
 

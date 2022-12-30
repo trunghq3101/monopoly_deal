@@ -5,7 +5,8 @@ import 'package:logging/logging.dart';
 enum AppErrorType {
   general,
   socketConnection,
-  roomNotExist;
+  roomNotExist,
+  alreadyInRoom;
 }
 
 class AppError {

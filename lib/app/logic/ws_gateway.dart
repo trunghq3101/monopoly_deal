@@ -35,6 +35,9 @@ class WsGateway extends ChangeNotifier {
             case PacketErrorType.roomNotExist:
               appErrorGateway.addError(AppError(AppErrorType.roomNotExist));
               break;
+            case PacketErrorType.alreadyInRoom:
+              appErrorGateway.addError(AppError(AppErrorType.alreadyInRoom));
+              break;
             default:
           }
         }
