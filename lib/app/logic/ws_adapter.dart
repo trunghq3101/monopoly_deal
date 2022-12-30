@@ -26,12 +26,11 @@ class WsAdapter {
         return ErrorPacket.from(dto.data);
       case PacketType.connected:
         return ConnectedPacket.from(dto.data);
-      case PacketType.createdRoom:
-        return CreatedRoomPacket.from(dto.data);
-      case PacketType.joinedRoom:
-        return JoinedRoomPacket.from(dto.data);
+      case PacketType.roomInfo:
+        return RoomInfo.from(dto.data);
       default:
-        throw UnimplementedError('Unimplemented decoder for this type: $type');
+        throw UnimplementedError(
+            'Unimplemented decoder for this type: ${dto.event}');
     }
   }
 

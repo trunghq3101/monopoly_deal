@@ -4,9 +4,8 @@ enum PacketType {
   error,
   connected,
   createRoom,
-  createdRoom,
   joinRoom,
-  joinedRoom,
+  roomInfo,
 }
 
 enum PacketErrorType { roomNotExist, alreadyInRoom }
@@ -40,16 +39,16 @@ class ConnectedPacket with EquatableMixin, ServerPacket {
   List<Object?> get props => [sid];
 }
 
-class CreatedRoomPacket with EquatableMixin, ServerPacket {
-  CreatedRoomPacket({
+class RoomInfo with EquatableMixin, ServerPacket {
+  RoomInfo({
     required this.roomId,
     required this.maxMembers,
     required this.memberIds,
   });
 
-  factory CreatedRoomPacket.from(Object? data) {
+  factory RoomInfo.from(Object? data) {
     final parts = (data as String).split(",");
-    return CreatedRoomPacket(
+    return RoomInfo(
       roomId: parts[0],
       maxMembers: int.parse(parts[1]),
       memberIds: parts.sublist(2),
