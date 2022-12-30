@@ -33,7 +33,7 @@ class WsGateway extends ChangeNotifier {
         if (event is ErrorPacket) {
           switch (event.type) {
             case PacketErrorType.roomNotExist:
-              appErrorGateway.addError(AppError.roomNotExist);
+              appErrorGateway.addError(AppError(AppErrorType.roomNotExist));
               break;
             default:
           }
@@ -46,7 +46,7 @@ class WsGateway extends ChangeNotifier {
   }
 
   void _catchSocketError(e, s) =>
-      appErrorGateway.addError(AppError.socketConnection, e, s);
+      appErrorGateway.addError(AppError(AppErrorType.socketConnection, e, s));
 
   void close() {
     socket?.close();

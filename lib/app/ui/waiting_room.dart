@@ -1,9 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:monopoly_deal/app/app.dart';
+import 'package:monopoly_deal/app/main_app.dart';
 
-class WaitingRoom extends StatelessWidget {
+class WaitingRoomArgs {
+  final Function()? pendingAction;
+
+  WaitingRoomArgs({this.pendingAction});
+}
+
+class WaitingRoom extends StatefulWidget {
   const WaitingRoom({super.key});
+
+  @override
+  State<WaitingRoom> createState() => _WaitingRoomState();
+}
+
+class _WaitingRoomState extends State<WaitingRoom> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    errorDisplayKey.currentState?.setActions([
+      TextButton(
+        onPressed: () {
+          errorDisplayKey.currentState?.dismiss();
+          Navigator.of(context).pop();
+        },
+        child: const Text('Go back'),
+      ),
+    ]);
+    final args = ModalRoute.of(context)!.settings.arguments as WaitingRoomArgs;
+    args.pendingAction?.call();
+  }
+
+  @override
+  void dispose() {
+    wsGateway.close();
+    errorDisplayKey.currentState?.unset();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +60,6 @@ class WaitingRoom extends StatelessWidget {
                     return TextButton.icon(
                       onPressed: () {
                         ScaffoldMessenger.of(context).clearSnackBars();
-                        wsGateway.close();
                         Navigator.of(context)
                             .popUntil(ModalRoute.withName('/'));
                       },

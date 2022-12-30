@@ -16,10 +16,14 @@ class StartMenu extends StatelessWidget {
           Builder(builder: (context) {
             return TextButton(
               onPressed: () {
-                wsGateway
-                  ..connect()
-                  ..send((sid) => CreateRoomPacket(sid: sid));
-                Navigator.of(context).pushNamed('/waitingRoom');
+                Navigator.of(context).pushNamed(
+                  '/waitingRoom',
+                  arguments: WaitingRoomArgs(
+                    pendingAction: () => wsGateway
+                      ..connect()
+                      ..send((sid) => CreateRoomPacket(sid: sid)),
+                  ),
+                );
               },
               child: const Text('Create room'),
             );

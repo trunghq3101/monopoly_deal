@@ -11,6 +11,16 @@ class JoinRoom extends StatefulWidget {
 class _JoinRoomState extends State<JoinRoom> {
   static const roomIdLength = 6;
   String _enteredRoomId = '';
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _focusNode.requestFocus();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +59,14 @@ class _JoinRoomState extends State<JoinRoom> {
                           vertical: Insets.medium,
                           horizontal: Insets.extraLarge,
                         ),
-                        child: TextFormField(
+                        child: TextField(
+                          focusNode: _focusNode,
                           onChanged: (value) {
                             setState(() => _enteredRoomId = value);
                           },
                           style: theme.textTheme.headline3?.copyWith(
                               color: theme.colorScheme.onTertiaryContainer),
                           textAlign: TextAlign.center,
-                          autofocus: true,
                           maxLength: roomIdLength,
                           decoration: const InputDecoration(
                             hintText: 'Enter code',

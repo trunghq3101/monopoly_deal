@@ -45,25 +45,19 @@ class _StartPageState extends State<StartPage> {
               switch (settings.name) {
                 case '/':
                   return MaterialPageRoute(
-                    builder: (_) {
-                      return const StartMenu();
-                    },
-                    settings: const RouteSettings(name: '/'),
+                    builder: (_) => const StartMenu(),
+                    settings: settings,
                   );
                 case '/waitingRoom':
                   return MaterialPageRoute(
-                    builder: (_) {
-                      return const WaitingRoom();
-                    },
-                    settings: const RouteSettings(name: '/waitingRoom'),
+                    builder: (_) => const WaitingRoom(),
+                    settings: settings,
                   );
 
                 case '/joinRoom':
                   return MaterialPageRoute(
-                    builder: (_) {
-                      return const JoinRoom();
-                    },
-                    settings: const RouteSettings(name: '/joinRoom'),
+                    builder: (_) => const JoinRoom(),
+                    settings: settings,
                   );
                 default:
                   throw ArgumentError();

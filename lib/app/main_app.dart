@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
 
+final errorDisplayKey = GlobalKey<AppErrorDisplayState>();
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -16,7 +18,7 @@ class MainApp extends StatelessWidget {
       ),
       home: Stack(
         children: [
-          const WsErrorDisplay(),
+          AppErrorDisplay(key: errorDisplayKey),
           GameWidget(
             game: MainGame2(),
             overlayBuilderMap: {

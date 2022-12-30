@@ -2,15 +2,18 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-enum AppError {
-  socketConnection('Socket connection error'),
-  roomNotExist('Room does not exist');
+enum AppErrorType {
+  general,
+  socketConnection,
+  roomNotExist;
+}
 
-  final String message;
-  const AppError(this.message);
+class AppError {
+  final AppErrorType type;
+  final Object? exception;
+  final StackTrace? stackTrace;
 
-  @override
-  String toString() => message;
+  AppError(this.type, [this.exception, this.stackTrace]);
 }
 
 class AppErrorGateway {
@@ -18,8 +21,8 @@ class AppErrorGateway {
   Stream<AppError> get error => _errorController.stream;
   final _logger = Logger("$AppErrorGateway");
 
-  void addError(AppError appError, [Object? originError, StackTrace? s]) {
-    _logger.warning(appError.message, originError, s);
+  void addError(AppError appError) {
+    _logger.warning(appError.type, appError.exception, appError.stackTrace);
     _errorController.add(appError);
   }
 }
