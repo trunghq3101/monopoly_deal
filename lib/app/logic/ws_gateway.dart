@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:monopoly_deal/app/app.dart';
+import 'package:monopoly_deal/config.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
 class WsGateway extends ChangeNotifier {
@@ -13,7 +14,7 @@ class WsGateway extends ChangeNotifier {
 
   void connect() {
     if (socket != null) return;
-    socket = WebSocket(Uri.parse("ws://localhost:3000/game"));
+    socket = WebSocket(Uri.parse("$wsHost/game"));
     socket!.connection.listen(
       (event) {
         _logger.info(event);

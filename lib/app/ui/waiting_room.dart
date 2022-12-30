@@ -43,47 +43,41 @@ class _WaitingRoomState extends State<WaitingRoom> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return WillPopScope(
-      onWillPop: () async {
-        wsGateway.close();
-        return true;
-      },
-      child: SafeArea(
-        child: ColoredBox(
-          color: theme.colorScheme.surface,
-          child: Align(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Scaffold(
+    return SafeArea(
+      child: ColoredBox(
+        color: theme.colorScheme.surface,
+        child: Align(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Scaffold(
+              backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.05),
+              appBar: AppBar(
                 backgroundColor:
-                    theme.colorScheme.surfaceTint.withOpacity(0.05),
-                appBar: AppBar(
-                  backgroundColor:
-                      theme.colorScheme.surfaceTint.withOpacity(0.08),
-                  leading: Align(
-                    child: Builder(builder: (context) {
-                      return TextButton.icon(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          Navigator.of(context)
-                              .popUntil(ModalRoute.withName('/'));
-                        },
-                        icon: const Icon(Icons.close),
-                        label: const Text("Leave"),
-                      );
-                    }),
-                  ),
-                  leadingWidth: 100,
+                    theme.colorScheme.surfaceTint.withOpacity(0.08),
+                leading: Align(
+                  child: Builder(builder: (context) {
+                    return TextButton.icon(
+                      onPressed: () {
+                        wsGateway.close();
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        Navigator.of(context)
+                            .popUntil(ModalRoute.withName('/'));
+                      },
+                      icon: const Icon(Icons.close),
+                      label: const Text("Leave"),
+                    );
+                  }),
                 ),
-                body: Builder(builder: (context) {
-                  return Padding(
-                    padding: const EdgeInsets.all(Insets.large),
-                    child: GameRoomModel.of(context).roomId != null
-                        ? const WaitingRoomContent()
-                        : const Center(child: CircularProgressIndicator()),
-                  );
-                }),
+                leadingWidth: 100,
               ),
+              body: Builder(builder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.all(Insets.large),
+                  child: GameRoomModel.of(context).roomId != null
+                      ? const WaitingRoomContent()
+                      : const Center(child: CircularProgressIndicator()),
+                );
+              }),
             ),
           ),
         ),
