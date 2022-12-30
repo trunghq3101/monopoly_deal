@@ -27,7 +27,7 @@ class WsAdapter {
       case PacketType.connected:
         return ConnectedPacket.from(dto.data);
       case PacketType.roomInfo:
-        return RoomInfo.from(dto.data);
+        return RoomInfoPacket.from(dto.data);
       default:
         throw UnimplementedError(
             'Unimplemented decoder for this type: ${dto.event}');

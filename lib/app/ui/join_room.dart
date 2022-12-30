@@ -23,6 +23,12 @@ class _JoinRoomState extends State<JoinRoom> {
   }
 
   @override
+  void dispose() {
+    wsGateway.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -37,13 +43,6 @@ class _JoinRoomState extends State<JoinRoom> {
               appBar: AppBar(
                 backgroundColor:
                     theme.colorScheme.surfaceTint.withOpacity(0.08),
-                leading: IconButton(
-                  onPressed: () {
-                    wsGateway.close();
-                    Navigator.of(context).pop();
-                  },
-                  icon: Icon(Icons.adaptive.arrow_back),
-                ),
               ),
               body: Padding(
                 padding: const EdgeInsets.all(Insets.large),
@@ -94,7 +93,7 @@ class _JoinRoomState extends State<JoinRoom> {
   }
 }
 
-class JoinRoomButton extends StatelessWidget {
+class JoinRoomButton extends StatefulWidget {
   const JoinRoomButton({
     Key? key,
     required this.enabled,
@@ -103,6 +102,23 @@ class JoinRoomButton extends StatelessWidget {
 
   final String enteredRoomId;
   final bool enabled;
+
+  @override
+  State<JoinRoomButton> createState() => _JoinRoomButtonState();
+}
+
+class _JoinRoomButtonState extends State<JoinRoomButton> {
+  @override
+  void initState() {
+    super.initState();
+    wsGateway.addListener(_wsGatewayListener);
+  }
+
+  @override
+  void dispose() {
+    wsGateway.removeListener(_wsGatewayListener);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,12 +138,12 @@ class JoinRoomButton extends StatelessWidget {
       );
     }
     return ElevatedButton.icon(
-      onPressed: enabled
+      onPressed: widget.enabled
           ? () {
               wsGateway
                 ..connect()
-                ..send(
-                    (sid) => JoinRoomPacket(sid: sid, roomId: enteredRoomId));
+                ..send((sid) =>
+                    JoinRoomPacket(sid: sid, roomId: widget.enteredRoomId));
               GameRoomModel.of(context).waitingForNewState();
             }
           : null,
@@ -140,5 +156,11 @@ class JoinRoomButton extends StatelessWidget {
       icon: const Icon(Icons.navigate_next_rounded),
       label: const Text('Join'),
     );
+  }
+
+  void _wsGatewayListener() {
+    if (wsGateway.serverPacket is RoomInfoPacket) {
+      Navigator.of(context).pushNamed('/waitingRoom');
+    }
   }
 }

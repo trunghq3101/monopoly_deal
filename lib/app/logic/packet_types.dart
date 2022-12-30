@@ -39,16 +39,16 @@ class ConnectedPacket with EquatableMixin, ServerPacket {
   List<Object?> get props => [sid];
 }
 
-class RoomInfo with EquatableMixin, ServerPacket {
-  RoomInfo({
+class RoomInfoPacket with EquatableMixin, ServerPacket {
+  RoomInfoPacket({
     required this.roomId,
     required this.maxMembers,
     required this.memberIds,
   });
 
-  factory RoomInfo.from(Object? data) {
+  factory RoomInfoPacket.from(Object? data) {
     final parts = (data as String).split(",");
-    return RoomInfo(
+    return RoomInfoPacket(
       roomId: parts[0],
       maxMembers: int.parse(parts[1]),
       memberIds: parts.sublist(2),

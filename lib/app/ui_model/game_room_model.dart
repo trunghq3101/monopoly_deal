@@ -45,7 +45,7 @@ class GameRoomNotifier extends ChangeNotifier {
       members.clear();
     }
     final packet = wsGateway.serverPacket;
-    if (packet is RoomInfo) {
+    if (packet is RoomInfoPacket) {
       roomId = packet.roomId;
       members = packet.memberIds;
       maxMembers = packet.maxMembers;

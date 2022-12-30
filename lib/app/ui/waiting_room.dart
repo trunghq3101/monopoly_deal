@@ -29,8 +29,8 @@ class _WaitingRoomState extends State<WaitingRoom> {
         child: const Text('Go back'),
       ),
     ]);
-    final args = ModalRoute.of(context)!.settings.arguments as WaitingRoomArgs;
-    args.pendingAction?.call();
+    final args = ModalRoute.of(context)!.settings.arguments as WaitingRoomArgs?;
+    args?.pendingAction?.call();
   }
 
   @override
