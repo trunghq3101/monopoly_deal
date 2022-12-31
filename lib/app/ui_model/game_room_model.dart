@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/app/app.dart';
+import 'package:web_socket_client/web_socket_client.dart';
 
 class GameRoomModel extends InheritedNotifier<GameRoomNotifier> {
   const GameRoomModel({
@@ -27,10 +28,6 @@ class GameRoomNotifier extends ChangeNotifier {
     wsGateway.addListener(_getRoomInfo);
   }
 
-  void waitingForNewState() {
-    loading = true;
-  }
-
   @override
   void dispose() {
     wsGateway.removeListener(_getRoomInfo);
@@ -38,13 +35,25 @@ class GameRoomNotifier extends ChangeNotifier {
   }
 
   void _getRoomInfo() {
-    loading = false;
     if (wsGateway.sid == null) {
       roomId = null;
       maxMembers = null;
+      loading = false;
       members.clear();
+      notifyListeners();
     }
     final packet = wsGateway.serverPacket;
+    if (wsGateway.connectionState is Connecting ||
+        wsGateway.connectionState is Reconnecting) {
+      loading = true;
+      notifyListeners();
+    }
+    if (wsGateway.connectionState is Disconnected ||
+        packet is ErrorPacket ||
+        packet is RoomInfoPacket) {
+      loading = false;
+      notifyListeners();
+    }
     if (packet is RoomInfoPacket) {
       roomId = packet.roomId;
       members = packet.memberIds;

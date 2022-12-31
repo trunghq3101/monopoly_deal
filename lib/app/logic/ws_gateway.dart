@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:logging/logging.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/config.dart';
@@ -7,6 +7,7 @@ import 'package:web_socket_client/web_socket_client.dart';
 class WsGateway extends ChangeNotifier {
   WebSocket? socket;
   ServerPacket? serverPacket;
+  ConnectionState? connectionState;
   String? sid;
   final _wsAdapter = WsAdapter();
   final _logger = Logger("$WsGateway");
@@ -18,6 +19,8 @@ class WsGateway extends ChangeNotifier {
     socket!.connection.listen(
       (event) {
         _logger.info(event);
+        connectionState = event;
+        notifyListeners();
       },
       onError: _catchSocketError,
     );
@@ -57,6 +60,7 @@ class WsGateway extends ChangeNotifier {
     socket = null;
     sid = null;
     serverPacket = null;
+    connectionState = null;
     _pendingRequests.clear();
     notifyListeners();
   }

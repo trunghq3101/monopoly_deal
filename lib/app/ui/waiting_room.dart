@@ -43,9 +43,9 @@ class _WaitingRoomState extends State<WaitingRoom> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SafeArea(
-      child: ColoredBox(
-        color: theme.colorScheme.surface,
+    return ColoredBox(
+      color: theme.colorScheme.surface,
+      child: SafeArea(
         child: Align(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 600),
