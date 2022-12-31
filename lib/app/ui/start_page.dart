@@ -1,17 +1,33 @@
 import 'dart:async';
 
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/app/lib/lib.dart';
+import 'package:monopoly_deal/game/game.dart';
 
-class StartPage extends StatefulWidget {
+class StartPage extends StatelessWidget {
   const StartPage({super.key});
 
   @override
-  State<StartPage> createState() => _StartPageState();
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        GameWidget(game: MainGame2()),
+        const StartMenuOverlay(),
+      ],
+    );
+  }
 }
 
-class _StartPageState extends State<StartPage> {
+class StartMenuOverlay extends StatefulWidget {
+  const StartMenuOverlay({super.key});
+
+  @override
+  State<StartMenuOverlay> createState() => _StartMenuOverlayState();
+}
+
+class _StartMenuOverlayState extends State<StartMenuOverlay> {
   late final Timer _timer;
   bool _show = false;
 
@@ -51,32 +67,49 @@ class _StartPageState extends State<StartPage> {
             ),
           ),
         ),
-        Navigator(
-          initialRoute: '/',
-          onGenerateRoute: (settings) {
-            switch (settings.name) {
-              case '/':
-                return MaterialPageRoute(
-                  builder: (_) => const StartMenu(),
-                  settings: settings,
-                );
-              case '/waitingRoom':
-                return MaterialPageRoute(
-                  builder: (_) => const WaitingRoom(),
-                  settings: settings,
-                );
-
-              case '/joinRoom':
-                return MaterialPageRoute(
-                  builder: (_) => const JoinRoom(),
-                  settings: settings,
-                );
-              default:
-                throw ArgumentError();
-            }
-          },
-        )
+        const StartMenu()
       ]),
+    );
+  }
+}
+
+class StartMenu extends StatelessWidget {
+  const StartMenu({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return M3Dialog(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Builder(builder: (context) {
+            return TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  '/waitingRoom',
+                  arguments: WaitingRoomArgs(
+                    pendingAction: () => wsGateway
+                      ..connect()
+                      ..send((sid) => CreateRoomPacket(sid: sid)),
+                  ),
+                );
+              },
+              child: const Text('Create room'),
+            );
+          }),
+          const SizedBox(height: 12),
+          Builder(builder: (context) {
+            return TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/joinRoom');
+              },
+              child: const Text('Join room'),
+            );
+          }),
+        ],
+      ),
     );
   }
 }

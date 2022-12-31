@@ -16,10 +16,11 @@ class WaitingRoom extends StatefulWidget {
   State<WaitingRoom> createState() => _WaitingRoomState();
 }
 
-class _WaitingRoomState extends State<WaitingRoom> {
+class _WaitingRoomState extends State<WaitingRoom> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
     errorDisplayKey.currentState?.setActions([
       TextButton(
         onPressed: () {
@@ -35,8 +36,15 @@ class _WaitingRoomState extends State<WaitingRoom> {
 
   @override
   void dispose() {
+    routeObserver.unsubscribe(this);
     errorDisplayKey.currentState?.unset();
     super.dispose();
+  }
+
+  @override
+  void didPop() {
+    wsGateway.close();
+    super.didPop();
   }
 
   @override
@@ -187,8 +195,7 @@ class StartButton extends StatelessWidget {
       child: ElevatedButton.icon(
         onPressed: GameRoomModel.of(context).isFull
             ? () {
-                Navigator.of(context, rootNavigator: true)
-                    .pushReplacementNamed('/game');
+                Navigator.of(context).pushReplacementNamed('/game');
               }
             : null,
         style: ElevatedButton.styleFrom(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/app/app.dart';
+import 'package:monopoly_deal/app/main_app.dart';
 
 class JoinRoom extends StatefulWidget {
   const JoinRoom({super.key});
@@ -8,7 +9,7 @@ class JoinRoom extends StatefulWidget {
   State<JoinRoom> createState() => _JoinRoomState();
 }
 
-class _JoinRoomState extends State<JoinRoom> {
+class _JoinRoomState extends State<JoinRoom> with RouteAware {
   static const roomIdLength = 6;
   String _enteredRoomId = '';
   late FocusNode _focusNode;
@@ -20,6 +21,24 @@ class _JoinRoomState extends State<JoinRoom> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _focusNode.requestFocus();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPop() {
+    wsGateway.close();
+    super.didPop();
   }
 
   @override

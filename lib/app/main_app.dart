@@ -5,6 +5,7 @@ import 'package:monopoly_deal/game/game.dart';
 
 final errorDisplayKey = GlobalKey<AppErrorDisplayState>();
 final navigatorKey = GlobalKey<NavigatorState>();
+final routeObserver = RouteObserver();
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -35,13 +36,11 @@ class _MainAppState extends State<MainApp> {
             colorScheme: ColorScheme.fromSeed(
                 seedColor: const Color.fromARGB(0, 15, 228, 232)),
           ),
+          navigatorObservers: [routeObserver],
           routes: {
-            '/': (context) => Stack(
-                  children: [
-                    GameWidget(game: MainGame2()),
-                    const StartPage(),
-                  ],
-                ),
+            '/': (context) => const StartPage(),
+            '/waitingRoom': (_) => const WaitingRoom(),
+            '/joinRoom': (_) => const JoinRoom(),
             '/game': (context) => GameWidget(game: MainGame2()),
           },
         ),
