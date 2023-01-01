@@ -63,24 +63,6 @@ class RoomInfoPacket with EquatableMixin, ServerPacket {
   List<Object?> get props => [roomId, memberIds, maxMembers];
 }
 
-class JoinedRoomPacket with EquatableMixin, ServerPacket {
-  JoinedRoomPacket({required this.roomId, required this.memberIds});
-
-  factory JoinedRoomPacket.from(Object? data) {
-    final parts = (data as String).split(",");
-    return JoinedRoomPacket(
-      roomId: parts[0],
-      memberIds: parts.sublist(1),
-    );
-  }
-
-  final String roomId;
-  final List<String> memberIds;
-
-  @override
-  List<Object?> get props => [roomId, memberIds];
-}
-
 class ClientPacket with EquatableMixin {
   ClientPacket({required this.sid});
 
