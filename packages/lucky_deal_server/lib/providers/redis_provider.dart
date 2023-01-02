@@ -6,7 +6,9 @@ typedef CommandGenerator = Future<Command> Function();
 
 final redisProvider = provider<CommandGenerator>(
   (context) => () {
-    final config = context.read<Config>().redisConfig;
+    // TODO: figure out a way to inject config
+    // final config = context.read<Config>().redisConfig;
+    final config = RedisConfig('localhost', 6379);
     return RedisConnection().connect(config.host, config.port);
   },
 );

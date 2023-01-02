@@ -1,6 +1,7 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:dart_frog_web_socket/dart_frog_web_socket.dart';
 import 'package:hashids2/hashids2.dart';
+import 'package:logging/logging.dart';
 import 'package:lucky_deal_server/providers/providers.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:redis/redis.dart';
@@ -10,11 +11,24 @@ Future<void> createRoomHandler(
   RequestContext context,
   PacketData data,
 ) async {
-  final roomId = HashIds().encodeInt(DateTime.now().millisecondsSinceEpoch);
+  final time = DateTime.now();
+  final roomId =
+      HashIds(alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890').encodeList(
+    [
+      time.hour,
+      time.minute,
+      time.second,
+    ],
+  );
   final cmdS = await context.read<CommandGenerator>()();
   final cmdP = await context.read<CommandGenerator>()();
   final pubSub = PubSub(cmdS)..subscribe([roomId]);
-  pubSub.getStream().handleError(print).listen((event) {
+  pubSub
+      .getStream()
+      .handleError(
+        (Object e, StackTrace s) => Logger('').warning(e.toString(), e, s),
+      )
+      .listen((event) {
     final msg = event as List<dynamic>;
     final kind = msg[0];
     switch (kind) {
