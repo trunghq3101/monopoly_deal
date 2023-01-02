@@ -9,6 +9,9 @@ environment:
 dependencies:
   dart_frog: ^0.3.0
   dart_frog_web_socket: ^0.1.0-dev.1
+  redis: ^3.1.0
+  lucky_deal_shared:
+    path: ../lucky_deal_shared
 
 dev_dependencies:
   mocktail: ^0.3.0

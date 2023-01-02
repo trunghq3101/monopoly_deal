@@ -1,19 +1,13 @@
-import 'package:equatable/equatable.dart';
-
-mixin ServerPacket {}
-
-class ClientPacket with EquatableMixin {
-  ClientPacket({required this.sid});
-
-  final String sid;
-  @override
-  List<Object?> get props => [sid];
-}
+import 'package:lucky_deal_shared/src/types/packet/packet.dart';
 
 enum PacketType {
-  error,
-  connected,
-  createRoom,
-  joinRoom,
-  roomInfo,
+  error(ErrorPacket.from),
+  connected(ConnectedPacket.from),
+  createRoom(CreateRoomPacket.from),
+  joinRoom(JoinRoomPacket.from),
+  roomInfo(RoomInfoPacket.from);
+
+  const PacketType(this.decode);
+
+  final PacketData Function(String raw) decode;
 }

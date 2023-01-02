@@ -7,12 +7,11 @@ import 'package:web_socket_client/web_socket_client.dart';
 
 class WsGateway extends ChangeNotifier {
   WebSocket? socket;
-  ServerPacket? serverPacket;
+  PacketData? serverPacket;
   ConnectionState? connectionState;
   String? sid;
-  final _wsAdapter = WsAdapter();
   final _logger = Logger("$WsGateway");
-  final List<Function(String sid)> _pendingRequests = [];
+  final List<PendingRequest> _pendingRequests = [];
 
   void connect() {
     if (socket != null) return;
@@ -26,13 +25,13 @@ class WsGateway extends ChangeNotifier {
       onError: _catchSocketError,
     );
 
-    socket!.messages.map((event) => _wsAdapter.decode(event)).listen(
+    socket!.messages.map((event) => WsDto.from(event).data).listen(
       (event) {
         _logger.info(event);
         if (event is ConnectedPacket) {
           sid = event.sid;
           for (var request in _pendingRequests) {
-            _sendPacket(sid!, request);
+            _sendPacket(sid!, request.type, request.builder);
           }
         }
         if (event is ErrorPacket) {
@@ -66,17 +65,30 @@ class WsGateway extends ChangeNotifier {
     notifyListeners();
   }
 
-  void send(Function(String sid) request) {
+  void send(PacketType type, SidPacketBuilder builder) {
     if (sid == null) {
-      _pendingRequests.add(request);
+      _pendingRequests.add(PendingRequest(type, builder));
       return;
     }
-    _sendPacket(sid!, request);
+    _sendPacket(sid!, type, builder);
   }
 
-  void _sendPacket(String sid, Function(String sid) buildPacket) {
-    final message = _wsAdapter.encode(buildPacket(sid));
+  void _sendPacket(
+    String sid,
+    PacketType type,
+    SidPacketBuilder builder,
+  ) {
+    final message = WsDto(type, builder(sid)).encode();
     _logger.info(message);
     socket?.send(message);
   }
 }
+
+class PendingRequest {
+  final PacketType type;
+  final SidPacketBuilder builder;
+
+  PendingRequest(this.type, this.builder);
+}
+
+typedef SidPacketBuilder = PacketData Function(String sid);

@@ -1,16 +1,20 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
 import 'packet.dart';
 
-class ConnectedPacket with EquatableMixin, ServerPacket {
-  ConnectedPacket({required this.sid});
+class ConnectedPacket with EquatableMixin, PacketData {
+  ConnectedPacket(this.sid);
 
-  factory ConnectedPacket.from(Object? data) {
-    return ConnectedPacket(sid: data as String);
+  factory ConnectedPacket.from(String data) {
+    final decoded = jsonDecode(data);
+    return ConnectedPacket(decoded['sid']);
   }
 
+  @override
   String encode() {
-    return sid;
+    return jsonEncode({'sid': sid});
   }
 
   final String sid;

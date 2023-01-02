@@ -1,25 +1,32 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
 import 'packet.dart';
 
-class RoomInfoPacket with EquatableMixin, ServerPacket {
+class RoomInfoPacket with EquatableMixin, PacketData {
   RoomInfoPacket({
     required this.roomId,
     required this.maxMembers,
     required this.memberIds,
   });
 
-  factory RoomInfoPacket.from(Object? data) {
-    final parts = (data as String).split(",");
+  factory RoomInfoPacket.from(String data) {
+    final decoded = jsonDecode(data);
     return RoomInfoPacket(
-      roomId: parts[0],
-      maxMembers: int.parse(parts[1]),
-      memberIds: parts.sublist(2),
+      roomId: decoded['roomId'],
+      maxMembers: decoded['maxMembers'],
+      memberIds: decoded['memberIds'],
     );
   }
 
+  @override
   String encode() {
-    return "$roomId,$maxMembers,${memberIds.join(",")}";
+    return jsonEncode({
+      'roomId': roomId,
+      'maxMembers': maxMembers,
+      'memberIds': memberIds,
+    });
   }
 
   final String roomId;

@@ -163,8 +163,10 @@ class _JoinRoomButtonState extends State<JoinRoomButton> {
           ? () {
               wsGateway
                 ..connect()
-                ..send((sid) =>
-                    JoinRoomPacket(sid: sid, roomId: widget.enteredRoomId));
+                ..send(
+                  PacketType.joinRoom,
+                  (sid) => JoinRoomPacket(sid, widget.enteredRoomId),
+                );
             }
           : null,
       style: ElevatedButton.styleFrom(

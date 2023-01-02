@@ -93,7 +93,10 @@ class StartMenu extends StatelessWidget {
                   arguments: WaitingRoomArgs(
                     pendingAction: () => wsGateway
                       ..connect()
-                      ..send((sid) => CreateRoomPacket(sid: sid)),
+                      ..send(
+                        PacketType.createRoom,
+                        (sid) => CreateRoomPacket(sid),
+                      ),
                   ),
                 );
               },
