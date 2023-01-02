@@ -12,6 +12,8 @@ dependencies:
   redis: ^3.1.0
   lucky_deal_shared:
     path: ../lucky_deal_shared
+  logging: ^1.1.0
+  uuid: ^3.0.7
 
 dev_dependencies:
   mocktail: ^0.3.0
