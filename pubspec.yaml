@@ -23,6 +23,8 @@ dependencies:
   web_socket_channel: ^2.2.0
   web_socket_client: ^0.1.0-dev.1
   logging: ^1.1.0
+  lucky_deal_shared:
+    path: ./packages/lucky_deal_shared
 
 dev_dependencies:
   flutter_test:

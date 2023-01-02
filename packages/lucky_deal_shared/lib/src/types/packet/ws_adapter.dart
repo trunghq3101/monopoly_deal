@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:monopoly_deal/app/app.dart';
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 
 class WsDto {
   final String event;

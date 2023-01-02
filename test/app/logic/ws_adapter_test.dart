@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
 
 void main() {

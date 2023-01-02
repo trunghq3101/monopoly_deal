@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:logging/logging.dart';
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/config.dart';
 import 'package:web_socket_client/web_socket_client.dart';
