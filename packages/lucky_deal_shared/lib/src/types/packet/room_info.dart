@@ -16,7 +16,7 @@ class RoomInfoPacket with EquatableMixin, PacketData {
     return RoomInfoPacket(
       roomId: decoded['roomId'],
       maxMembers: decoded['maxMembers'],
-      memberIds: decoded['memberIds'],
+      memberIds: (decoded['memberIds'] as List).join(',').split(',').toList(),
     );
   }
 
