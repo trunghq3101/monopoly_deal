@@ -8,8 +8,8 @@ Future<void> createRoomHandler(
   RequestContext context,
   PacketData data,
 ) async {
-  final roomId = context.read<RandomProvider>().roomIdGenerator();
   final sid = context.read<ConnectionInfoProvider>().sid;
+  final roomId = context.read<RandomProvider>().roomIdGenerator();
   channel.sink.add(WsDto(PacketType.roomCreated, RoomCreated(roomId)).encode());
   context.read<RoomsManager>().create(roomId)
     ..members.listen((members) {

@@ -17,6 +17,7 @@ void main() {
     var testUserId = '';
     late WebSocket user1;
     late WebSocket user2;
+    late WebSocket user3;
     String roomIdGenerator() => testRoomId;
     String uuidGenerator() => testUserId;
 
@@ -57,6 +58,15 @@ void main() {
       user2 = WebSocket(Uri.parse('ws://localhost:${server.port}'));
       await expectLater(
         user2.connection,
+        emitsInOrder([const Connecting(), const Connected()]),
+      );
+    }
+
+    Future<void> user3Connect() async {
+      testUserId = 'user3id';
+      user3 = WebSocket(Uri.parse('ws://localhost:${server.port}'));
+      await expectLater(
+        user3.connection,
         emitsInOrder([const Connecting(), const Connected()]),
       );
     }
@@ -148,6 +158,44 @@ void main() {
         await expectLater(
           user1.messages,
           emitsThrough('3,user1id,user2id'),
+        );
+      },
+      timeout: Timeout.parse('2s'),
+    );
+
+    test(
+      'User 2 receives a notification when user 3 joins the room',
+      () async {
+        await user1Connect();
+        await user2Connect();
+        await user3Connect();
+        await user1CreateRoom();
+
+        user2.send('4,$testRoomId');
+        user3.send('4,$testRoomId');
+
+        await expectLater(
+          user2.messages,
+          emitsThrough('2,user3id'),
+        );
+      },
+      timeout: Timeout.parse('2s'),
+    );
+
+    test(
+      'User 2 sees themselves in the room with user 1 and user 3',
+      () async {
+        await user1Connect();
+        await user2Connect();
+        await user3Connect();
+        await user1CreateRoom();
+
+        user2.send('4,$testRoomId');
+        user3.send('4,$testRoomId');
+
+        await expectLater(
+          user2.messages,
+          emitsThrough('3,user1id,user2id,user3id'),
         );
       },
       timeout: Timeout.parse('2s'),
