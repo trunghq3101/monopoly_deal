@@ -1,13 +1,15 @@
 import 'package:lucky_deal_shared/src/types/packet/packet.dart';
 
 enum PacketType {
-  error(ErrorPacket.from),
-  connected(ConnectedPacket.from),
-  createRoom(CreateRoomPacket.from),
+  createRoom(EmptyPacket.from),
+  roomCreated(RoomCreated.from),
+  memberJoined(MemberJoined.from),
+  membersUpdated(MembersUpdated.from),
   joinRoom(JoinRoomPacket.from),
-  roomInfo(RoomInfoPacket.from);
+  joinedRoom(JoinedRoom.from),
+  error(ErrorPacket.from);
 
   const PacketType(this.decode);
 
-  final PacketData Function(String raw) decode;
+  final PacketData Function(List<String> values) decode;
 }

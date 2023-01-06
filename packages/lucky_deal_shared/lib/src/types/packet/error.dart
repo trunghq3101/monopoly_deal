@@ -1,22 +1,20 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
-
-import 'packet.dart';
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 
 enum PacketErrorType { roomNotExist, alreadyInRoom }
 
 class ErrorPacket with EquatableMixin, PacketData {
   ErrorPacket(this.type);
 
-  factory ErrorPacket.from(String data) {
-    final decoded = jsonDecode(data);
-    return ErrorPacket(decoded['code']);
+  factory ErrorPacket.from(List<String> values) {
+    return ErrorPacket(
+      PacketErrorType.values.firstWhere((e) => e.name == values[0]),
+    );
   }
 
   @override
   String encode() {
-    return jsonEncode({'code': type});
+    return type.name;
   }
 
   final PacketErrorType type;

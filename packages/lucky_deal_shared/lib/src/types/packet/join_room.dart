@@ -1,25 +1,20 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
-
-import 'packet.dart';
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 
 class JoinRoomPacket with EquatableMixin, PacketData {
-  JoinRoomPacket(this.sid, this.roomId);
+  JoinRoomPacket(this.roomId);
 
-  factory JoinRoomPacket.from(String data) {
-    final decoded = jsonDecode(data);
-    return JoinRoomPacket(decoded['sid'], decoded['roomId']);
+  factory JoinRoomPacket.from(List<String> values) {
+    return JoinRoomPacket(values[0]);
   }
 
   @override
   String encode() {
-    return jsonEncode({'sid': sid, 'roomId': roomId});
+    return roomId;
   }
 
-  final String sid;
   final String roomId;
 
   @override
-  List<Object?> get props => [sid, roomId];
+  List<Object?> get props => [roomId];
 }
