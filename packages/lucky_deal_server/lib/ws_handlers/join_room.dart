@@ -16,38 +16,11 @@ Future<void> joinRoomHandler(
       JoinRoomPacket(roomId),
     ).encode(),
   );
-
-  final cmd = await context.read<CommandGenerator>()();
-  final membersValue = await cmd.send_object([
-    'XREVRANGE',
-    '$roomId-${PacketType.membersUpdated}',
-    '+',
-    '-',
-    'COUNT',
-    1
-  ]);
-  final membersRaw =
-      (((membersValue as List)[0] as List)[1] as List)[1] as String;
-  final members = (WsDto.from(membersRaw).data as MembersUpdated).members;
-  await cmd.send_object([
-    'XADD',
-    '$roomId-${PacketType.memberJoined}',
-    '*',
-    'value',
-    WsDto(PacketType.memberJoined, MemberJoined(sid)).encode()
-  ]);
-  final membersUpdatedPacket = WsDto(
-    PacketType.membersUpdated,
-    MembersUpdated([...members, sid]),
-  ).encode();
-  await cmd.send_object([
-    'XADD',
-    '$roomId-${PacketType.membersUpdated}',
-    '*',
-    'value',
-    membersUpdatedPacket,
-  ]);
-  channel.sink.add(
-    membersUpdatedPacket,
-  );
+  context.read<RoomsManager>().findById(roomId)
+    ..members.listen((members) {
+      channel.sink.add(
+        WsDto(PacketType.membersUpdated, MembersUpdated(members)).encode(),
+      );
+    })
+    ..join(sid);
 }

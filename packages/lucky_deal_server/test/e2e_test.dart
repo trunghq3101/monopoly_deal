@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
 import 'package:lucky_deal_server/providers/providers.dart';
 import 'package:test/test.dart';
+import 'package:uuid/uuid.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
 import '../routes/_middleware.dart';
@@ -60,7 +62,7 @@ void main() {
     }
 
     Future<void> user1CreateRoom() async {
-      testRoomId = 'roomId';
+      testRoomId = 'room${const Uuid().v4()}';
       user1.send('0,');
     }
 
@@ -69,7 +71,7 @@ void main() {
 
       await user1CreateRoom();
 
-      await expectLater(user1.messages, emits('1,roomId'));
+      await expectLater(user1.messages, emits('1,$testRoomId'));
     });
 
     test(
@@ -90,11 +92,11 @@ void main() {
         await user2Connect();
         await user1CreateRoom();
 
-        user2.send('4,roomId');
+        user2.send('4,$testRoomId');
 
         await expectLater(
           user2.messages,
-          emits('5,roomId'),
+          emits('5,$testRoomId'),
         );
       },
       timeout: Timeout.parse('2s'),
@@ -107,7 +109,7 @@ void main() {
         await user2Connect();
         await user1CreateRoom();
 
-        user2.send('4,roomId');
+        user2.send('4,$testRoomId');
 
         await expectLater(
           user2.messages,
@@ -124,7 +126,7 @@ void main() {
         await user2Connect();
         await user1CreateRoom();
 
-        user2.send('4,roomId');
+        user2.send('4,$testRoomId');
 
         await expectLater(
           user1.messages,
@@ -141,7 +143,7 @@ void main() {
         await user2Connect();
         await user1CreateRoom();
 
-        user2.send('4,roomId');
+        user2.send('4,$testRoomId');
 
         await expectLater(
           user1.messages,
