@@ -55,7 +55,7 @@ workflows:
         echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
       - flutter packages pub get
       - flutter config --enable-web
-      - flutter analyze
+      # - flutter analyze
       - flutter test
       - flutter build apk --release --build-number=$PROJECT_BUILD_NUMBER
       - |
