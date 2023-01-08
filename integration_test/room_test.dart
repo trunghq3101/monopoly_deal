@@ -56,10 +56,5 @@ void main() {
         findsOneWidget,
       );
     });
-
-    testWidgets(
-        'User 1 knows that user 2 has joined the room', (tester) async {});
-    testWidgets(
-        'Users can start the game when the room is full', (tester) async {});
   });
 }
