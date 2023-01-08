@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 
-enum PacketErrorType { roomNotExist, alreadyInRoom }
+enum PacketErrorType { general, roomNotExist, alreadyInRoom }
 
 class ErrorPacket with EquatableMixin, PacketData {
   ErrorPacket(this.type);

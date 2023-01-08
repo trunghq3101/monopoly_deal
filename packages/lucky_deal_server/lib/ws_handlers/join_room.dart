@@ -9,11 +9,11 @@ Future<void> joinRoomHandler(
   PacketData data,
 ) async {
   final sid = context.read<ConnectionInfoProvider>().sid;
-  final roomId = (data as JoinRoomPacket).roomId;
+  final roomId = (data as JoinRoom).roomId;
   channel.sink.add(
     WsDto(
       PacketType.joinedRoom,
-      JoinRoomPacket(roomId),
+      JoinRoom(roomId),
     ).encode(),
   );
   context.read<RoomsManager>().findById(roomId)

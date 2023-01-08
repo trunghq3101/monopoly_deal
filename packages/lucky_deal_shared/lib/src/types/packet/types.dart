@@ -5,7 +5,7 @@ enum PacketType {
   roomCreated(RoomCreated.from),
   memberJoined(MemberJoined.from),
   membersUpdated(MembersUpdated.from),
-  joinRoom(JoinRoomPacket.from),
+  joinRoom(JoinRoom.from),
   joinedRoom(JoinedRoom.from),
   error(ErrorPacket.from);
 

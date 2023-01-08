@@ -33,6 +33,10 @@ dev_dependencies:
   flame_test: ^1.9.1
   integration_test:
     sdk: flutter
+  test: ^1.21.4
+
+dependency_overrides:
+  collection: ^1.17.0
 
 flutter:
   uses-material-design: true

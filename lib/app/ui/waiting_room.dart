@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:monopoly_deal/app/app.dart';
@@ -81,7 +82,7 @@ class _WaitingRoomState extends State<WaitingRoom> with RouteAware {
               body: Builder(builder: (context) {
                 return Padding(
                   padding: const EdgeInsets.all(Insets.large),
-                  child: GameRoomModel.of(context).roomId != null
+                  child: RoomModel.of(context).roomId != null
                       ? const WaitingRoomContent()
                       : const Center(child: CircularProgressIndicator()),
                 );
@@ -115,7 +116,7 @@ class WaitingRoomContent extends StatelessWidget {
             return InkWell(
               onTap: () {
                 Clipboard.setData(
-                  ClipboardData(text: GameRoomModel.of(context).roomId!),
+                  ClipboardData(text: RoomModel.of(context).roomId!),
                 ).then(
                   (_) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -128,7 +129,7 @@ class WaitingRoomContent extends StatelessWidget {
                 padding: const EdgeInsets.all(Insets.medium),
                 child: Builder(builder: (context) {
                   return Text(
-                    GameRoomModel.of(context).roomId!,
+                    RoomModel.of(context).roomId!,
                     style: theme.textTheme.headline3?.copyWith(
                         color: theme.colorScheme.onTertiaryContainer),
                     textAlign: TextAlign.center,
@@ -145,13 +146,19 @@ class WaitingRoomContent extends StatelessWidget {
             padding: const EdgeInsets.all(Insets.medium),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Member(index: 0),
-                    Member(index: 1),
-                  ],
-                ),
+                Builder(builder: (context) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Member(
+                        id: RoomModel.of(context).members?.elementAtOrNull(0),
+                      ),
+                      Member(
+                        id: RoomModel.of(context).members?.elementAtOrNull(1),
+                      ),
+                    ],
+                  );
+                }),
                 const SizedBox(height: Insets.medium),
                 const WaitingProgressIndicator(),
               ],
@@ -210,9 +217,9 @@ class StartButton extends StatelessWidget {
 }
 
 class Member extends StatelessWidget {
-  const Member({super.key, required this.index});
+  const Member({super.key, this.id});
 
-  final int index;
+  final String? id;
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +229,7 @@ class Member extends StatelessWidget {
       child: Icon(
         Icons.person,
         size: 40,
-        color: GameRoomModel.of(context).members.length - 1 < index
+        color: id == null
             ? theme.colorScheme.onSurface.withOpacity(0.11)
             : theme.primaryColor,
       ),

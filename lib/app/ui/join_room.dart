@@ -3,14 +3,14 @@ import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/app/main_app.dart';
 
-class JoinRoom extends StatefulWidget {
-  const JoinRoom({super.key});
+class JoiningRoom extends StatefulWidget {
+  const JoiningRoom({super.key});
 
   @override
-  State<JoinRoom> createState() => _JoinRoomState();
+  State<JoiningRoom> createState() => _JoiningRoomState();
 }
 
-class _JoinRoomState extends State<JoinRoom> with RouteAware {
+class _JoiningRoomState extends State<JoiningRoom> with RouteAware {
   static const roomIdLength = 6;
   String _enteredRoomId = '';
   late FocusNode _focusNode;
@@ -164,8 +164,7 @@ class _JoinRoomButtonState extends State<JoinRoomButton> {
               wsGateway
                 ..connect()
                 ..send(
-                  PacketType.joinRoom,
-                  (sid) => JoinRoomPacket(sid, widget.enteredRoomId),
+                  WsDto(PacketType.joinRoom, JoinRoom(widget.enteredRoomId)),
                 );
             }
           : null,
@@ -181,7 +180,7 @@ class _JoinRoomButtonState extends State<JoinRoomButton> {
   }
 
   void _wsGatewayListener() {
-    if (wsGateway.serverPacket is RoomInfoPacket) {
+    if (wsGateway.serverPacket is JoinedRoom) {
       Navigator.of(context).pushNamed('/waitingRoom');
     }
   }

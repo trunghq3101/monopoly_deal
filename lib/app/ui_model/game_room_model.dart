@@ -36,13 +36,13 @@ class GameRoomNotifier extends ChangeNotifier {
   }
 
   void _getRoomInfo() {
-    if (wsGateway.sid == null) {
-      roomId = null;
-      maxMembers = null;
-      loading = false;
-      members.clear();
-      notifyListeners();
-    }
+    // if (wsGateway.sid == null) {
+    //   roomId = null;
+    //   maxMembers = null;
+    //   loading = false;
+    //   members.clear();
+    //   notifyListeners();
+    // }
     final packet = wsGateway.serverPacket;
     if (wsGateway.connectionState is Connecting ||
         wsGateway.connectionState is Reconnecting) {
@@ -51,14 +51,12 @@ class GameRoomNotifier extends ChangeNotifier {
     }
     if (wsGateway.connectionState is Disconnected ||
         packet is ErrorPacket ||
-        packet is RoomInfoPacket) {
+        packet is MembersUpdated) {
       loading = false;
       notifyListeners();
     }
-    if (packet is RoomInfoPacket) {
-      roomId = packet.roomId;
-      members = packet.memberIds;
-      maxMembers = packet.maxMembers;
+    if (packet is MembersUpdated) {
+      members = packet.members;
       notifyListeners();
     }
   }

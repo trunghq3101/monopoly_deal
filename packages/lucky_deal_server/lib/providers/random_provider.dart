@@ -14,11 +14,7 @@ class RandomProvider {
           final roomId =
               HashIds(alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
                   .encodeList(
-            [
-              time.hour,
-              time.minute,
-              time.second,
-            ],
+            [time.minute, time.second, time.microsecond],
           );
           return roomId;
         };

@@ -9,9 +9,8 @@ class WsGateway extends ChangeNotifier {
   WebSocket? socket;
   PacketData? serverPacket;
   ConnectionState? connectionState;
-  String? sid;
   final _logger = Logger("$WsGateway");
-  final List<PendingRequest> _pendingRequests = [];
+  final List<WsDto> _pendingRequests = [];
 
   void connect() {
     if (socket != null) return;
@@ -20,6 +19,11 @@ class WsGateway extends ChangeNotifier {
       (event) {
         _logger.info(event);
         connectionState = event;
+        if (connectionState is Connected) {
+          for (var request in _pendingRequests) {
+            _sendPacket(request);
+          }
+        }
         notifyListeners();
       },
       onError: _catchSocketError,
@@ -28,12 +32,7 @@ class WsGateway extends ChangeNotifier {
     socket!.messages.map((event) => WsDto.from(event).data).listen(
       (event) {
         _logger.info(event);
-        if (event is ConnectedPacket) {
-          sid = event.sid;
-          for (var request in _pendingRequests) {
-            _sendPacket(sid!, request.type, request.builder);
-          }
-        }
+
         if (event is ErrorPacket) {
           switch (event.type) {
             case PacketErrorType.roomNotExist:
@@ -58,37 +57,23 @@ class WsGateway extends ChangeNotifier {
   void close() {
     socket?.close();
     socket = null;
-    sid = null;
     serverPacket = null;
     connectionState = null;
     _pendingRequests.clear();
     notifyListeners();
   }
 
-  void send(PacketType type, SidPacketBuilder builder) {
-    if (sid == null) {
-      _pendingRequests.add(PendingRequest(type, builder));
+  void send(WsDto dto) {
+    if (socket?.connection.state is! Connected) {
+      _pendingRequests.add(dto);
       return;
     }
-    _sendPacket(sid!, type, builder);
+    _sendPacket(dto);
   }
 
-  void _sendPacket(
-    String sid,
-    PacketType type,
-    SidPacketBuilder builder,
-  ) {
-    final message = WsDto(type, builder(sid)).encode();
+  void _sendPacket(WsDto dto) {
+    final message = dto.encode();
     _logger.info(message);
     socket?.send(message);
   }
 }
-
-class PendingRequest {
-  final PacketType type;
-  final SidPacketBuilder builder;
-
-  PendingRequest(this.type, this.builder);
-}
-
-typedef SidPacketBuilder = PacketData Function(String sid);

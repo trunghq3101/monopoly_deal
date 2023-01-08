@@ -56,3 +56,6 @@ class MockSequenceEventSubscriber implements Subscriber {
     receivedEvents.add(event);
   }
 }
+
+Future<void> kDelay() =>
+    Future.delayed(const Duration(milliseconds: 200), () {});
