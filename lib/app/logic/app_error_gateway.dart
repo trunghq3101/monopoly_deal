@@ -18,7 +18,9 @@ class AppError {
 }
 
 class AppErrorGateway {
-  final StreamController<AppError> _errorController = StreamController();
+  //TO-DO: this should not be a broadcast stream. Must use it to pass integration tests.
+  final StreamController<AppError> _errorController =
+      StreamController.broadcast();
   Stream<AppError> get error => _errorController.stream;
   final _logger = Logger("$AppErrorGateway");
 

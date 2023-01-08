@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'packet.dart';
 
 class WsDto {

@@ -8,7 +8,9 @@ final navigatorKey = GlobalKey<NavigatorState>();
 final routeObserver = RouteObserver();
 
 class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+  const MainApp({super.key, this.roomGateway});
+
+  final RoomGateway? roomGateway;
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -16,7 +18,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   final _gameRoomNotifier = GameRoomNotifier();
-  final _roomGateway = RoomGateway();
+  late final _roomGateway = widget.roomGateway ?? RoomGateway();
 
   @override
   void dispose() {
