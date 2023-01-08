@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/app/main_app.dart';
 
@@ -11,7 +10,6 @@ class JoiningRoom extends StatefulWidget {
 }
 
 class _JoiningRoomState extends State<JoiningRoom> with RouteAware {
-  static const roomIdLength = 6;
   String _enteredRoomId = '';
   late FocusNode _focusNode;
 
@@ -37,12 +35,6 @@ class _JoiningRoomState extends State<JoiningRoom> with RouteAware {
   }
 
   @override
-  void didPop() {
-    wsGateway.close();
-    super.didPop();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -59,7 +51,6 @@ class _JoiningRoomState extends State<JoiningRoom> with RouteAware {
                     theme.colorScheme.surfaceTint.withOpacity(0.08),
                 leading: IconButton(
                   onPressed: () {
-                    wsGateway.close();
                     Navigator.of(context).pop();
                   },
                   icon: Icon(Icons.adaptive.arrow_back),
@@ -80,6 +71,7 @@ class _JoiningRoomState extends State<JoiningRoom> with RouteAware {
                           horizontal: Insets.extraLarge,
                         ),
                         child: TextField(
+                          key: const Key('enterCode'),
                           focusNode: _focusNode,
                           onChanged: (value) {
                             setState(() => _enteredRoomId = value);
@@ -87,7 +79,6 @@ class _JoiningRoomState extends State<JoiningRoom> with RouteAware {
                           style: theme.textTheme.headline3?.copyWith(
                               color: theme.colorScheme.onTertiaryContainer),
                           textAlign: TextAlign.center,
-                          maxLength: roomIdLength,
                           decoration: const InputDecoration(
                             hintText: 'Enter code',
                             counterText: '',
@@ -100,7 +91,6 @@ class _JoiningRoomState extends State<JoiningRoom> with RouteAware {
                       alignment: Alignment.centerRight,
                       child: JoinRoomButton(
                         enteredRoomId: _enteredRoomId,
-                        enabled: _enteredRoomId.length == roomIdLength,
                       ),
                     ),
                   ],
@@ -117,12 +107,10 @@ class _JoiningRoomState extends State<JoiningRoom> with RouteAware {
 class JoinRoomButton extends StatefulWidget {
   const JoinRoomButton({
     Key? key,
-    required this.enabled,
     required this.enteredRoomId,
   }) : super(key: key);
 
   final String enteredRoomId;
-  final bool enabled;
 
   @override
   State<JoinRoomButton> createState() => _JoinRoomButtonState();
@@ -132,12 +120,12 @@ class _JoinRoomButtonState extends State<JoinRoomButton> {
   @override
   void initState() {
     super.initState();
-    wsGateway.addListener(_wsGatewayListener);
+    // wsGateway.addListener(_wsGatewayListener);
   }
 
   @override
   void dispose() {
-    wsGateway.removeListener(_wsGatewayListener);
+    // wsGateway.removeListener(_wsGatewayListener);
     super.dispose();
   }
 
@@ -145,29 +133,24 @@ class _JoinRoomButtonState extends State<JoinRoomButton> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    if (GameRoomModel.of(context).loading) {
-      return const ElevatedButton(
-        onPressed: null,
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: 16,
-            height: 16,
-            child: RepaintBoundary(child: CircularProgressIndicator()),
-          ),
-        ),
-      );
-    }
+    // if (GameRoomModel.of(context).loading) {
+    //   return const ElevatedButton(
+    //     onPressed: null,
+    //     child: Padding(
+    //       padding: EdgeInsets.all(8.0),
+    //       child: SizedBox(
+    //         width: 16,
+    //         height: 16,
+    //         child: RepaintBoundary(child: CircularProgressIndicator()),
+    //       ),
+    //     ),
+    //   );
+    // }
     return ElevatedButton.icon(
-      onPressed: widget.enabled
-          ? () {
-              wsGateway
-                ..connect()
-                ..send(
-                  WsDto(PacketType.joinRoom, JoinRoom(widget.enteredRoomId)),
-                );
-            }
-          : null,
+      onPressed: () {
+        RoomModel.of(context).joinRoom(widget.enteredRoomId);
+        Navigator.of(context).pushNamed('/waitingRoom');
+      },
       style: ElevatedButton.styleFrom(
         foregroundColor: theme.colorScheme.onPrimary,
         backgroundColor: theme.colorScheme.primary,
@@ -177,11 +160,5 @@ class _JoinRoomButtonState extends State<JoinRoomButton> {
       icon: const Icon(Icons.navigate_next_rounded),
       label: const Text('Join'),
     );
-  }
-
-  void _wsGatewayListener() {
-    if (wsGateway.serverPacket is JoinedRoom) {
-      Navigator.of(context).pushNamed('/waitingRoom');
-    }
   }
 }

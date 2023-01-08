@@ -43,12 +43,6 @@ class _WaitingRoomState extends State<WaitingRoom> with RouteAware {
   }
 
   @override
-  void didPop() {
-    wsGateway.close();
-    super.didPop();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -67,7 +61,6 @@ class _WaitingRoomState extends State<WaitingRoom> with RouteAware {
                   child: Builder(builder: (context) {
                     return TextButton.icon(
                       onPressed: () {
-                        wsGateway.close();
                         ScaffoldMessenger.of(context).clearSnackBars();
                         Navigator.of(context)
                             .popUntil(ModalRoute.withName('/'));
@@ -179,7 +172,7 @@ class WaitingProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GameRoomModel.of(context).isFull
+    return RoomModel.of(context).isFull
         ? Text(
             'Ready!',
             style: Theme.of(context).textTheme.headline5,
@@ -200,7 +193,7 @@ class StartButton extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: ElevatedButton.icon(
-        onPressed: GameRoomModel.of(context).isFull
+        onPressed: RoomModel.of(context).isFull
             ? () {
                 Navigator.of(context).pushReplacementNamed('/game');
               }

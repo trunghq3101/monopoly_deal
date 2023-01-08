@@ -17,39 +17,34 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final _gameRoomNotifier = GameRoomNotifier();
   late final _roomGateway = widget.roomGateway ?? RoomGateway();
 
   @override
   void dispose() {
-    _gameRoomNotifier.dispose();
     _roomGateway.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GameRoomModel(
-      notifier: _gameRoomNotifier,
-      child: RoomModel(
-        notifier: _roomGateway,
-        child: AppErrorDisplay(
-          key: errorDisplayKey,
-          child: MaterialApp(
-            navigatorKey: navigatorKey,
-            theme: ThemeData(
-              useMaterial3: true,
-              colorScheme: ColorScheme.fromSeed(
-                  seedColor: const Color.fromARGB(0, 15, 228, 232)),
-            ),
-            navigatorObservers: [routeObserver],
-            routes: {
-              '/': (context) => const StartPage(),
-              '/waitingRoom': (_) => const WaitingRoom(),
-              '/joinRoom': (_) => const JoiningRoom(),
-              '/game': (context) => GameWidget(game: MainGame2()),
-            },
+    return RoomModel(
+      notifier: _roomGateway,
+      child: AppErrorDisplay(
+        key: errorDisplayKey,
+        child: MaterialApp(
+          navigatorKey: navigatorKey,
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color.fromARGB(0, 15, 228, 232)),
           ),
+          navigatorObservers: [routeObserver],
+          routes: {
+            '/': (context) => const StartPage(),
+            '/waitingRoom': (_) => const WaitingRoom(),
+            '/joinRoom': (_) => const JoiningRoom(),
+            '/game': (context) => GameWidget(game: MainGame2()),
+          },
         ),
       ),
     );

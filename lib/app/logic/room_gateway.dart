@@ -10,6 +10,7 @@ class RoomGateway extends ChangeNotifier {
 
   String? roomId;
   List<String>? members;
+  bool get isFull => members?.length == 2;
   final WsManager _wsManager;
   bool _bound = false;
 
@@ -18,15 +19,23 @@ class RoomGateway extends ChangeNotifier {
     if (!_bound) {
       _bound = true;
       ws.messages.listen(
-        (event) {
-          final packet = WsDto.from(event).data;
-          if (packet is RoomCreated) {
-            roomId = packet.roomId;
-            notifyListeners();
-          }
-          if (packet is MembersUpdated) {
-            members = packet.members;
-            notifyListeners();
+        (msg) {
+          final event = WsDto.from(msg).event;
+          final data = WsDto.from(msg).data;
+          switch (event) {
+            case PacketType.roomCreated:
+              roomId = (data as RoomCreated).roomId;
+              notifyListeners();
+              break;
+            case PacketType.joinedRoom:
+              roomId = (data as JoinedRoom).roomId;
+              notifyListeners();
+              break;
+            case PacketType.membersUpdated:
+              members = (data as MembersUpdated).members;
+              notifyListeners();
+              break;
+            default:
           }
         },
         onDone: () {

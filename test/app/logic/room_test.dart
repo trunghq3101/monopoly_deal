@@ -30,6 +30,7 @@ void main() {
         gateway = RoomGateway();
         await gateway.joinRoom(roomId);
         await kDelay();
+        expect(gateway.roomId, isA<String>());
         expect(gateway.members?.length, 2);
       });
     },
