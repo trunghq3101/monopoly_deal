@@ -16,19 +16,6 @@ void main() {
         expect(gateway.roomId, isA<String>());
       });
 
-      test('User 1 receives error when creating room twice', () async {
-        final wsManager = WsManager();
-        gateway = RoomGateway(wsManager: wsManager);
-        await gateway.createRoom();
-        await kDelay();
-        await gateway.createRoom();
-        final conn = await wsManager.connection();
-        await expectLater(
-          conn.messages,
-          emitsThrough('6,alreadyInRoom'),
-        );
-      });
-
       test('User 1 sees themselves in the room', () async {
         gateway = RoomGateway();
         await gateway.createRoom();

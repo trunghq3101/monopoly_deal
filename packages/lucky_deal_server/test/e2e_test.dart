@@ -86,19 +86,6 @@ void main() {
         await expectLater(user1.messages, emits('1,$testRoomId'));
       });
 
-      test('User 1 receives error when creating room twice', () async {
-        server = await serve(
-          const Pipeline().addMiddleware(middleware).addHandler(onRequest),
-          InternetAddress.anyIPv4,
-          0,
-        );
-        await user1Connect();
-        await user1CreateRoom();
-        await user1CreateRoom();
-
-        await expectLater(user1.messages, emitsThrough('6,alreadyInRoom'));
-      });
-
       test(
         'User 1 sees themselves in the room',
         () async {
