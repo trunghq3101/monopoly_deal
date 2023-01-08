@@ -1,0 +1,5 @@
+build:
+  docker:
+    web: packages/lucky_deal_server/build/Dockerfile
+run:
+  web: /app/bin/server
