@@ -5,10 +5,10 @@ FROM dart:stable AS build
 WORKDIR /app
 
 # Copy Dependencies
-COPY ../../lucky_deal_shared ./../lucky_deal_shared
+COPY ./lucky_deal_shared ././lucky_deal_shared
 
 # Install Dependencies
-RUN dart pub get -C ../lucky_deal_shared
+RUN dart pub get -C ./lucky_deal_shared
 
 # Resolve app dependencies.
 COPY pubspec.* ./

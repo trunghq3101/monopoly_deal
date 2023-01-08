@@ -279,7 +279,7 @@ packages:
   lucky_deal_shared:
     dependency: "direct main"
     description:
-      path: "packages/lucky_deal_shared"
+      path: "packages/lucky_deal_server/lucky_deal_shared"
       relative: true
     source: path
     version: "1.0.0"

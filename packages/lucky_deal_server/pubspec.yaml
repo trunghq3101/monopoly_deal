@@ -12,7 +12,7 @@ dependencies:
   hashids2: ^2.0.0
   logging: ^1.1.0
   lucky_deal_shared:
-    path: ../lucky_deal_shared
+    path: ./lucky_deal_shared
   redis: ^3.1.0
   uuid: ^3.0.7
 

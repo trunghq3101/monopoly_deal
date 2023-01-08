@@ -24,7 +24,7 @@ dependencies:
   web_socket_client: ^0.1.0-dev.1
   logging: ^1.1.0
   lucky_deal_shared:
-    path: ./packages/lucky_deal_shared
+    path: ./packages/lucky_deal_server/lucky_deal_shared
 
 dev_dependencies:
   flutter_test:
