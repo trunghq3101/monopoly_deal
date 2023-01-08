@@ -6,7 +6,8 @@
 pubspec.lock
 
 # Files and directories created by dart_frog
-build/
+build/*
+!build/Dockerfile
 .dart_frog
 
 # Test related files
