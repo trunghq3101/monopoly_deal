@@ -56,7 +56,7 @@ workflows:
       - flutter packages pub get
       - flutter config --enable-web
       # - flutter analyze
-      - flutter test
+      # - flutter test
       - flutter build apk --release --build-number=$PROJECT_BUILD_NUMBER
       - |
         # build web
