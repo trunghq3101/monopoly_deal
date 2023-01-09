@@ -11,7 +11,7 @@ class SelectToDeal with Publisher, Subscriber {
   void onNewEvent(Event event, [Object? payload]) {
     switch (event.eventIdentifier) {
       case CardDeckEvent.dealStartGame:
-        final playerPositions = MainGame2.gameMap.playerPositions;
+        final playerPositions = MainGame.gameMap.playerPositions;
         final numCardsToDeal = 5 * playerPositions.length;
         final cardsInDeck = _cardTracker.cardsInDeckFromTop();
         assert(cardsInDeck.length >= numCardsToDeal,

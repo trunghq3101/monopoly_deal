@@ -40,7 +40,7 @@ void main() {
 
           expect(
             p.viewfinder.visibleGameSize,
-            MainGame2.gameMap.overviewGameVisibleSize,
+            MainGame.gameMap.overviewGameVisibleSize,
           );
         },
       );
@@ -59,7 +59,7 @@ void main() {
 
           expect(
             p.viewfinder.position,
-            Vector2(0, MainGame2.gameMap.overviewGameVisibleSize.y * 0.5),
+            Vector2(0, MainGame.gameMap.overviewGameVisibleSize.y * 0.5),
           );
           expect(p.viewfinder.anchor, Anchor.bottomCenter);
         },

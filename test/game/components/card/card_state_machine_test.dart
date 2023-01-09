@@ -91,7 +91,7 @@ void main() {
           test(
               'not isMyDealRegion, change to ${CardState.inAnimation}, notify ${CardStateMachineEvent.toDealRegion}',
               () {
-            MainGame2.gameMap = _MockGameMap()..mockIsMyPosition = false;
+            MainGame.gameMap = _MockGameMap()..mockIsMyPosition = false;
             final payload = CardDealPayload(1, Vector2.zero());
             machine.parent = Card(cardId: 1);
 
@@ -110,7 +110,7 @@ void main() {
           test(
               'isMyDealRegion, change to ${CardState.inAnimation}, notify ${CardStateMachineEvent.toDealRegion}',
               () {
-            MainGame2.gameMap = _MockGameMap()..mockIsMyPosition = true;
+            MainGame.gameMap = _MockGameMap()..mockIsMyPosition = true;
             final payload = CardDealPayload(1, Vector2.zero());
             machine.parent = Card(cardId: 1);
 

@@ -5,7 +5,7 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:monopoly_deal/game/game.dart';
 
-class MainGame2 extends FlameGame
+class MainGame extends FlameGame
     with HasHoverableComponents, HasTappableComponents {
   static GameMap gameMap = GameMap();
   static GameAsset gameAsset = GameAsset();
@@ -53,10 +53,9 @@ class MainGame2 extends FlameGame
 
     _handToggleButton = HandToggleButton()
       ..position =
-          Vector2(MainGame2.gameMap.overviewGameVisibleSize.x * 0.5, 400);
+          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * 0.5, 400);
     _placeCardButton = PlaceCardButton()
-      ..position =
-          Vector2(MainGame2.gameMap.overviewGameVisibleSize.x * 0.5, 0);
+      ..position = Vector2(MainGame.gameMap.overviewGameVisibleSize.x * 0.5, 0);
     _placeCardButton
       ..addSubscriber(_handToggleButton)
       ..addSubscriber(_selectToReArrange);

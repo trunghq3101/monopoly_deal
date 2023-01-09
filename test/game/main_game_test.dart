@@ -15,12 +15,12 @@ class _MockGameAsset extends GameAsset {
 void main() {
   group('MainGame2', () {
     setUp(() async {
-      MainGame2.gameAsset = _MockGameAsset();
+      MainGame.gameAsset = _MockGameAsset();
     });
 
-    testWithGame<MainGame2>(
+    testWithGame<MainGame>(
       'load correctly',
-      MainGame2.new,
+      MainGame.new,
       (game) async {
         await game.ready();
 

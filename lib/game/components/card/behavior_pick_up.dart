@@ -18,7 +18,7 @@ class PickUpBehavior extends Component
         assert(payload is CardPickUpPayload);
         payload as CardPickUpPayload;
         final delay = payload.orderIndex * _delayStep;
-        final frontImg = MainGame2.gameAsset.frontImageForCardId(parent.cardId);
+        final frontImg = MainGame.gameAsset.frontImageForCardId(parent.cardId);
         final frontCard = SpriteComponent.fromImage(frontImg);
         frontCard.size = parent.size;
         parent.add(TimerComponent(
@@ -46,7 +46,7 @@ class PickUpBehavior extends Component
           ]),
           SequenceEffect([
             MoveEffect.to(
-              Vector2(0, MainGame2.gameMap.overviewGameVisibleSize.y * 1.5),
+              Vector2(0, MainGame.gameMap.overviewGameVisibleSize.y * 1.5),
               DelayedEffectController(
                 CurvedEffectController(0.3, Curves.easeInCubic),
                 delay: delay,
@@ -62,8 +62,8 @@ class PickUpBehavior extends Component
             ),
           ]),
           ScaleEffect.to(
-            Vector2.all(MainGame2.gameMap.cardSizeInHand.x /
-                MainGame2.gameMap.cardSize.x),
+            Vector2.all(MainGame.gameMap.cardSizeInHand.x /
+                MainGame.gameMap.cardSize.x),
             DelayedEffectController(
               LinearEffectController(0.4),
               delay: delay + 0.3,

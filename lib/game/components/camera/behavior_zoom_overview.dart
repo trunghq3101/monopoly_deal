@@ -11,12 +11,12 @@ class ZoomOverviewBehavior extends Component
     switch (event.eventIdentifier) {
       case CardDeckEvent.dealStartGame:
         parent.add(CameraZoomEffectTo(
-          MainGame2.gameMap.overviewGameVisibleSize,
+          MainGame.gameMap.overviewGameVisibleSize,
           LinearEffectController(1),
         ));
         parent.viewfinder.addAll([
           MoveEffect.to(
-            Vector2(0, MainGame2.gameMap.overviewGameVisibleSize.y * 0.5),
+            Vector2(0, MainGame.gameMap.overviewGameVisibleSize.y * 0.5),
             LinearEffectController(1),
           ),
           AnchorEffect.to(Anchor.bottomCenter, LinearEffectController(1))

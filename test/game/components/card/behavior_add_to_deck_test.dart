@@ -45,13 +45,13 @@ void main() {
           (game) async {
             final p = PositionComponent();
             behavior.addToParent(p);
-            MainGame2.gameMap = GameMap(deckCenter: Vector2.zero());
+            MainGame.gameMap = GameMap(deckCenter: Vector2.zero());
             await game.ensureAdd(p);
 
             behavior.onNewEvent(Event(CardDeckEvent.showUp));
             await game.ready();
 
-            expect(p.position, MainGame2.gameMap.inDeckPosition(0));
+            expect(p.position, MainGame.gameMap.inDeckPosition(0));
           },
         );
 
@@ -79,7 +79,7 @@ void main() {
             behavior = AddToDeckBehavior(index: behaviorIndex);
             behavior.addToParent(p);
             final inDeckPosition = Vector2.all(100);
-            MainGame2.gameMap = _MockGameMap(
+            MainGame.gameMap = _MockGameMap(
               mockInDeckPosition: (index) =>
                   index == behaviorIndex ? inDeckPosition : Vector2.zero(),
             );

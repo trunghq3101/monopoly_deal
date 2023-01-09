@@ -68,9 +68,9 @@ class CardTracker extends Component
   }
 
   void _setupHandCurve() {
-    handCurveWidth = MainGame2.gameMap.overviewGameVisibleSize.x / 2;
-    final handCurveStart = Vector2(-handCurveWidth / 2,
-        MainGame2.gameMap.overviewGameVisibleSize.y * 0.35);
+    handCurveWidth = MainGame.gameMap.overviewGameVisibleSize.x / 2;
+    final handCurveStart = Vector2(
+        -handCurveWidth / 2, MainGame.gameMap.overviewGameVisibleSize.y * 0.35);
     final handCurveEnd = handCurveStart + Vector2(handCurveWidth, 0);
     final handCurveRadius =
         Radius.elliptical(handCurveWidth, handCurveWidth / 2);

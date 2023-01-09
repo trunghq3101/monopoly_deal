@@ -34,7 +34,7 @@ void main() {
     testWithFlameGame('has size as $GameMap.cardSize', (game) async {
       await game.ensureAdd(card);
 
-      expect(card.size, MainGame2.gameMap.cardSize);
+      expect(card.size, MainGame.gameMap.cardSize);
     });
 
     testWithFlameGame('has SpriteComponent with the size the same as its size',

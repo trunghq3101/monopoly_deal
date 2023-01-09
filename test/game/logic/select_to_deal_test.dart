@@ -45,7 +45,7 @@ void main() {
       test(
         "notify 10 times",
         () {
-          MainGame2.gameMap = GameMap(playerPositions: [
+          MainGame.gameMap = GameMap(playerPositions: [
             Vector2.all(0),
             Vector2.all(1),
           ]);
@@ -62,7 +62,7 @@ void main() {
             Vector2.all(0),
             Vector2.all(1),
           ];
-          MainGame2.gameMap = GameMap(playerPositions: playerPositions);
+          MainGame.gameMap = GameMap(playerPositions: playerPositions);
 
           behavior.onNewEvent(Event(CardDeckEvent.dealStartGame));
 

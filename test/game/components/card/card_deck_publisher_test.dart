@@ -29,11 +29,11 @@ void main() {
     });
 
     testWithFlameGame(
-        'receive ${CardEvent.addedToDeck} for ${MainGame2.cardTotalAmount} times, notify ${CardDeckEvent.dealStartGame}',
+        'receive ${CardEvent.addedToDeck} for ${MainGame.cardTotalAmount} times, notify ${CardDeckEvent.dealStartGame}',
         (game) async {
       await game.ensureAdd(publisher);
 
-      for (var i = 0; i < MainGame2.cardTotalAmount; i++) {
+      for (var i = 0; i < MainGame.cardTotalAmount; i++) {
         publisher.onNewEvent(Event(CardEvent.addedToDeck));
       }
 

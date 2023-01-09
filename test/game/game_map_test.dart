@@ -33,7 +33,7 @@ void main() {
         () {
           const deckSpacing = 10.0;
           final deckCenter = Vector2.zero();
-          MainGame2.cardTotalAmount = 4;
+          MainGame.cardTotalAmount = 4;
           gameMap = GameMap(deckSpacing: deckSpacing);
 
           Vector2 inDeckPosition = gameMap.inDeckPosition(0);

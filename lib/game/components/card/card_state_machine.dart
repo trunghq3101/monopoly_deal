@@ -42,10 +42,9 @@ class CardStateMachine extends PositionComponent
           if ((payload as CardDealPayload).cardId != parent.cardId) {
             return;
           }
-          final newState =
-              MainGame2.gameMap.isMyPosition(payload.playerPosition)
-                  ? CardState.inMyDealRegion
-                  : CardState.inDealRegion;
+          final newState = MainGame.gameMap.isMyPosition(payload.playerPosition)
+              ? CardState.inMyDealRegion
+              : CardState.inDealRegion;
           changeState(CardState.inAnimation);
           notify(Event(CardStateMachineEvent.toDealRegion)
             ..payload = payload

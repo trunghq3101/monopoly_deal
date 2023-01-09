@@ -27,7 +27,7 @@ class GameMap {
 
   Vector2 inDeckPosition(int index) {
     return deckCenter -
-        (cardSize * _ratio) * (index - (MainGame2.cardTotalAmount - 1) * 0.5);
+        (cardSize * _ratio) * (index - (MainGame.cardTotalAmount - 1) * 0.5);
   }
 
   bool isMyPosition(Vector2 position) {

@@ -21,7 +21,7 @@ class CardDeckPublisher extends PublisherComponent with Subscriber {
     if (event.eventIdentifier == CardEvent.addedToDeck) {
       _addToDeckCount++;
 
-      if (_addToDeckCount == MainGame2.cardTotalAmount) {
+      if (_addToDeckCount == MainGame.cardTotalAmount) {
         notify(Event(CardDeckEvent.dealStartGame));
       }
     }

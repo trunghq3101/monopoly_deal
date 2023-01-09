@@ -20,7 +20,7 @@ void main() {
           child: MaterialApp(
             routes: {
               '/': (_) => const WaitingRoom(),
-              '/game': (_) => GameWidget(game: MainGame2()),
+              '/game': (_) => GameWidget(game: MainGame()),
             },
           ),
         ),
@@ -31,7 +31,7 @@ void main() {
       await user2.startGame();
       await tester.pump(const Duration(seconds: 1));
       await tester.pump(const Duration(seconds: 2));
-      expect(find.byType(GameWidget<MainGame2>), findsOneWidget);
+      expect(find.byType(GameWidget<MainGame>), findsOneWidget);
     });
   });
 }

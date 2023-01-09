@@ -20,7 +20,7 @@ void main() {
 
     setUp(() async {
       await loadTestAssets();
-      MainGame2.gameAsset = _MockGameAsset();
+      MainGame.gameAsset = _MockGameAsset();
       behavior = PickUpBehavior();
     });
 
