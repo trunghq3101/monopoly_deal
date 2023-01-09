@@ -10,9 +10,11 @@ class RoomGateway extends ChangeNotifier {
 
   String? roomId;
   List<String>? members;
+  late Stream<WsDto> gameEvents = _gameEvents.stream;
   bool get isFull => members?.length == 2;
   final WsManager _wsManager;
   bool _bound = false;
+  final StreamController<WsDto> _gameEvents = StreamController.broadcast();
 
   Future<WebSocket> get socket async {
     final ws = await _wsManager.connection();
@@ -20,8 +22,9 @@ class RoomGateway extends ChangeNotifier {
       _bound = true;
       ws.messages.listen(
         (msg) {
-          final event = WsDto.from(msg).event;
-          final data = WsDto.from(msg).data;
+          final wsDto = WsDto.from(msg);
+          final event = wsDto.event;
+          final data = wsDto.data;
           switch (event) {
             case PacketType.roomCreated:
               roomId = (data as RoomCreated).roomId;
@@ -33,6 +36,10 @@ class RoomGateway extends ChangeNotifier {
               break;
             case PacketType.membersUpdated:
               members = (data as MembersUpdated).members;
+              notifyListeners();
+              break;
+            case PacketType.gameStarted:
+              _gameEvents.add(wsDto);
               notifyListeners();
               break;
             default:
@@ -52,5 +59,9 @@ class RoomGateway extends ChangeNotifier {
 
   Future<void> joinRoom(String roomId) async {
     (await socket).send(WsDto(PacketType.joinRoom, JoinRoom(roomId)).encode());
+  }
+
+  Future<void> startGame() async {
+    (await socket).send(WsDto(PacketType.startGame, EmptyPacket()).encode());
   }
 }

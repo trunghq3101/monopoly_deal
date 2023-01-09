@@ -12,14 +12,14 @@ void main() {
       test('User 1 can create a room and receive a room code', () async {
         gateway = RoomGateway();
         await gateway.createRoom();
-        await kDelay();
+        await testDelay();
         expect(gateway.roomId, isA<String>());
       });
 
       test('User 1 sees themselves in the room', () async {
         gateway = RoomGateway();
         await gateway.createRoom();
-        await kDelay();
+        await testDelay();
         expect(gateway.members?.length, 1);
       });
 
@@ -29,7 +29,7 @@ void main() {
         final roomId = await _createRoom();
         gateway = RoomGateway();
         await gateway.joinRoom(roomId);
-        await kDelay();
+        await testDelay();
         expect(gateway.roomId, isA<String>());
         expect(gateway.members?.length, 2);
       });
@@ -41,6 +41,6 @@ void main() {
 Future<String> _createRoom() async {
   final gateway = RoomGateway();
   await gateway.createRoom();
-  await kDelay();
+  await testDelay();
   return gateway.roomId!;
 }

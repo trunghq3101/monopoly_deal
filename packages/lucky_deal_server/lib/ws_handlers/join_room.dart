@@ -27,5 +27,8 @@ Future<void> joinRoomHandler(
         WsDto(PacketType.memberJoined, MemberJoined(newJoined)).encode(),
       );
     })
+    ..messages.listen((msg) {
+      channel.sink.add(msg);
+    })
     ..join(sid);
 }

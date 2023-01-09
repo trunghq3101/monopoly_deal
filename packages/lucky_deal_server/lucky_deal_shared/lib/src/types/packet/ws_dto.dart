@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 import 'packet.dart';
 
-class WsDto {
+class WsDto with EquatableMixin {
   WsDto(this.event, this.data);
 
   factory WsDto.from(String raw) {
@@ -17,6 +19,9 @@ class WsDto {
 
   final PacketType event;
   final PacketData data;
+
+  @override
+  List<Object?> get props => [event, data];
 }
 
 mixin PacketData {

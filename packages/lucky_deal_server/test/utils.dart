@@ -9,3 +9,6 @@ class PacketMatcher extends CustomMatcher {
   @override
   Object? featureValueOf(dynamic actual) => WsDto.from(actual as String).data;
 }
+
+Future<void> testDelay() => Future.delayed(const Duration(milliseconds: 200));
+Future<void> testDelayZero() => Future.delayed(Duration.zero);

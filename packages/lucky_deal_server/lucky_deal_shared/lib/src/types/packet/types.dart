@@ -7,7 +7,9 @@ enum PacketType {
   membersUpdated(MembersUpdated.from),
   joinRoom(JoinRoom.from),
   joinedRoom(JoinedRoom.from),
-  error(ErrorPacket.from);
+  error(ErrorPacket.from),
+  startGame(EmptyPacket.from),
+  gameStarted(EmptyPacket.from);
 
   const PacketType(this.decode);
 

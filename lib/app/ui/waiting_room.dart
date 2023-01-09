@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/app/main_app.dart';
 
@@ -18,9 +21,16 @@ class WaitingRoom extends StatefulWidget {
 }
 
 class _WaitingRoomState extends State<WaitingRoom> with RouteAware {
+  StreamSubscription? _gameEventsSub;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _gameEventsSub = RoomModel.of(context).gameEvents.listen((event) {
+      if (event.event == PacketType.gameStarted) {
+        Navigator.of(context).pushReplacementNamed('/game');
+      }
+    });
     routeObserver.subscribe(this, ModalRoute.of(context)!);
     errorDisplayKey.currentState?.setActions([
       TextButton(
@@ -39,6 +49,7 @@ class _WaitingRoomState extends State<WaitingRoom> with RouteAware {
   void dispose() {
     routeObserver.unsubscribe(this);
     errorDisplayKey.currentState?.unset();
+    _gameEventsSub?.cancel();
     super.dispose();
   }
 

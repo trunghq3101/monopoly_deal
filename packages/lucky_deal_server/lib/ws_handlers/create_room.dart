@@ -21,6 +21,9 @@ Future<void> createRoomHandler(
         WsDto(PacketType.memberJoined, MemberJoined(newJoined)).encode(),
       );
     })
+    ..messages.listen((msg) {
+      channel.sink.add(msg);
+    })
     ..join(sid);
   channel.sink.add(WsDto(PacketType.roomCreated, RoomCreated(roomId)).encode());
 }
