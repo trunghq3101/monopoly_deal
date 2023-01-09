@@ -206,6 +206,7 @@ class StartButton extends StatelessWidget {
       child: ElevatedButton.icon(
         onPressed: RoomModel.of(context).isFull
             ? () {
+                RoomModel.of(context).startGame();
                 Navigator.of(context).pushReplacementNamed('/game');
               }
             : null,
