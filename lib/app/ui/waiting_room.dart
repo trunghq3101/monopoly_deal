@@ -27,6 +27,7 @@ class _WaitingRoomState extends State<WaitingRoom> with RouteAware {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _gameEventsSub = RoomModel.of(context).gameEvents.listen((event) {
+      if (!mounted) return;
       if (event.event == PacketType.gameStarted) {
         Navigator.of(context).pushReplacementNamed('/game');
       }
@@ -207,7 +208,6 @@ class StartButton extends StatelessWidget {
         onPressed: RoomModel.of(context).isFull
             ? () {
                 RoomModel.of(context).startGame();
-                Navigator.of(context).pushReplacementNamed('/game');
               }
             : null,
         style: ElevatedButton.styleFrom(

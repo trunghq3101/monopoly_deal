@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:dart_frog/dart_frog.dart';
+import 'package:lucky_deal_server/models/models.dart';
 
 class RoomMembersManager {
-  RoomMembersManager({List<String>? initial}) : _membersList = initial ?? [];
+  RoomMembersManager({List<String>? initial, Deck? deck})
+      : _membersList = initial ?? [],
+        _deck = deck ?? Deck()
+          ..shuffle();
   late Stream<List<String>> members = _membersController.stream;
   late Stream<String> newJoined = _newJoinedController.stream;
   late Stream<String> messages = _messagesController.stream;
@@ -11,6 +15,7 @@ class RoomMembersManager {
   final _newJoinedController = StreamController<String>.broadcast();
   final _messagesController = StreamController<String>.broadcast();
   late final List<String> _membersList;
+  late final Deck _deck;
 
   void join(String sid) {
     _newJoinedController.add(sid);
@@ -23,6 +28,13 @@ class RoomMembersManager {
       throw ArgumentError('$sender is not a member of this room');
     }
     _messagesController.add(message);
+  }
+
+  List<int> cardsToBeDealed(String sid) {
+    if (!_membersList.contains(sid)) {
+      throw ArgumentError('$sid is not a member of this room');
+    }
+    return _deck.toBeDealed(_membersList.indexOf(sid), _membersList.length);
   }
 }
 
