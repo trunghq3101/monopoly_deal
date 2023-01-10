@@ -12,11 +12,29 @@ void main() {
       expect(deck.at(1), isNot(1));
     });
 
-    test('To-be-dealed cards for player', () {
-      deck = Deck();
-      expect(deck.toBeDealed(0, 3), [0, 3, 6, 9, 12]);
-      expect(deck.toBeDealed(1, 3), [1, 4, 7, 10, 13]);
-      expect(deck.toBeDealed(2, 3), [2, 5, 8, 11, 14]);
+    test('User can pick up cards when game has started', () {
+      deck = Deck(playersAmount: 3)..onStart();
+      expect(deck.pickUp(0, at: 0), 0);
+      expect(deck.pickUp(0, at: 3), 3);
+      expect(deck.pickUp(1, at: 1), 1);
+      expect(deck.pickUp(1, at: 4), 4);
+      expect(deck.pickUp(2, at: 2), 2);
+      expect(deck.pickUp(2, at: 5), 5);
+      expect(() => deck.pickUp(0, at: 15), throwsStateError);
+      expect(() => deck.pickUp(1, at: 15), throwsStateError);
+      expect(() => deck.pickUp(2, at: 15), throwsStateError);
+
+      deck.onDraw(0);
+      expect(deck.pickUp(0, at: 15), 15);
+      expect(deck.pickUp(0, at: 16), 16);
+      expect(() => deck.pickUp(1, at: 15), throwsStateError);
+      expect(() => deck.pickUp(1, at: 17), throwsStateError);
+
+      deck.onDraw(1);
+      expect(deck.pickUp(1, at: 17), 17);
+      expect(deck.pickUp(1, at: 18), 18);
+      expect(() => deck.pickUp(0, at: 17), throwsStateError);
+      expect(() => deck.pickUp(0, at: 19), throwsStateError);
     });
   });
 }

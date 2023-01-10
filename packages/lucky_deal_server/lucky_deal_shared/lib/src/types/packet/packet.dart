@@ -1,10 +1,12 @@
+export 'cards_revealed.dart';
 export 'empty.dart';
 export 'error.dart';
 export 'join_room.dart';
 export 'joined_room.dart';
 export 'member_joined.dart';
+export 'member_left.dart';
 export 'members_updated.dart';
+export 'reveal_card.dart';
 export 'room_created.dart';
-export 'to_pick_up_cards.dart';
 export 'types.dart';
 export 'ws_dto.dart';

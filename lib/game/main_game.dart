@@ -3,13 +3,19 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
+import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class MainGame extends FlameGame
     with HasHoverableComponents, HasTappableComponents {
+  MainGame({RoomGateway? roomGateway})
+      : roomGateway = roomGateway ?? RoomGateway();
+
   static GameMap gameMap = GameMap();
   static GameAsset gameAsset = GameAsset();
   static var cardTotalAmount = 100;
+
+  final RoomGateway roomGateway;
 
   World get _world => children.query<World>().first;
   CardDeckPublisher get _cardDeckPublisher =>

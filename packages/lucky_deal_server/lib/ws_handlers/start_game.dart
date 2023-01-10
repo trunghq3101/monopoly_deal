@@ -10,6 +10,7 @@ Future<void> startGameHandler(
 ) async {
   final sid = context.read<ConnectionInfoProvider>().sid;
   final room = context.read<RoomsManager>().findByMember(sid);
+  room?.deck.onStart();
   room?.broadcast(
     sid,
     WsDto(

@@ -1,5 +1,4 @@
 import 'package:lucky_deal_shared/src/types/packet/packet.dart';
-import 'package:lucky_deal_shared/src/types/packet/to_pick_up_cards.dart';
 
 enum PacketType {
   createRoom(EmptyPacket.from),
@@ -11,8 +10,10 @@ enum PacketType {
   error(ErrorPacket.from),
   startGame(EmptyPacket.from),
   gameStarted(EmptyPacket.from),
-  getToPickUpCards(EmptyPacket.from),
-  toPickUpCards(ToPickUpCards.from);
+  revealCard(RevealCard.from),
+  cardsRevealed(CardsRevealed.from),
+  memberLeft(MemberLeft.from),
+  ;
 
   const PacketType(this.decode);
 

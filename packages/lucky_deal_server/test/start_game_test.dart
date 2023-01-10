@@ -52,6 +52,30 @@ void main() {
 
         unawaited(expectLater(user2.messages, emitsThrough('8,')));
       });
+
+      test('Each user receives starter cards', () async {
+        final user1 = WebSocket(Uri.parse('ws://localhost:${server.port}'));
+        await testDelay();
+        user1.send('0,');
+        await testDelay();
+        final roomId = requestContext.read<RoomsManager>().lastRoomId;
+        final user2 = WebSocket(Uri.parse('ws://localhost:${server.port}'));
+        await testDelay();
+        user2.send('4,$roomId');
+        await testDelay();
+        user1.send('7,');
+        final deck = requestContext.read<RoomsManager>().findById(roomId).deck;
+
+        user1.send('9,0');
+        unawaited(
+          expectLater(user1.messages, emitsThrough('10,${deck.at(0)}')),
+        );
+
+        user2.send('9,1');
+        unawaited(
+          expectLater(user2.messages, emitsThrough('10,${deck.at(1)}')),
+        );
+      });
     },
     timeout: Timeout.parse('2s'),
   );

@@ -9,6 +9,7 @@ import 'package:web_socket_client/web_socket_client.dart';
 
 import '../routes/_middleware.dart';
 import '../routes/game.dart';
+import 'utils.dart';
 
 void main() {
   group(
@@ -40,56 +41,47 @@ void main() {
           InternetAddress.anyIPv4,
           0,
         );
+
+        testUserId = 'user1id';
+        user1 = WebSocket(Uri.parse('ws://localhost:${server.port}'));
+        await testDelay();
+
+        testUserId = 'user2id';
+        user2 = WebSocket(Uri.parse('ws://localhost:${server.port}'));
+        await testDelay();
+
+        testUserId = 'user3id';
+        user3 = WebSocket(Uri.parse('ws://localhost:${server.port}'));
+        await testDelay();
       });
 
       tearDown(() async {
+        user1.close();
+        await testDelay();
+        user2.close();
+        await testDelay();
+        user3.close();
+        await testDelay();
         await server.close();
       });
-
-      Future<void> user1Connect() async {
-        testUserId = 'user1id';
-        user1 = WebSocket(Uri.parse('ws://localhost:${server.port}'));
-        await expectLater(
-          user1.connection,
-          emitsInOrder([const Connecting(), const Connected()]),
-        );
-      }
-
-      Future<void> user2Connect() async {
-        testUserId = 'user2id';
-        user2 = WebSocket(Uri.parse('ws://localhost:${server.port}'));
-        await expectLater(
-          user2.connection,
-          emitsInOrder([const Connecting(), const Connected()]),
-        );
-      }
-
-      Future<void> user3Connect() async {
-        testUserId = 'user3id';
-        user3 = WebSocket(Uri.parse('ws://localhost:${server.port}'));
-        await expectLater(
-          user3.connection,
-          emitsInOrder([const Connecting(), const Connected()]),
-        );
-      }
 
       Future<void> user1CreateRoom() async {
         testRoomId = 'room${const Uuid().v4()}';
         user1.send('0,');
       }
 
-      test('User 1 can create a room and receive the room code', () async {
-        await user1Connect();
+      test(
+        'User 1 can create a room and receive the room code',
+        () async {
+          await user1CreateRoom();
 
-        await user1CreateRoom();
-
-        await expectLater(user1.messages, emits('1,$testRoomId'));
-      });
+          await expectLater(user1.messages, emits('1,$testRoomId'));
+        },
+      );
 
       test(
         'User 1 sees themselves in the room',
         () async {
-          await user1Connect();
           await user1CreateRoom();
 
           await expectLater(user1.messages, emitsThrough('3,user1id'));
@@ -99,8 +91,6 @@ void main() {
       test(
         'User 2 can join the room using the correct room code',
         () async {
-          await user1Connect();
-          await user2Connect();
           await user1CreateRoom();
 
           user2.send('4,$testRoomId');
@@ -115,8 +105,6 @@ void main() {
       test(
         'User 2 sees themselves in the room with user 1',
         () async {
-          await user1Connect();
-          await user2Connect();
           await user1CreateRoom();
 
           user2.send('4,$testRoomId');
@@ -131,8 +119,6 @@ void main() {
       test(
         'User 1 receives a notification when user 2 joins the room',
         () async {
-          await user1Connect();
-          await user2Connect();
           await user1CreateRoom();
 
           user2.send('4,$testRoomId');
@@ -147,8 +133,6 @@ void main() {
       test(
         'User 1 sees themselves in the room with user 2',
         () async {
-          await user1Connect();
-          await user2Connect();
           await user1CreateRoom();
 
           user2.send('4,$testRoomId');
@@ -163,9 +147,6 @@ void main() {
       test(
         'User 2 receives a notification when user 3 joins the room',
         () async {
-          await user1Connect();
-          await user2Connect();
-          await user3Connect();
           await user1CreateRoom();
 
           user2.send('4,$testRoomId');
@@ -181,9 +162,6 @@ void main() {
       test(
         'User 2 sees themselves in the room with user 1 and user 3',
         () async {
-          await user1Connect();
-          await user2Connect();
-          await user3Connect();
           await user1CreateRoom();
 
           user2.send('4,$testRoomId');

@@ -43,7 +43,10 @@ Future<Response> onRequest(RequestContext context) async {
             );
           }
         },
-        onDone: () => logger.info('disconnected'),
+        onDone: () {
+          context.read<RoomsManager>().findByMember(sid)?.leave(sid);
+          logger.info('disconnected');
+        },
         onError: (Object e, StackTrace s) {
           logger.warning('Error', e, s);
           channel.sink.addError(e, s);
