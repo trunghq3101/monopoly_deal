@@ -17,20 +17,20 @@ class CardTracker extends Component
 
   List<Card> get allCards => world.children.query<Card>();
 
-  List<HasCardId> cardsInDeckFromTop() {
+  List<HasCardIndex> cardsInDeckFromTop() {
     final cards = allCards.where((c) => c.state == CardState.inDeck).toList();
     cards.sort((a, b) => b.priority.compareTo(a.priority));
     return cards;
   }
 
-  List<HasCardId> cardsInMyDealRegionFromTop() {
+  List<HasCardIndex> cardsInMyDealRegionFromTop() {
     final cards =
         allCards.where((c) => c.state == CardState.inMyDealRegion).toList();
     cards.sort((a, b) => b.priority.compareTo(a.priority));
     return cards;
   }
 
-  List<HasCardId> cardsInHandCollapsedFromTop() {
+  List<HasCardIndex> cardsInHandCollapsedFromTop() {
     final cards =
         allCards.where((c) => c.state == CardState.inHandCollapsed).toList();
     cards.sort((a, b) => b.priority.compareTo(a.priority));

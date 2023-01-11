@@ -78,7 +78,7 @@ class RoomsManager {
         'Unsynced roomId $roomId between _memberToRoom and _rooms',
       );
     }
-    return _rooms[_memberToRoom[memberId]];
+    return _rooms[roomId];
   }
 }
 

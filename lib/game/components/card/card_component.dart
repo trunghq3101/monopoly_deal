@@ -2,13 +2,13 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:monopoly_deal/game/game.dart';
 
-class Card extends PositionComponent with HasCardId, HasCardState {
-  Card({int cardId = 0}) : _cardId = cardId;
+class Card extends PositionComponent with HasCardIndex, HasCardState {
+  Card({int cardIndex = 0}) : _cardIndex = cardIndex;
 
-  final int _cardId;
+  final int _cardIndex;
 
   @override
-  int get cardId => _cardId;
+  int get cardIndex => _cardIndex;
 
   @override
   CardState get state => children.query<CardStateMachine>().first.state;
@@ -24,8 +24,8 @@ class Card extends PositionComponent with HasCardId, HasCardState {
   }
 }
 
-mixin HasCardId {
-  int get cardId;
+mixin HasCardIndex {
+  int get cardIndex;
 }
 
 mixin HasCardState {

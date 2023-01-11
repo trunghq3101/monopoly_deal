@@ -22,7 +22,7 @@ class SelectToPickUp with Publisher, Subscriber {
           notify(
             Event(CardEvent.pickUp)
               ..payload = CardPickUpPayload(
-                c.cardId,
+                c.cardIndex,
                 orderIndex: orderIndex++,
                 inHandPosition: inHandPosition,
               ),

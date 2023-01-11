@@ -5,22 +5,22 @@ import 'package:monopoly_deal/game/lib/lib.dart';
 import '../../utils.dart';
 
 class _MockCardTracker extends CardTracker {
-  List<HasCardId> mockCardsInMyDealRegion = [];
+  List<HasCardIndex> mockCardsInMyDealRegion = [];
   bool mockHasCardInAnimationState = false;
   @override
-  List<HasCardId> cardsInMyDealRegionFromTop() => mockCardsInMyDealRegion;
+  List<HasCardIndex> cardsInMyDealRegionFromTop() => mockCardsInMyDealRegion;
 
   @override
   bool hasCardInAnimationState() => mockHasCardInAnimationState;
 }
 
-class _MockHasCardId implements HasCardId {
-  _MockHasCardId(this._cardId);
+class _MockHasCardIndex implements HasCardIndex {
+  _MockHasCardIndex(this._cardIndex);
 
-  final int _cardId;
+  final int _cardIndex;
 
   @override
-  int get cardId => _cardId;
+  int get cardIndex => _cardIndex;
 }
 
 void main() {
@@ -42,12 +42,12 @@ void main() {
     });
 
     group('on ${CardStateMachineEvent.tapOnMyDealRegion}', () {
-      test('notify ${CardEvent.pickUp} with cardId and orderIndex', () {
+      test('notify ${CardEvent.pickUp} with cardIndex and orderIndex', () {
         final s = MockSequenceEventSubscriber();
         selector.addSubscriber(s);
-        final cardsInMyDealRegion = <HasCardId>[
-          _MockHasCardId(1),
-          _MockHasCardId(2)
+        final cardsInMyDealRegion = <HasCardIndex>[
+          _MockHasCardIndex(1),
+          _MockHasCardIndex(2)
         ];
         cardTracker.mockCardsInMyDealRegion = cardsInMyDealRegion;
         cardTracker.mockHasCardInAnimationState = false;
@@ -56,8 +56,8 @@ void main() {
 
         for (var i = 0; i < 2; i++) {
           s.receivedEvents[i] = Event(CardEvent.pickUp)
-            ..payload =
-                CardPickUpPayload(cardsInMyDealRegion[i].cardId, orderIndex: i);
+            ..payload = CardPickUpPayload(cardsInMyDealRegion[i].cardIndex,
+                orderIndex: i);
         }
       });
 

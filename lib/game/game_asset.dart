@@ -14,10 +14,19 @@ class GameAsset {
         36,36,36,37,37,37,38,38,39'''
           .split(',');
 
+  final Map<int, int> _indexToId = {};
+
   Future<void> load() async {
     await Flame.images.loadAllImages();
   }
 
-  Image frontImageForCardId(int id) =>
-      Flame.images.fromCache('${cardSpriteNames[id].trim()}.png');
+  void onCardRevealed(int index, int id) {
+    _indexToId[index] = id;
+  }
+
+  Image frontImageForCardIndex(int index) {
+    final id = _indexToId[index];
+    if (id == null) throw StateError('Card at $index has not been revealed');
+    return Flame.images.fromCache('${cardSpriteNames[id].trim()}.png');
+  }
 }

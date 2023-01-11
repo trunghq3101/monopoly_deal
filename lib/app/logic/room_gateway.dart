@@ -20,6 +20,12 @@ class RoomGateway extends ChangeNotifier {
     final ws = await _wsManager.connection();
     if (!_bound) {
       _bound = true;
+      ws.connection.listen((event) {
+        if (event is Disconnected) {
+          roomId = null;
+          members = null;
+        }
+      });
       ws.messages.listen(
         (msg) {
           final wsDto = WsDto.from(msg);
@@ -39,6 +45,7 @@ class RoomGateway extends ChangeNotifier {
               notifyListeners();
               break;
             case PacketType.gameStarted:
+            case PacketType.cardsRevealed:
               _gameEvents.add(wsDto);
               notifyListeners();
               break;
@@ -63,5 +70,14 @@ class RoomGateway extends ChangeNotifier {
 
   Future<void> startGame() async {
     (await socket).send(WsDto(PacketType.startGame, EmptyPacket()).encode());
+  }
+
+  Future<void> revealCard(int index) async {
+    (await socket)
+        .send(WsDto(PacketType.revealCard, RevealCard(index)).encode());
+  }
+
+  Future<void> disconnect() async {
+    _wsManager.disconnect();
   }
 }

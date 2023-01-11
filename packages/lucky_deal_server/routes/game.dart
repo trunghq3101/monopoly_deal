@@ -10,7 +10,6 @@ import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 final logger = Logger('game');
 
 Future<Response> onRequest(RequestContext context) async {
-  recordStackTraceAtLevel = Level.SEVERE;
   final handler = webSocketHandler(
     (channel, protocol) {
       final sid = context.read<RandomProvider>().uuidGenerator();

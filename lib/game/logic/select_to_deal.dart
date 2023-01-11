@@ -21,7 +21,7 @@ class SelectToDeal with Publisher, Subscriber {
         int orderIndex = 0;
         for (var c in cardsToDeal) {
           final payload = CardDealPayload(
-            c.cardId,
+            c.cardIndex,
             playerPositions[pIndex],
             orderIndex: orderIndex++,
           );

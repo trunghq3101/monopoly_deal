@@ -25,54 +25,58 @@ void main() {
     });
 
     group('on ${CardStateMachineEvent.tapWhileInHand}', () {
-      test('given no previewing card, notify ${CardEvent.preview} with cardId',
+      test(
+          'given no previewing card, notify ${CardEvent.preview} with cardIndex',
           () {
-        const cardId = 2;
+        const cardIndex = 2;
         cardTracker.mockCardInPreviewingState = null;
 
         selector.onNewEvent(
           Event(CardStateMachineEvent.tapWhileInHand)
-            ..payload = CardIdPayload(cardId),
+            ..payload = CardIndexPayload(cardIndex),
         );
 
         expect(subscriber.receivedEvents[0],
-            Event(CardEvent.preview)..payload = CardIdPayload(cardId));
+            Event(CardEvent.preview)..payload = CardIndexPayload(cardIndex));
       });
 
       test(
           'given a previewing card, notify ${CardEvent.preview} and ${CardEvent.previewSwap}',
           () {
-        const cardId = 2;
+        const cardIndex = 2;
         const previewingCardId = 1;
-        cardTracker.mockCardInPreviewingState = Card(cardId: previewingCardId);
+        cardTracker.mockCardInPreviewingState =
+            Card(cardIndex: previewingCardId);
 
         selector.onNewEvent(
           Event(CardStateMachineEvent.tapWhileInHand)
-            ..payload = CardIdPayload(cardId),
+            ..payload = CardIndexPayload(cardIndex),
         );
 
         expect(
           subscriber.receivedEvents,
           [
-            Event(CardEvent.preview)..payload = CardIdPayload(cardId),
+            Event(CardEvent.preview)..payload = CardIndexPayload(cardIndex),
             Event(CardEvent.previewSwap)
-              ..payload = CardIdPayload(previewingCardId),
+              ..payload = CardIndexPayload(previewingCardId),
           ],
         );
       });
     });
 
     group('on ${CardStateMachineEvent.tapWhileInPreviewing}', () {
-      test('notify ${CardEvent.previewRevert} with cardId', () {
-        const cardId = 2;
+      test('notify ${CardEvent.previewRevert} with cardIndex', () {
+        const cardIndex = 2;
 
         selector.onNewEvent(
           Event(CardStateMachineEvent.tapWhileInPreviewing)
-            ..payload = CardIdPayload(cardId),
+            ..payload = CardIndexPayload(cardIndex),
         );
 
-        expect(subscriber.receivedEvents[0],
-            Event(CardEvent.previewRevert)..payload = CardIdPayload(cardId));
+        expect(
+            subscriber.receivedEvents[0],
+            Event(CardEvent.previewRevert)
+              ..payload = CardIndexPayload(cardIndex));
       });
     });
   });

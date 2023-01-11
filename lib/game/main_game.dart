@@ -9,13 +9,13 @@ import 'package:monopoly_deal/game/game.dart';
 class MainGame extends FlameGame
     with HasHoverableComponents, HasTappableComponents {
   MainGame({RoomGateway? roomGateway})
-      : roomGateway = roomGateway ?? RoomGateway();
+      : _roomGateway = roomGateway ?? RoomGateway();
 
   static GameMap gameMap = GameMap();
   static GameAsset gameAsset = GameAsset();
   static var cardTotalAmount = 100;
 
-  final RoomGateway roomGateway;
+  final RoomGateway _roomGateway;
 
   World get _world => children.query<World>().first;
   CardDeckPublisher get _cardDeckPublisher =>
@@ -56,6 +56,7 @@ class MainGame extends FlameGame
     add(cardDeckPublisher);
     add(cardTracker);
     add(_selectToReArrange);
+    add(RoomGatewayComponent(_roomGateway));
 
     _handToggleButton = HandToggleButton()
       ..position =
@@ -81,9 +82,10 @@ class MainGame extends FlameGame
   void onChildrenChanged(Component child, ChildrenChangeType type) {
     if (type == ChildrenChangeType.added) {
       if (child is CardDeckPublisher) {
-        final cards =
-            List.generate(cardTotalAmount, (int index) => Card(cardId: index))
-              ..shuffle();
+        final cards = List.generate(
+                cardTotalAmount, (int index) => Card(cardIndex: index))
+            .reversed
+            .toList();
         for (var i = 0; i < cardTotalAmount; i++) {
           _setupCard(cards[i], i);
         }

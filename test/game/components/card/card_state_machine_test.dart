@@ -76,9 +76,10 @@ void main() {
       });
 
       group('on ${CardEvent.deal}', () {
-        test('given payload.cardId not equal parent cardId, do nothing', () {
+        test('given payload.cardIndex not equal parent cardIndex, do nothing',
+            () {
           final payload = CardDealPayload(0, Vector2.zero());
-          machine.parent = Card(cardId: 1);
+          machine.parent = Card(cardIndex: 1);
 
           machine.onNewEvent(Event(CardEvent.deal)..payload = payload);
 
@@ -87,13 +88,13 @@ void main() {
           expect(subscriber.receivedEvent, null);
         });
 
-        group('given payload.cardId equal parent cardId', () {
+        group('given payload.cardIndex equal parent cardIndex', () {
           test(
               'not isMyDealRegion, change to ${CardState.inAnimation}, notify ${CardStateMachineEvent.toDealRegion}',
               () {
             MainGame.gameMap = _MockGameMap()..mockIsMyPosition = false;
             final payload = CardDealPayload(1, Vector2.zero());
-            machine.parent = Card(cardId: 1);
+            machine.parent = Card(cardIndex: 1);
 
             machine.onNewEvent(Event(CardEvent.deal)..payload = payload);
 
@@ -112,7 +113,7 @@ void main() {
               () {
             MainGame.gameMap = _MockGameMap()..mockIsMyPosition = true;
             final payload = CardDealPayload(1, Vector2.zero());
-            machine.parent = Card(cardId: 1);
+            machine.parent = Card(cardIndex: 1);
 
             machine.onNewEvent(Event(CardEvent.deal)..payload = payload);
 
@@ -172,23 +173,23 @@ void main() {
           expect(
             subscriber.receivedEvent,
             Event(CardStateMachineEvent.tapWhileInHand)
-              ..payload = CardIdPayload(0),
+              ..payload = CardIndexPayload(0),
           );
         },
       );
 
       testWithGame<_MockGame>(
-        'on ${CardEvent.preview}, given unmatched cardId, do nothing',
+        'on ${CardEvent.preview}, given unmatched cardIndex, do nothing',
         _MockGame.new,
         (game) async {
-          const cardId = 1;
+          const cardIndex = 1;
           machine.mockState = CardState.inHand;
           final p = Card();
           p.add(machine);
           await game.ensureAdd(p);
 
           machine.onNewEvent(
-            Event(CardEvent.preview)..payload = CardIdPayload(cardId),
+            Event(CardEvent.preview)..payload = CardIndexPayload(cardIndex),
           );
 
           expect(subscriber.receivedEvent, null);
@@ -226,23 +227,24 @@ void main() {
           expect(
             subscriber.receivedEvent,
             Event(CardStateMachineEvent.tapWhileInPreviewing)
-              ..payload = CardIdPayload(0),
+              ..payload = CardIndexPayload(0),
           );
         },
       );
 
       testWithGame<_MockGame>(
-        'on ${CardEvent.previewRevert}, given unmatched cardId, do nothing',
+        'on ${CardEvent.previewRevert}, given unmatched cardIndex, do nothing',
         _MockGame.new,
         (game) async {
-          const cardId = 1;
+          const cardIndex = 1;
           machine.mockState = CardState.inPreviewing;
           final p = Card();
           p.add(machine);
           await game.ensureAdd(p);
 
           machine.onNewEvent(
-            Event(CardEvent.previewRevert)..payload = CardIdPayload(cardId),
+            Event(CardEvent.previewRevert)
+              ..payload = CardIndexPayload(cardIndex),
           );
 
           expect(subscriber.receivedEvent, null);
@@ -250,17 +252,17 @@ void main() {
       );
 
       testWithGame<_MockGame>(
-        'on ${CardEvent.previewSwap}, giving matched cardId, notify ${CardStateMachineEvent.swapBackToHand}',
+        'on ${CardEvent.previewSwap}, giving matched cardIndex, notify ${CardStateMachineEvent.swapBackToHand}',
         _MockGame.new,
         (game) async {
-          const cardId = 1;
+          const cardIndex = 1;
           machine.mockState = CardState.inPreviewing;
-          final p = Card(cardId: cardId);
+          final p = Card(cardIndex: cardIndex);
           p.add(machine);
           await game.ensureAdd(p);
 
           machine.onNewEvent(
-            Event(CardEvent.previewSwap)..payload = CardIdPayload(cardId),
+            Event(CardEvent.previewSwap)..payload = CardIndexPayload(cardIndex),
           );
 
           expect(subscriber.receivedEvent,

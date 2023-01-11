@@ -7,11 +7,11 @@ import 'package:monopoly_deal/game/lib/lib.dart';
 import '../../utils.dart';
 
 class _MockCardTracker extends CardTracker {
-  List<HasCardId> mockCardsInHand = [];
+  List<HasCardIndex> mockCardsInHand = [];
   List<InHandPosition> mockInHandPosition = [];
 
   @override
-  List<HasCardId> cardsInHandCollapsedFromTop() => mockCardsInHand;
+  List<HasCardIndex> cardsInHandCollapsedFromTop() => mockCardsInHand;
 
   @override
   InHandPosition getInHandCollapsedPosition({
@@ -21,13 +21,13 @@ class _MockCardTracker extends CardTracker {
       mockInHandPosition[index];
 }
 
-class _MockHasCardId implements HasCardId {
-  _MockHasCardId(this._cardId);
+class _MockHasCardIndex implements HasCardIndex {
+  _MockHasCardIndex(this._cardIndex);
 
-  final int _cardId;
+  final int _cardIndex;
 
   @override
-  int get cardId => _cardId;
+  int get cardIndex => _cardIndex;
 }
 
 void main() {
@@ -49,7 +49,10 @@ void main() {
         InHandPosition(Vector2.all(10), 0.1),
         InHandPosition(Vector2.all(20), 0.2)
       ];
-      cardTracker.mockCardsInHand = [_MockHasCardId(0), _MockHasCardId(1)];
+      cardTracker.mockCardsInHand = [
+        _MockHasCardIndex(0),
+        _MockHasCardIndex(1)
+      ];
       cardTracker.mockInHandPosition = mockInHandPosition;
       await game.ensureAdd(selector);
 

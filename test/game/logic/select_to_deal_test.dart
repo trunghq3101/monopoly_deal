@@ -5,21 +5,21 @@ import 'package:monopoly_deal/game/lib/lib.dart';
 
 import '../../utils.dart';
 
-class _MockHasCardId implements HasCardId {
-  _MockHasCardId({required int cardId}) : _cardId = cardId;
+class _MockHasCardIndex implements HasCardIndex {
+  _MockHasCardIndex({required int cardIndex}) : _cardIndex = cardIndex;
 
-  final int _cardId;
+  final int _cardIndex;
 
   @override
-  int get cardId => _cardId;
+  int get cardIndex => _cardIndex;
 }
 
 class _MockCardTracker extends CardTracker {
-  final List<HasCardId> cards =
-      List.generate(20, (index) => _MockHasCardId(cardId: index));
+  final List<HasCardIndex> cards =
+      List.generate(20, (index) => _MockHasCardIndex(cardIndex: index));
 
   @override
-  List<HasCardId> cardsInDeckFromTop() {
+  List<HasCardIndex> cardsInDeckFromTop() {
     return cards;
   }
 }

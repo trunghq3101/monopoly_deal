@@ -55,6 +55,12 @@ class _WaitingRoomState extends State<WaitingRoom> with RouteAware {
   }
 
   @override
+  void didPop() {
+    RoomModel.of(context).disconnect();
+    super.didPop();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 

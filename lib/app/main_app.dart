@@ -43,7 +43,8 @@ class _MainAppState extends State<MainApp> {
             '/': (context) => const StartPage(),
             '/waitingRoom': (_) => const WaitingRoom(),
             '/joinRoom': (_) => const JoiningRoom(),
-            '/game': (context) => GameWidget(game: MainGame()),
+            '/game': (context) =>
+                GameWidget(game: MainGame(roomGateway: _roomGateway)),
           },
         ),
       ),

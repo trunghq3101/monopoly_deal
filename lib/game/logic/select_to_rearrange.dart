@@ -26,7 +26,7 @@ class SelectToReArrange extends Component with Publisher, Subscriber {
               notify(
                 Event(CardEvent.reposition)
                   ..payload = CardRepositionPayload(
-                    c.cardId,
+                    c.cardIndex,
                     inHandPosition: newInHandPosition,
                   ),
               );

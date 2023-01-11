@@ -12,12 +12,13 @@ void main() {
       gameAsset = GameAsset();
     });
 
-    test('given cardId, return front image', () async {
+    test('given cardIndex, return front image', () async {
       await loadTestAssets();
+      gameAsset.onCardRevealed(3, 10);
 
       expect(
-        gameAsset.frontImageForCardId(3),
-        Flame.images.fromCache('02.png'),
+        gameAsset.frontImageForCardIndex(3),
+        Flame.images.fromCache('05.png'),
       );
     });
   });

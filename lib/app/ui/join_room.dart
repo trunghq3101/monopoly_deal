@@ -35,6 +35,12 @@ class _JoiningRoomState extends State<JoiningRoom> with RouteAware {
   }
 
   @override
+  void didPop() {
+    RoomModel.of(context).disconnect();
+    super.didPop();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 

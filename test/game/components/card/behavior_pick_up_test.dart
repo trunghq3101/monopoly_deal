@@ -11,7 +11,7 @@ import '../../../utils.dart';
 
 class _MockGameAsset extends GameAsset {
   @override
-  Image frontImageForCardId(int id) => Flame.images.fromCache('01.png');
+  Image frontImageForCardIndex(int id) => Flame.images.fromCache('01.png');
 }
 
 void main() {

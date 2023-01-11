@@ -1,11 +1,14 @@
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame/experimental.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/animation.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class PickUpBehavior extends Component
-    with ParentIsA<Card>, Subscriber, Publisher {
+    with ParentIsA<Card>, Subscriber, Publisher, HasGameReference<FlameGame> {
   PickUpBehavior({double delayStep = 0.1}) : _delayStep = delayStep;
 
   final double _delayStep;
@@ -18,15 +21,21 @@ class PickUpBehavior extends Component
         assert(payload is CardPickUpPayload);
         payload as CardPickUpPayload;
         final delay = payload.orderIndex * _delayStep;
-        final frontImg = MainGame.gameAsset.frontImageForCardId(parent.cardId);
-        final frontCard = SpriteComponent.fromImage(frontImg);
-        frontCard.size = parent.size;
+        game.children
+            .query<RoomGatewayComponent>()
+            .firstOrNull
+            ?.roomGateway
+            .revealCard(payload.cardIndex);
+        // final frontImg =
+        //     MainGame.gameAsset.frontImageForCardIndex(parent.cardIndex);
+        // final frontCard = SpriteComponent.fromImage(frontImg);
+        // frontCard.size = parent.size;
         parent.add(TimerComponent(
           period: delay + 0.3,
           removeOnFinish: true,
           onTick: () {
-            parent.children.query<SpriteComponent>().first.removeFromParent();
-            parent.add(frontCard);
+            // parent.children.query<SpriteComponent>().first.removeFromParent();
+            // parent.add(frontCard);
             parent.priority = parent.priority + 1;
           },
         ));

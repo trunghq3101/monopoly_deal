@@ -5,7 +5,7 @@ import 'package:web_socket_client/web_socket_client.dart';
 
 class WsManager {
   WebSocket? _socket;
-  final Completer<WebSocket> _socketCompleter = Completer<WebSocket>();
+  Completer<WebSocket> _socketCompleter = Completer<WebSocket>();
 
   Future<WebSocket> connection() async {
     if (_socket != null) return _socket!;
@@ -23,5 +23,11 @@ class WsManager {
       },
       onError: _socketCompleter.completeError,
     );
+  }
+
+  void disconnect() {
+    _socket?.close();
+    _socket = null;
+    _socketCompleter = Completer<WebSocket>();
   }
 }

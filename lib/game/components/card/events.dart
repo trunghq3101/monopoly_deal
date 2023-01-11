@@ -29,40 +29,40 @@ enum CardEvent {
 }
 
 class CardDealPayload with EquatableMixin {
-  final int cardId;
+  final int cardIndex;
   final Vector2 playerPosition;
   final int orderIndex;
 
-  CardDealPayload(this.cardId, this.playerPosition, {this.orderIndex = 0});
+  CardDealPayload(this.cardIndex, this.playerPosition, {this.orderIndex = 0});
 
   @override
-  List<Object?> get props => [cardId, playerPosition, orderIndex];
+  List<Object?> get props => [cardIndex, playerPosition, orderIndex];
 }
 
 class CardPickUpPayload with EquatableMixin {
-  final int cardId;
+  final int cardIndex;
   final int orderIndex;
   final InHandPosition inHandPosition;
 
   CardPickUpPayload(
-    this.cardId, {
+    this.cardIndex, {
     this.orderIndex = 0,
     InHandPosition? inHandPosition,
   }) : inHandPosition = inHandPosition ?? InHandPosition.test();
 
   @override
-  List<Object?> get props => [cardId, orderIndex, inHandPosition];
+  List<Object?> get props => [cardIndex, orderIndex, inHandPosition];
 }
 
 class CardRepositionPayload with EquatableMixin {
-  final int cardId;
+  final int cardIndex;
   final InHandPosition inHandPosition;
 
-  CardRepositionPayload(this.cardId, {InHandPosition? inHandPosition})
+  CardRepositionPayload(this.cardIndex, {InHandPosition? inHandPosition})
       : inHandPosition = inHandPosition ?? InHandPosition.test();
 
   @override
-  List<Object?> get props => [cardId, inHandPosition];
+  List<Object?> get props => [cardIndex, inHandPosition];
 }
 
 class InHandPosition with EquatableMixin {
@@ -77,11 +77,11 @@ class InHandPosition with EquatableMixin {
   List<Object?> get props => [position, angle];
 }
 
-class CardIdPayload with EquatableMixin {
-  final int cardId;
+class CardIndexPayload with EquatableMixin {
+  final int cardIndex;
 
-  CardIdPayload(this.cardId);
+  CardIndexPayload(this.cardIndex);
 
   @override
-  List<Object?> get props => [cardId];
+  List<Object?> get props => [cardIndex];
 }
