@@ -3,18 +3,21 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
+import 'package:monopoly_deal/game/lib/lib.dart';
 
 class MainGame extends FlameGame
     with HasHoverableComponents, HasTappableComponents {
-  MainGame({RoomGateway? roomGateway})
+  MainGame({this.isFake = false, RoomGateway? roomGateway})
       : _roomGateway = roomGateway ?? RoomGateway();
 
   static GameMap gameMap = GameMap();
   static GameAsset gameAsset = GameAsset();
   static var cardTotalAmount = 100;
 
+  final bool isFake;
   final RoomGateway _roomGateway;
 
   World get _world => children.query<World>().first;
@@ -35,6 +38,7 @@ class MainGame extends FlameGame
     await gameAsset.load();
 
     gameMap = GameMap(
+        myIndex: isFake ? 0 : _roomGateway.myIndex,
         deckCenter: Vector2.zero(),
         deckSpacing: 0.7,
         cardSize: Vector2(300, 440),
@@ -103,6 +107,7 @@ class MainGame extends FlameGame
     final togglePreviewingBehavior = TogglePreviewingBehavior();
     final toTableBehavior = ToTableBehavior();
     final repositionInHand = RepositionInHandBehavior();
+    final revealCardBehavior = RevealCardBehavior();
     card
       ..add(cardStateMachine)
       ..add(addToDeckBehavior)
@@ -111,7 +116,8 @@ class MainGame extends FlameGame
       ..add(pullUpDownBehavior)
       ..add(togglePreviewingBehavior)
       ..add(toTableBehavior)
-      ..add(repositionInHand);
+      ..add(repositionInHand)
+      ..add(revealCardBehavior);
 
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
     dealToPlayerBehavior.addSubscriber(cardStateMachine);
@@ -123,6 +129,16 @@ class MainGame extends FlameGame
     _handToggleButton.addSubscriber(cardStateMachine);
     _placeCardButton.addSubscriber(cardStateMachine);
     _selectToReArrange.addSubscriber(cardStateMachine);
+    _roomGateway.gameEvents.listen((event) {
+      if (event.event == PacketType.cardRevealed) {
+        final data = event.data as CardRevealed;
+        gameAsset.onCardRevealed(data.cardIndex, data.cardId);
+        revealCardBehavior.onNewEvent(
+          Event(CardEvent.cardRevealed)
+            ..payload = CardIndexPayload(data.cardIndex),
+        );
+      }
+    });
 
     cardStateMachine
       ..addSubscriber(dealToPlayerBehavior)

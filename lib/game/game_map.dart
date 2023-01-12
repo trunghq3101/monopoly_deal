@@ -9,7 +9,9 @@ class GameMap {
   final List<Vector2> playerPositions;
   final Vector2 intialGameVisibleSize;
   final Vector2 overviewGameVisibleSize;
+  final int myIndex;
   late final _ratio = deckSpacing / cardSize.distanceTo(Vector2.zero());
+  final Map<int, Vector2> _indexToPosition = {};
 
   GameMap({
     Vector2? deckCenter,
@@ -18,12 +20,18 @@ class GameMap {
     this.playerPositions = const [],
     Vector2? intialGameVisibleSize,
     Vector2? overviewGameVisibleSize,
+    this.myIndex = 0,
   })  : deckCenter = deckCenter ?? Vector2.zero(),
         cardSize = cardSize ?? Vector2(300, 440),
         cardSizeInHand = Vector2(750, 1100),
         intialGameVisibleSize = intialGameVisibleSize ?? Vector2(600, 600),
         overviewGameVisibleSize =
-            overviewGameVisibleSize ?? Vector2(2000, 3000);
+            overviewGameVisibleSize ?? Vector2(2000, 3000) {
+    final playerAmount = playerPositions.length;
+    for (var i = 0; i < playerAmount; i++) {
+      _indexToPosition[(myIndex + i) % playerAmount] = playerPositions[i];
+    }
+  }
 
   Vector2 inDeckPosition(int index) {
     return deckCenter -
@@ -31,6 +39,14 @@ class GameMap {
   }
 
   bool isMyPosition(Vector2 position) {
-    return position == playerPositions[0];
+    return position == positionForPlayerIndex(myIndex);
+  }
+
+  Vector2 positionForPlayerIndex(int index) {
+    final position = _indexToPosition[index];
+    if (position == null) {
+      throw StateError('Position for player index $index not available');
+    }
+    return position;
   }
 }

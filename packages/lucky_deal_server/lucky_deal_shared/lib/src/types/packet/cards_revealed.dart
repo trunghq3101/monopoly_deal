@@ -1,17 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 
-class CardsRevealed with EquatableMixin, PacketData {
-  CardsRevealed(this.cardIds);
+class CardRevealed with EquatableMixin, PacketData {
+  CardRevealed(this.cardIndex, this.cardId);
 
-  factory CardsRevealed.from(List<String> values) =>
-      CardsRevealed(values.map((e) => int.parse(e)).toList());
+  factory CardRevealed.from(List<String> values) =>
+      CardRevealed(int.parse(values[0]), int.parse(values[1]));
 
-  final List<int> cardIds;
-
-  @override
-  String encode() => cardIds.join(",");
+  final int cardIndex;
+  final int cardId;
 
   @override
-  List<Object?> get props => [cardIds];
+  String encode() => "$cardIndex,$cardId";
+
+  @override
+  List<Object?> get props => [cardIndex, cardId];
 }

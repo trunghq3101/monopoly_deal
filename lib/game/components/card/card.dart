@@ -3,6 +3,7 @@ export 'behavior_deal_to_player.dart';
 export 'behavior_pick_up.dart';
 export 'behavior_pull_up_down.dart';
 export 'behavior_reposition_in_hand.dart';
+export 'behavior_reveal_card.dart';
 export 'behavior_to_table.dart';
 export 'behavior_toggle_previewing.dart';
 export 'card_component.dart';

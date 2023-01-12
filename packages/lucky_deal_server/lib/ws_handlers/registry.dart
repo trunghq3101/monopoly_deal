@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dart_frog/dart_frog.dart';
 import 'package:dart_frog_web_socket/dart_frog_web_socket.dart';
+import 'package:lucky_deal_server/ws_handlers/ack_connection.dart';
 import 'package:lucky_deal_server/ws_handlers/create_room.dart';
 import 'package:lucky_deal_server/ws_handlers/join_room.dart';
 import 'package:lucky_deal_server/ws_handlers/reveal_card.dart';
@@ -19,4 +20,5 @@ final packetHandlers = <
   PacketType.joinRoom: joinRoomHandler,
   PacketType.startGame: startGameHandler,
   PacketType.revealCard: revealCardHandler,
+  PacketType.ackConnection: ackConnectionHandler
 };

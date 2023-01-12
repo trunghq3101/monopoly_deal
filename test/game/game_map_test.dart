@@ -53,6 +53,22 @@ void main() {
               deckSpacing * 1.5);
         },
       );
+
+      test('given player index, return position', () async {
+        gameMap = GameMap(
+          myIndex: 1,
+          playerPositions: [Vector2.all(1), Vector2.all(2), Vector2.all(0)],
+        );
+
+        expect(
+          gameMap.positionForPlayerIndex(0),
+          Vector2.all(0),
+        );
+        expect(
+          gameMap.positionForPlayerIndex(2),
+          Vector2.all(2),
+        );
+      });
     });
   });
 }

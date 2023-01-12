@@ -11,8 +11,10 @@ enum PacketType {
   startGame(EmptyPacket.from),
   gameStarted(EmptyPacket.from),
   revealCard(RevealCard.from),
-  cardsRevealed(CardsRevealed.from),
-  memberLeft(MemberLeft.from);
+  cardRevealed(CardRevealed.from),
+  memberLeft(MemberLeft.from),
+  connected(Connected.from),
+  ackConnection(EmptyPacket.from);
 
   const PacketType(this.decode);
 

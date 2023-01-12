@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
-import 'package:web_socket_client/web_socket_client.dart';
+import 'package:web_socket_client/web_socket_client.dart' as wsClient;
 
 class RoomGateway extends ChangeNotifier {
   RoomGateway({WsManager? wsManager}) : _wsManager = wsManager ?? WsManager();
 
+  String? sid;
   String? roomId;
   List<String>? members;
   late Stream<WsDto> gameEvents = _gameEvents.stream;
@@ -16,12 +17,14 @@ class RoomGateway extends ChangeNotifier {
   bool _bound = false;
   final StreamController<WsDto> _gameEvents = StreamController.broadcast();
 
-  Future<WebSocket> get socket async {
+  Future<wsClient.WebSocket> get socket async {
     final ws = await _wsManager.connection();
     if (!_bound) {
       _bound = true;
+      ws.send(WsDto(PacketType.ackConnection, EmptyPacket()).encode());
       ws.connection.listen((event) {
-        if (event is Disconnected) {
+        if (event is wsClient.Disconnected) {
+          sid = null;
           roomId = null;
           members = null;
         }
@@ -32,6 +35,10 @@ class RoomGateway extends ChangeNotifier {
           final event = wsDto.event;
           final data = wsDto.data;
           switch (event) {
+            case PacketType.connected:
+              sid = (data as Connected).sid;
+              notifyListeners();
+              break;
             case PacketType.roomCreated:
               roomId = (data as RoomCreated).roomId;
               notifyListeners();
@@ -45,7 +52,7 @@ class RoomGateway extends ChangeNotifier {
               notifyListeners();
               break;
             case PacketType.gameStarted:
-            case PacketType.cardsRevealed:
+            case PacketType.cardRevealed:
               _gameEvents.add(wsDto);
               notifyListeners();
               break;
@@ -58,6 +65,13 @@ class RoomGateway extends ChangeNotifier {
       );
     }
     return ws;
+  }
+
+  int get myIndex {
+    if (members == null || sid == null) {
+      throw StateError('Missing room members or sid data');
+    }
+    return members!.indexOf(sid!);
   }
 
   Future<void> createRoom() async {

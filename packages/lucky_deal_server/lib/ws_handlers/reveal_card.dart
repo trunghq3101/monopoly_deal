@@ -11,8 +11,9 @@ Future<void> revealCardHandler(
   final sid = context.read<ConnectionInfoProvider>().sid;
   final room = context.read<RoomsManager>().findByMember(sid);
   if (room == null) throw StateError('Room does not exist');
-  final cardId = room.deck
-      .pickUp(room.memberIndex(sid), at: (data as RevealCard).cardIndex);
-  channel.sink
-      .add(WsDto(PacketType.cardsRevealed, CardsRevealed([cardId])).encode());
+  final cardIndex = (data as RevealCard).cardIndex;
+  final cardId = room.deck.pickUp(room.memberIndex(sid), at: cardIndex);
+  channel.sink.add(
+    WsDto(PacketType.cardRevealed, CardRevealed(cardIndex, cardId)).encode(),
+  );
 }

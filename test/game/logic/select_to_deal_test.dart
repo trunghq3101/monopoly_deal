@@ -62,21 +62,22 @@ void main() {
             Vector2.all(0),
             Vector2.all(1),
           ];
-          MainGame.gameMap = GameMap(playerPositions: playerPositions);
+          MainGame.gameMap =
+              GameMap(myIndex: 1, playerPositions: playerPositions);
 
           behavior.onNewEvent(Event(CardDeckEvent.dealStartGame));
 
           expect(subscriber.receivedEvents.map((e) => e?.payload), [
-            CardDealPayload(0, playerPositions[0], orderIndex: 0),
-            CardDealPayload(1, playerPositions[1], orderIndex: 1),
-            CardDealPayload(2, playerPositions[0], orderIndex: 2),
-            CardDealPayload(3, playerPositions[1], orderIndex: 3),
-            CardDealPayload(4, playerPositions[0], orderIndex: 4),
-            CardDealPayload(5, playerPositions[1], orderIndex: 5),
-            CardDealPayload(6, playerPositions[0], orderIndex: 6),
-            CardDealPayload(7, playerPositions[1], orderIndex: 7),
-            CardDealPayload(8, playerPositions[0], orderIndex: 8),
-            CardDealPayload(9, playerPositions[1], orderIndex: 9),
+            CardDealPayload(0, playerPositions[1], orderIndex: 0),
+            CardDealPayload(1, playerPositions[0], orderIndex: 1),
+            CardDealPayload(2, playerPositions[1], orderIndex: 2),
+            CardDealPayload(3, playerPositions[0], orderIndex: 3),
+            CardDealPayload(4, playerPositions[1], orderIndex: 4),
+            CardDealPayload(5, playerPositions[0], orderIndex: 5),
+            CardDealPayload(6, playerPositions[1], orderIndex: 6),
+            CardDealPayload(7, playerPositions[0], orderIndex: 7),
+            CardDealPayload(8, playerPositions[1], orderIndex: 8),
+            CardDealPayload(9, playerPositions[0], orderIndex: 9),
           ]);
         },
       );

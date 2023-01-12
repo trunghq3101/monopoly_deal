@@ -68,12 +68,12 @@ void main() {
 
         user1.send('9,0');
         unawaited(
-          expectLater(user1.messages, emitsThrough('10,${deck.at(0)}')),
+          expectLater(user1.messages, emitsThrough('10,0,${deck.at(0)}')),
         );
 
         user2.send('9,1');
         unawaited(
-          expectLater(user2.messages, emitsThrough('10,${deck.at(1)}')),
+          expectLater(user2.messages, emitsThrough('10,1,${deck.at(1)}')),
         );
       });
     },

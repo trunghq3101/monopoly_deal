@@ -1,4 +1,5 @@
 export 'cards_revealed.dart';
+export 'connected.dart';
 export 'empty.dart';
 export 'error.dart';
 export 'join_room.dart';

@@ -26,16 +26,10 @@ class PickUpBehavior extends Component
             .firstOrNull
             ?.roomGateway
             .revealCard(payload.cardIndex);
-        // final frontImg =
-        //     MainGame.gameAsset.frontImageForCardIndex(parent.cardIndex);
-        // final frontCard = SpriteComponent.fromImage(frontImg);
-        // frontCard.size = parent.size;
         parent.add(TimerComponent(
           period: delay + 0.3,
           removeOnFinish: true,
           onTick: () {
-            // parent.children.query<SpriteComponent>().first.removeFromParent();
-            // parent.add(frontCard);
             parent.priority = parent.priority + 1;
           },
         ));

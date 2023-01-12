@@ -47,6 +47,8 @@ Future<Response> onRequest(RequestContext context) async {
           logger.info('disconnected');
         },
         onError: (Object e, StackTrace s) {
+          print(e);
+          print(s);
           logger.warning('Error', e, s);
           channel.sink.addError(e, s);
         },

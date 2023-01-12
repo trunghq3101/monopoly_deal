@@ -25,7 +25,8 @@ enum CardEvent {
   preview,
   previewRevert,
   previewSwap,
-  reposition
+  reposition,
+  cardRevealed,
 }
 
 class CardDealPayload with EquatableMixin {

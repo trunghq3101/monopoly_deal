@@ -20,7 +20,7 @@ void main() {
 
     testWithGame<MainGame>(
       'load correctly',
-      MainGame.new,
+      () => MainGame(isFake: true),
       (game) async {
         await game.ready();
 

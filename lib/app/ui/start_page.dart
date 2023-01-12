@@ -13,7 +13,7 @@ class StartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        GameWidget(game: MainGame()),
+        GameWidget(game: MainGame(isFake: true)),
         const StartMenuOverlay(),
       ],
     );

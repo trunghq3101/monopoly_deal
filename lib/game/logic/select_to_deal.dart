@@ -22,7 +22,7 @@ class SelectToDeal with Publisher, Subscriber {
         for (var c in cardsToDeal) {
           final payload = CardDealPayload(
             c.cardIndex,
-            playerPositions[pIndex],
+            MainGame.gameMap.positionForPlayerIndex(pIndex),
             orderIndex: orderIndex++,
           );
           notify(Event(CardEvent.deal)..payload = payload);
