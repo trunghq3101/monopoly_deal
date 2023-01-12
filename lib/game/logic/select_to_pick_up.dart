@@ -11,7 +11,7 @@ class SelectToPickUp with Publisher, Subscriber {
   final RoomGateway _roomGateway;
 
   @override
-  void onNewEvent(Event event, [Object? payload]) {
+  void onNewEvent(Event event) {
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.tapOnMyDealRegion:
         if (_cardTracker.hasCardInAnimationState()) return;

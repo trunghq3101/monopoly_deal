@@ -1,12 +1,13 @@
 import 'package:flame/components.dart';
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class RevealCardBehavior extends Component with ParentIsA<Card>, Subscriber {
   @override
   void onNewEvent(Event event) {
-    if (event.eventIdentifier == CardEvent.cardRevealed) {
-      final payload = event.payload as CardIndexPayload;
+    if (event.eventIdentifier == PacketType.cardRevealed) {
+      final payload = event.payload as CardRevealed;
       if (payload.cardIndex != parent.cardIndex) return;
       final frontImg =
           MainGame.gameAsset.frontImageForCardIndex(parent.cardIndex);

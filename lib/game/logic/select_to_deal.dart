@@ -8,7 +8,7 @@ class SelectToDeal with Publisher, Subscriber {
   final CardTracker _cardTracker;
 
   @override
-  void onNewEvent(Event event, [Object? payload]) {
+  void onNewEvent(Event event) {
     switch (event.eventIdentifier) {
       case CardDeckEvent.dealStartGame:
         final playerPositions = MainGame.gameMap.playerPositions;

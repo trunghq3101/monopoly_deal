@@ -13,10 +13,10 @@ class SelectToPickUpForOpponent with Publisher, Subscriber {
   final RoomGateway _roomGateway;
 
   @override
-  void onNewEvent(Event event, [Object? payload]) {
+  void onNewEvent(Event event) {
     switch (event.eventIdentifier) {
       case PacketType.pickedUp:
-        payload as PickedUp;
+        final payload = event.payload as PickedUp;
         if (payload.playerId == _roomGateway.sid) {
           return;
         }

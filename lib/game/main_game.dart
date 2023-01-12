@@ -86,7 +86,8 @@ class MainGame extends FlameGame
       ..addSubscriber(zoomOverviewBehavior);
 
     _roomGateway.gameEvents.listen((event) {
-      _selectToPickUpForOpponent.onNewEvent(Event(event.event), event.data);
+      _selectToPickUpForOpponent
+          .onNewEvent(Event(event.event)..payload = event.data);
     });
   }
 
@@ -145,8 +146,7 @@ class MainGame extends FlameGame
         final data = event.data as CardRevealed;
         gameAsset.onCardRevealed(data.cardIndex, data.cardId);
         revealCardBehavior.onNewEvent(
-          Event(CardEvent.cardRevealed)
-            ..payload = CardIndexPayload(data.cardIndex),
+          Event(event.event)..payload = data,
         );
       }
     });
