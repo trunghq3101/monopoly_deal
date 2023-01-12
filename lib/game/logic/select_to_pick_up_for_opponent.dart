@@ -1,9 +1,11 @@
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class SelectToPickUp with Publisher, Subscriber {
-  SelectToPickUp({CardTracker? cardTracker, RoomGateway? roomGateway})
+class SelectToPickUpForOpponent with Publisher, Subscriber {
+  SelectToPickUpForOpponent(
+      {CardTracker? cardTracker, RoomGateway? roomGateway})
       : _cardTracker = cardTracker ?? CardTracker(),
         _roomGateway = roomGateway ?? RoomGateway();
 
@@ -13,18 +15,21 @@ class SelectToPickUp with Publisher, Subscriber {
   @override
   void onNewEvent(Event event, [Object? payload]) {
     switch (event.eventIdentifier) {
-      case CardStateMachineEvent.tapOnMyDealRegion:
-        if (_cardTracker.hasCardInAnimationState()) return;
-        _roomGateway.pickUp();
-        final cardsToPickUp = _cardTracker.cardsInMyDealRegionFromTop();
+      case PacketType.pickedUp:
+        payload as PickedUp;
+        if (payload.playerId == _roomGateway.sid) {
+          return;
+        }
+        final cardsToPickUp = _cardTracker.cardsByIndexFromTop(payload.cards);
         int orderIndex = 0;
         for (var c in cardsToPickUp) {
-          final inHandPosition = _cardTracker.getInHandPosition(
+          final inHandPosition = _cardTracker.getInHandPositionForOpponent(
+            playerIndex: _roomGateway.playerIndexOf(payload.playerId),
             index: cardsToPickUp.length - 1 - orderIndex,
             amount: cardsToPickUp.length,
           );
           notify(
-            Event(CardEvent.pickUp)
+            Event(CardEvent.pickUpForOpponent)
               ..payload = CardPickUpPayload(
                 c.cardIndex,
                 orderIndex: orderIndex++,

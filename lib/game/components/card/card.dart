@@ -1,6 +1,7 @@
 export 'behavior_add_to_deck.dart';
 export 'behavior_deal_to_player.dart';
 export 'behavior_pick_up.dart';
+export 'behavior_pick_up_for_opponent.dart';
 export 'behavior_pull_up_down.dart';
 export 'behavior_reposition_in_hand.dart';
 export 'behavior_reveal_card.dart';

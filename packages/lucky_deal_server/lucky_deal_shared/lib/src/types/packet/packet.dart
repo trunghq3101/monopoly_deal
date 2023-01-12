@@ -7,6 +7,7 @@ export 'joined_room.dart';
 export 'member_joined.dart';
 export 'member_left.dart';
 export 'members_updated.dart';
+export 'picked_up.dart';
 export 'reveal_card.dart';
 export 'room_created.dart';
 export 'types.dart';

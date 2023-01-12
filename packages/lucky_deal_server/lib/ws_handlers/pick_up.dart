@@ -3,7 +3,7 @@ import 'package:dart_frog_web_socket/dart_frog_web_socket.dart';
 import 'package:lucky_deal_server/providers/providers.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 
-Future<void> revealCardHandler(
+Future<void> pickUpHandler(
   WebSocketChannel channel,
   RequestContext context,
   PacketData data,
@@ -11,9 +11,12 @@ Future<void> revealCardHandler(
   final sid = context.read<ConnectionInfoProvider>().sid;
   final room = context.read<RoomsManager>().findByMember(sid);
   if (room == null) throw StateError('Room does not exist');
-  final cardIndex = (data as RevealCard).cardIndex;
-  final cardId = room.deck.reveal(room.memberIndex(sid), at: cardIndex);
-  channel.sink.add(
-    WsDto(PacketType.cardRevealed, CardRevealed(cardIndex, cardId)).encode(),
+  final cardIndexes = room.deck.pickUp(room.memberIndex(sid));
+  room.broadcast(
+    sid,
+    WsDto(
+      PacketType.pickedUp,
+      PickedUp(sid, cardIndexes),
+    ).encode(),
   );
 }

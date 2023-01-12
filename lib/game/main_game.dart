@@ -25,6 +25,7 @@ class MainGame extends FlameGame
       children.query<CardDeckPublisher>().first;
   late SelectToDeal _selectToDeal;
   late SelectToPickUp _selectToPickUp;
+  late SelectToPickUpForOpponent _selectToPickUpForOpponent;
   late SelectToPreviewing _selectToPreviewing;
   late SelectToReArrange _selectToReArrange;
   late HandToggleButton _handToggleButton;
@@ -51,7 +52,10 @@ class MainGame extends FlameGame
     final cardDeckPublisher = CardDeckPublisher();
     final cardTracker = CardTracker();
     _selectToDeal = SelectToDeal(cardTracker: cardTracker);
-    _selectToPickUp = SelectToPickUp(cardTracker: cardTracker);
+    _selectToPickUp =
+        SelectToPickUp(cardTracker: cardTracker, roomGateway: _roomGateway);
+    _selectToPickUpForOpponent = SelectToPickUpForOpponent(
+        cardTracker: cardTracker, roomGateway: _roomGateway);
     _selectToPreviewing = SelectToPreviewing(cardTracker: cardTracker);
     _selectToReArrange = SelectToReArrange(cardTracker: cardTracker);
 
@@ -80,6 +84,10 @@ class MainGame extends FlameGame
     cardDeckPublisher
       ..addSubscriber(_selectToDeal)
       ..addSubscriber(zoomOverviewBehavior);
+
+    _roomGateway.gameEvents.listen((event) {
+      _selectToPickUpForOpponent.onNewEvent(Event(event.event), event.data);
+    });
   }
 
   @override
@@ -103,6 +111,7 @@ class MainGame extends FlameGame
     final addToDeckBehavior = AddToDeckBehavior(index: index, priority: index);
     final dealToPlayerBehavior = DealToPlayerBehavior();
     final pickUpBehavior = PickUpBehavior();
+    final pickUpForOpponentBehavior = PickUpForOpponentBehavior();
     final pullUpDownBehavior = PullUpDownBehavior();
     final togglePreviewingBehavior = TogglePreviewingBehavior();
     final toTableBehavior = ToTableBehavior();
@@ -113,6 +122,7 @@ class MainGame extends FlameGame
       ..add(addToDeckBehavior)
       ..add(dealToPlayerBehavior)
       ..add(pickUpBehavior)
+      ..add(pickUpForOpponentBehavior)
       ..add(pullUpDownBehavior)
       ..add(togglePreviewingBehavior)
       ..add(toTableBehavior)
@@ -122,6 +132,7 @@ class MainGame extends FlameGame
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
     dealToPlayerBehavior.addSubscriber(cardStateMachine);
     pickUpBehavior.addSubscriber(cardStateMachine);
+    pickUpForOpponentBehavior.addSubscriber(cardStateMachine);
     _cardDeckPublisher.addSubscriber(addToDeckBehavior);
     _selectToDeal.addSubscriber(cardStateMachine);
     _selectToPickUp.addSubscriber(cardStateMachine);
@@ -151,6 +162,7 @@ class MainGame extends FlameGame
       ..addSubscriber(_placeCardButton)
       ..addSubscriber(toTableBehavior)
       ..addSubscriber(repositionInHand);
+    _selectToPickUpForOpponent.addSubscriber(pickUpForOpponentBehavior);
   }
 }
 

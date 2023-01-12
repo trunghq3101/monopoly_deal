@@ -53,6 +53,7 @@ class RoomGateway extends ChangeNotifier {
               break;
             case PacketType.gameStarted:
             case PacketType.cardRevealed:
+            case PacketType.pickedUp:
               _gameEvents.add(wsDto);
               notifyListeners();
               break;
@@ -93,5 +94,16 @@ class RoomGateway extends ChangeNotifier {
 
   Future<void> disconnect() async {
     _wsManager.disconnect();
+  }
+
+  int playerIndexOf(String playerId) {
+    if (members == null) {
+      throw StateError('Missing room members or sid data');
+    }
+    return members!.indexOf(playerId);
+  }
+
+  Future<void> pickUp() async {
+    (await socket).send(WsDto(PacketType.pickUp, EmptyPacket()).encode());
   }
 }

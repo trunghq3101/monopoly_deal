@@ -22,6 +22,7 @@ enum CardEvent {
   addedToDeck,
   deal,
   pickUp,
+  pickUpForOpponent,
   preview,
   previewRevert,
   previewSwap,

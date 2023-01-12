@@ -14,7 +14,9 @@ enum PacketType {
   cardRevealed(CardRevealed.from),
   memberLeft(MemberLeft.from),
   connected(Connected.from),
-  ackConnection(EmptyPacket.from);
+  ackConnection(EmptyPacket.from),
+  pickUp(EmptyPacket.from),
+  pickedUp(PickedUp.from);
 
   const PacketType(this.decode);
 
