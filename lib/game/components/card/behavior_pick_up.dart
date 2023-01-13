@@ -21,11 +21,17 @@ class PickUpBehavior extends Component
         assert(payload is CardPickUpPayload);
         payload as CardPickUpPayload;
         final delay = payload.orderIndex * _delayStep;
-        game.children
-            .query<RoomGatewayComponent>()
-            .firstOrNull
-            ?.roomGateway
-            .revealCard(payload.cardIndex);
+        add(TimerComponent(
+            period: delay,
+            removeOnFinish: true,
+            onTick: () {
+              game.children
+                  .query<RoomGatewayComponent>()
+                  .firstOrNull
+                  ?.roomGateway
+                  .revealCard(payload.cardIndex);
+            }));
+
         parent.add(TimerComponent(
           period: delay + 0.3,
           removeOnFinish: true,

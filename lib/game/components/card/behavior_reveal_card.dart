@@ -14,7 +14,7 @@ class RevealCardBehavior extends Component with ParentIsA<Card>, Subscriber {
       final frontCard = SpriteComponent.fromImage(frontImg);
       frontCard.size = parent.size;
       add(TimerComponent(
-        period: 0.6,
+        period: 0.3,
         removeOnFinish: true,
         onTick: () {
           parent.children.query<SpriteComponent>().first.removeFromParent();
