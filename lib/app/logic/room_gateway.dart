@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
-import 'package:web_socket_client/web_socket_client.dart' as wsClient;
+import 'package:web_socket_client/web_socket_client.dart' as ws_client;
 
 class RoomGateway extends ChangeNotifier {
   RoomGateway({WsManager? wsManager}) : _wsManager = wsManager ?? WsManager();
@@ -17,13 +17,13 @@ class RoomGateway extends ChangeNotifier {
   bool _bound = false;
   final StreamController<WsDto> _gameEvents = StreamController.broadcast();
 
-  Future<wsClient.WebSocket> get socket async {
+  Future<ws_client.WebSocket> get socket async {
     final ws = await _wsManager.connection();
     if (!_bound) {
       _bound = true;
       ws.send(WsDto(PacketType.ackConnection, EmptyPacket()).encode());
       ws.connection.listen((event) {
-        if (event is wsClient.Disconnected) {
+        if (event is ws_client.Disconnected) {
           sid = null;
           roomId = null;
           members = null;
