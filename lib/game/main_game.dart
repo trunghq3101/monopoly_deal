@@ -138,6 +138,7 @@ class MainGame extends FlameGame
     dealToPlayerBehavior.addSubscriber(cardStateMachine);
     pickUpBehavior.addSubscriber(cardStateMachine);
     pickUpForOpponentBehavior.addSubscriber(cardStateMachine);
+    togglePreviewingBehavior.addSubscriber(cardStateMachine);
     _cardDeckPublisher.addSubscriber(addToDeckBehavior);
     _selectToDeal.addSubscriber(cardStateMachine);
     _selectToPickUp.addSubscriber(cardStateMachine);

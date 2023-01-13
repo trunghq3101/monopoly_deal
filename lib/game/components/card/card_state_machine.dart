@@ -32,13 +32,11 @@ class CardStateMachine extends PositionComponent
     switch (state) {
       case CardState.inAnimation:
         if (event.eventIdentifier == CardStateMachineEvent.animationCompleted) {
-          assert(payload is CardState);
           changeState(payload as CardState);
         }
         break;
       case CardState.inDeck:
         if (event.eventIdentifier == CardEvent.deal) {
-          assert(payload is CardDealPayload);
           if ((payload as CardDealPayload).cardIndex != parent.cardIndex) {
             return;
           }
@@ -54,7 +52,6 @@ class CardStateMachine extends PositionComponent
         break;
       case CardState.inMyDealRegion:
         if (event.eventIdentifier == CardEvent.pickUp) {
-          assert(payload is CardPickUpPayload);
           if ((payload as CardPickUpPayload).cardIndex != parent.cardIndex) {
             return;
           }
@@ -73,11 +70,12 @@ class CardStateMachine extends PositionComponent
             notify(Event(CardStateMachineEvent.pullDown));
             break;
           case CardEvent.preview:
-            assert(payload is CardIndexPayload);
             payload as CardIndexPayload;
             if (parent.cardIndex != payload.cardIndex) break;
-            changeState(CardState.inPreviewing);
-            notify(Event(CardStateMachineEvent.toPreviewing));
+            changeState(CardState.inAnimation);
+            notify(Event(CardStateMachineEvent.toPreviewing)
+              ..reverseEvent = CardStateMachineEvent.animationCompleted
+              ..reversePayload = CardState.inPreviewing);
             break;
           default:
         }
@@ -89,7 +87,6 @@ class CardStateMachine extends PositionComponent
             notify(Event(CardStateMachineEvent.pullUp));
             break;
           case CardEvent.reposition:
-            assert(payload is CardRepositionPayload);
             payload as CardRepositionPayload;
             if (parent.cardIndex != payload.cardIndex) break;
             notify(event);
@@ -100,18 +97,20 @@ class CardStateMachine extends PositionComponent
       case CardState.inPreviewing:
         switch (event.eventIdentifier) {
           case CardEvent.previewRevert:
-            assert(payload is CardIndexPayload);
             payload as CardIndexPayload;
             if (parent.cardIndex != payload.cardIndex) break;
-            changeState(CardState.inHand);
-            notify(Event(CardStateMachineEvent.toHand));
+            changeState(CardState.inAnimation);
+            notify(Event(CardStateMachineEvent.toHand)
+              ..reverseEvent = CardStateMachineEvent.animationCompleted
+              ..reversePayload = CardState.inHand);
             break;
           case CardEvent.previewSwap:
-            assert(payload is CardIndexPayload);
             payload as CardIndexPayload;
             if (parent.cardIndex != payload.cardIndex) break;
-            changeState(CardState.inHand);
-            notify(Event(CardStateMachineEvent.swapBackToHand));
+            changeState(CardState.inAnimation);
+            notify(Event(CardStateMachineEvent.swapBackToHand)
+              ..reverseEvent = CardStateMachineEvent.animationCompleted
+              ..reversePayload = CardState.inHand);
             break;
           case PlaceCardButtonEvent.tap:
             changeState(CardState.onTable);

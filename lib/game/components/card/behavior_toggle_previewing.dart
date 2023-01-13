@@ -4,7 +4,7 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class TogglePreviewingBehavior extends Component
-    with Subscriber, ParentIsA<PositionComponent> {
+    with Publisher, Subscriber, ParentIsA<PositionComponent> {
   PositionComponent? _inHandPlaceholder;
   @override
   void onNewEvent(Event event) {
@@ -15,7 +15,7 @@ class TogglePreviewingBehavior extends Component
             position: parent.position,
             scale: parent.scale,
             priority: parent.priority);
-        parent.add(TimerComponent(
+        add(TimerComponent(
           period: 0.01,
           removeOnFinish: true,
           onTick: () {
@@ -25,13 +25,20 @@ class TogglePreviewingBehavior extends Component
         parent.addAll([
           MoveEffect.to(Vector2(0, -500), LinearEffectController(0.1)),
           RotateEffect.to(0, LinearEffectController(0.1)),
-          ScaleEffect.by(Vector2.all(1.6), LinearEffectController(0.1)),
+          ScaleEffect.by(
+            Vector2.all(1.6),
+            LinearEffectController(0.1),
+            onComplete: () {
+              notify(
+                  Event(event.reverseEvent!)..payload = event.reversePayload);
+            },
+          ),
         ]);
         break;
       case CardStateMachineEvent.toHand:
       case CardStateMachineEvent.swapBackToHand:
         if (_inHandPlaceholder == null) return;
-        parent.add(TimerComponent(
+        add(TimerComponent(
           period: 0.01,
           removeOnFinish: true,
           onTick: () {
@@ -44,7 +51,13 @@ class TogglePreviewingBehavior extends Component
           RotateEffect.to(
               _inHandPlaceholder!.angle, LinearEffectController(0.1)),
           ScaleEffect.to(
-              _inHandPlaceholder!.scale, LinearEffectController(0.1)),
+            _inHandPlaceholder!.scale,
+            LinearEffectController(0.1),
+            onComplete: () {
+              notify(
+                  Event(event.reverseEvent!)..payload = event.reversePayload);
+            },
+          ),
         ]);
         break;
       default:
