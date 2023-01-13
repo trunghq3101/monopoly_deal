@@ -1,28 +1,35 @@
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
+import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class SelectToPreviewing with Publisher, Subscriber {
-  SelectToPreviewing({CardTracker? cardTracker})
-      : _cardTracker = cardTracker ?? CardTracker();
+  SelectToPreviewing({CardTracker? cardTracker, RoomGateway? roomGateway})
+      : _cardTracker = cardTracker ?? CardTracker(),
+        _roomGateway = roomGateway ?? RoomGateway();
 
   final CardTracker _cardTracker;
+  final RoomGateway _roomGateway;
 
   @override
   void onNewEvent(Event event) {
-    final payload = event.payload;
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.tapWhileInHand:
+        final payload = event.payload as CardIndexPayload;
         final previewingCard = _cardTracker.cardInPreviewingState();
-        assert(payload is CardIndexPayload);
         notify(Event(CardEvent.preview)..payload = payload);
+        _roomGateway.sendCardEvent(PacketType.previewCard, payload.cardIndex);
         if (previewingCard != null) {
           notify(Event(CardEvent.previewSwap)
             ..payload = CardIndexPayload(previewingCard.cardIndex));
+          _roomGateway.sendCardEvent(
+              PacketType.unpreviewCard, previewingCard.cardIndex);
         }
         break;
       case CardStateMachineEvent.tapWhileInPreviewing:
-        assert(payload is CardIndexPayload);
+        final payload = event.payload as CardIndexPayload;
         notify(Event(CardEvent.previewRevert)..payload = payload);
+        _roomGateway.sendCardEvent(PacketType.unpreviewCard, payload.cardIndex);
         break;
       default:
     }

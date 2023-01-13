@@ -40,4 +40,8 @@ class Deck {
     _dealNextCardTo(playerIndex);
     _dealNextCardTo(playerIndex);
   }
+
+  bool verifyCardOwner(int cardIndex, int playerIndex) {
+    return _dealedCards[playerIndex].contains(cardIndex);
+  }
 }

@@ -56,7 +56,8 @@ class MainGame extends FlameGame
         SelectToPickUp(cardTracker: cardTracker, roomGateway: _roomGateway);
     _selectToPickUpForOpponent = SelectToPickUpForOpponent(
         cardTracker: cardTracker, roomGateway: _roomGateway);
-    _selectToPreviewing = SelectToPreviewing(cardTracker: cardTracker);
+    _selectToPreviewing =
+        SelectToPreviewing(cardTracker: cardTracker, roomGateway: _roomGateway);
     _selectToReArrange = SelectToReArrange(cardTracker: cardTracker);
 
     add(world);
@@ -115,6 +116,8 @@ class MainGame extends FlameGame
     final pickUpForOpponentBehavior = PickUpForOpponentBehavior();
     final pullUpDownBehavior = PullUpDownBehavior();
     final togglePreviewingBehavior = TogglePreviewingBehavior();
+    final togglePreviewingForOpponentBehavior =
+        TogglePreviewingForOpponentBehavior();
     final toTableBehavior = ToTableBehavior();
     final repositionInHand = RepositionInHandBehavior();
     final revealCardBehavior = RevealCardBehavior();
@@ -126,6 +129,7 @@ class MainGame extends FlameGame
       ..add(pickUpForOpponentBehavior)
       ..add(pullUpDownBehavior)
       ..add(togglePreviewingBehavior)
+      ..add(togglePreviewingForOpponentBehavior)
       ..add(toTableBehavior)
       ..add(repositionInHand)
       ..add(revealCardBehavior);
@@ -149,6 +153,8 @@ class MainGame extends FlameGame
           Event(event.event)..payload = data,
         );
       }
+      togglePreviewingForOpponentBehavior
+          .onNewEvent(Event(event.event)..payload = event.data);
     });
 
     cardStateMachine

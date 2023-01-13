@@ -1,3 +1,5 @@
+export 'card_info.dart';
+export 'card_with_player.dart';
 export 'cards_revealed.dart';
 export 'connected.dart';
 export 'empty.dart';

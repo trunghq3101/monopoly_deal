@@ -16,7 +16,11 @@ enum PacketType {
   connected(Connected.from),
   ackConnection(EmptyPacket.from),
   pickUp(EmptyPacket.from),
-  pickedUp(PickedUp.from);
+  pickedUp(PickedUp.from),
+  previewCard(CardInfo.from),
+  cardPreviewed(CardWithPlayer.from),
+  unpreviewCard(CardInfo.from),
+  cardUnpreviewed(CardWithPlayer.from);
 
   const PacketType(this.decode);
 

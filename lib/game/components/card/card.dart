@@ -7,6 +7,7 @@ export 'behavior_reposition_in_hand.dart';
 export 'behavior_reveal_card.dart';
 export 'behavior_to_table.dart';
 export 'behavior_toggle_previewing.dart';
+export 'behavior_toggle_previewing_for_opponent.dart';
 export 'card_component.dart';
 export 'card_state_machine.dart';
 export 'card_tracker.dart';

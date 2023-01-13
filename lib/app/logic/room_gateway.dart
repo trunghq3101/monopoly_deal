@@ -57,6 +57,12 @@ class RoomGateway extends ChangeNotifier {
               _gameEvents.add(wsDto);
               notifyListeners();
               break;
+            case PacketType.cardPreviewed:
+            case PacketType.cardUnpreviewed:
+              if ((wsDto.data as CardWithPlayer).playerId == sid) return;
+              _gameEvents.add(wsDto);
+              notifyListeners();
+              break;
             default:
           }
         },
@@ -105,5 +111,9 @@ class RoomGateway extends ChangeNotifier {
 
   Future<void> pickUp() async {
     (await socket).send(WsDto(PacketType.pickUp, EmptyPacket()).encode());
+  }
+
+  Future<void> sendCardEvent(PacketType type, int cardIndex) async {
+    (await socket).send(WsDto(type, CardInfo(cardIndex)).encode());
   }
 }
