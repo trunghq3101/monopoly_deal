@@ -18,12 +18,12 @@ Future<void> createRoomHandler(
     })
     ..newJoined.listen((newJoined) {
       channel.sink.add(
-        WsDto(PacketType.memberJoined, MemberJoined(newJoined)).encode(),
+        WsDto(PacketType.memberJoined, PlayerId(newJoined)).encode(),
       );
     })
     ..newLeft.listen((newLeft) {
       channel.sink.add(
-        WsDto(PacketType.memberLeft, MemberLeft(newLeft)).encode(),
+        WsDto(PacketType.memberLeft, PlayerId(newLeft)).encode(),
       );
     })
     ..messages.listen((msg) {

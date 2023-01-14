@@ -11,6 +11,7 @@ class RoomGateway extends ChangeNotifier {
   String? sid;
   String? roomId;
   List<String>? members;
+  String? turnId;
   late Stream<WsDto> gameEvents = _gameEvents.stream;
   bool get isFull => members?.length == 2;
   final WsManager _wsManager;
@@ -51,6 +52,11 @@ class RoomGateway extends ChangeNotifier {
               members = (data as MembersUpdated).members;
               notifyListeners();
               break;
+            case PacketType.turnPassed:
+              turnId = (data as PlayerId).sid;
+              _gameEvents.add(wsDto);
+              notifyListeners();
+              break;
             case PacketType.gameStarted:
             case PacketType.cardRevealed:
             case PacketType.pickedUp:
@@ -80,6 +86,8 @@ class RoomGateway extends ChangeNotifier {
     }
     return members!.indexOf(sid!);
   }
+
+  bool get isMyTurn => turnId != null && turnId == sid;
 
   Future<void> createRoom() async {
     (await socket).send(WsDto(PacketType.createRoom, EmptyPacket()).encode());

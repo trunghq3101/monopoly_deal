@@ -89,6 +89,7 @@ class MainGame extends FlameGame
     _roomGateway.gameEvents.listen((event) {
       _selectToPickUpForOpponent
           .onNewEvent(Event(event.event)..payload = event.data);
+      _placeCardButton.onNewEvent(Event(event.event)..payload = event.data);
     });
   }
 

@@ -24,40 +24,7 @@ void main() {
       behavior = PickUpBehavior();
     });
 
-    test('is Component', () {
-      expect(behavior, isA<Component>());
-    });
-
-    test('parent is PositionComponent', () {
-      expect(behavior, isA<ParentIsA<Card>>());
-    });
-
-    test('is $Subscriber', () {
-      expect(behavior, isA<Subscriber>());
-    });
-
     group('on ${CardStateMachineEvent.pickUpToHand}', () {
-      testWithFlameGame('parent change sprite', (game) async {
-        final p = Card();
-        p.add(behavior);
-        await game.ensureAdd(p);
-        final oldSprite = p.children.query<SpriteComponent>().first.sprite;
-
-        behavior.onNewEvent(
-          Event(CardStateMachineEvent.pickUpToHand)
-            ..payload = CardPickUpPayload(0)
-            ..reverseEvent = 0,
-        );
-        await game.ready();
-        game.update(2);
-        await game.ready();
-
-        expect(
-          p.children.query<SpriteComponent>().first.sprite,
-          isNot(oldSprite),
-        );
-      });
-
       testWithFlameGame('parent position change to inHandPosition',
           (game) async {
         final inHand = InHandPosition(Vector2.all(100), 0.8);

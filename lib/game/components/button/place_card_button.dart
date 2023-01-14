@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame/game.dart';
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
@@ -10,7 +12,7 @@ enum PlaceCardButtonState {
 }
 
 class PlaceCardButton extends PositionComponent
-    with TapCallbacks, Subscriber, Publisher {
+    with TapCallbacks, Subscriber, Publisher, HasGameReference<FlameGame> {
   PlaceCardButtonState _state = PlaceCardButtonState.invisible;
   PlaceCardButtonState get state => _state;
 
@@ -22,15 +24,24 @@ class PlaceCardButton extends PositionComponent
 
   @override
   void onNewEvent(Event event) {
+    final roomGateway =
+        game.children.query<RoomGatewayComponent>().firstOrNull?.roomGateway;
+    final cardTracker = game.children.query<CardTracker>().firstOrNull;
+    final isMyTurn = roomGateway?.isMyTurn ?? false;
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.toPreviewing:
-        if (state == PlaceCardButtonState.invisible) {
+        if (isMyTurn && state == PlaceCardButtonState.invisible) {
           _changeState(PlaceCardButtonState.visible);
         }
         break;
       case CardStateMachineEvent.toHand:
-        if (state == PlaceCardButtonState.visible) {
+        if (isMyTurn && state == PlaceCardButtonState.visible) {
           _changeState(PlaceCardButtonState.invisible);
+        }
+        break;
+      case PacketType.turnPassed:
+        if (isMyTurn && cardTracker?.cardInPreviewingState() != null) {
+          _changeState(PlaceCardButtonState.visible);
         }
         break;
       default:

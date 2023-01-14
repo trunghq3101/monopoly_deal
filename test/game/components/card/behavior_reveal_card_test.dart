@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_test/flame_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
@@ -32,7 +33,7 @@ void main() {
         final oldSprite = p.children.query<SpriteComponent>().first.sprite;
 
         behavior.onNewEvent(
-            Event(CardEvent.cardRevealed)..payload = CardIndexPayload(0));
+            Event(PacketType.cardRevealed)..payload = CardRevealed(0, 1));
         await game.ready();
         game.update(2);
         await game.ready();

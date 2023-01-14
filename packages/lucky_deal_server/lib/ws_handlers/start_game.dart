@@ -18,4 +18,11 @@ Future<void> startGameHandler(
       EmptyPacket(),
     ).encode(),
   );
+  room?.broadcast(
+    sid,
+    WsDto(
+      PacketType.turnPassed,
+      PlayerId(sid),
+    ).encode(),
+  );
 }

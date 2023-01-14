@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 
-class MemberLeft with EquatableMixin, PacketData {
-  MemberLeft(this.sid);
+class PlayerId with EquatableMixin, PacketData {
+  PlayerId(this.sid);
 
-  factory MemberLeft.from(List<String> values) => MemberLeft(values[0]);
+  factory PlayerId.from(List<String> values) => PlayerId(values[0]);
 
   final String sid;
 

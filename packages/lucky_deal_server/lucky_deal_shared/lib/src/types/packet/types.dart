@@ -3,7 +3,7 @@ import 'package:lucky_deal_shared/src/types/packet/packet.dart';
 enum PacketType {
   createRoom(EmptyPacket.from),
   roomCreated(RoomCreated.from),
-  memberJoined(MemberJoined.from),
+  memberJoined(PlayerId.from),
   membersUpdated(MembersUpdated.from),
   joinRoom(JoinRoom.from),
   joinedRoom(JoinedRoom.from),
@@ -12,7 +12,7 @@ enum PacketType {
   gameStarted(EmptyPacket.from),
   revealCard(RevealCard.from),
   cardRevealed(CardRevealed.from),
-  memberLeft(MemberLeft.from),
+  memberLeft(PlayerId.from),
   connected(Connected.from),
   ackConnection(EmptyPacket.from),
   pickUp(EmptyPacket.from),
@@ -20,7 +20,8 @@ enum PacketType {
   previewCard(CardInfo.from),
   cardPreviewed(CardWithPlayer.from),
   unpreviewCard(CardInfo.from),
-  cardUnpreviewed(CardWithPlayer.from);
+  cardUnpreviewed(CardWithPlayer.from),
+  turnPassed(PlayerId.from);
 
   const PacketType(this.decode);
 
