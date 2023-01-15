@@ -22,8 +22,6 @@ class SelectToPreviewing with Publisher, Subscriber {
         if (previewingCard != null) {
           notify(Event(CardEvent.previewSwap)
             ..payload = CardIndexPayload(previewingCard.cardIndex));
-          _roomGateway.sendCardEvent(
-              PacketType.unpreviewCard, previewingCard.cardIndex);
         }
         break;
       case CardStateMachineEvent.tapWhileInPreviewing:

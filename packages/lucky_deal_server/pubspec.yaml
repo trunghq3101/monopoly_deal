@@ -7,8 +7,10 @@ environment:
   sdk: ">=2.18.0 <3.0.0"
 
 dependencies:
+  collection: ^1.17.0
   dart_frog: ^0.3.0
   dart_frog_web_socket: ^0.1.0-dev.1
+  equatable: ^2.0.5
   hashids2: ^2.0.0
   logging: ^1.1.0
   lucky_deal_shared:
