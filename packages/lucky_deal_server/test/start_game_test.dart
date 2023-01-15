@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
-import 'package:lucky_deal_server/providers/providers.dart';
+import 'package:lucky_deal_server/models/models.dart';
 import 'package:test/test.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
@@ -64,7 +64,8 @@ void main() {
         user2.send('4,$roomId');
         await testDelay();
         user1.send('7,');
-        final deck = requestContext.read<RoomsManager>().findById(roomId).deck;
+        final deck =
+            requestContext.read<RoomsManager>().findById(roomId).gameMaster;
 
         user1.send('9,0');
         unawaited(

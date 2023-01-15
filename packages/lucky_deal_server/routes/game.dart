@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:dart_frog_web_socket/dart_frog_web_socket.dart';
 import 'package:logging/logging.dart';
+import 'package:lucky_deal_server/models/models.dart';
 import 'package:lucky_deal_server/providers/providers.dart';
 import 'package:lucky_deal_server/ws_handlers/registry.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';

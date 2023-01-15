@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:lucky_deal_server/providers/providers.dart';
+import 'package:lucky_deal_server/models/models.dart';
 import 'package:test/test.dart';
 
 import '../../utils.dart';

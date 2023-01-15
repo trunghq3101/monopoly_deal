@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:lucky_deal_server/models/models.dart';
 
-class Deck {
-  Deck({int? playersAmount}) : _playersAmount = playersAmount ?? 2;
+class GameMaster {
+  GameMaster({int? playersAmount}) : _playersAmount = playersAmount ?? 2;
 
   final int _playersAmount;
   final List<Card> _cards = List.generate(100, (index) => Card(id: index));
