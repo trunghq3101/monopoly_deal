@@ -11,13 +11,15 @@ Future<void> playCardHandler(
   final sid = context.read<ConnectionInfoProvider>().sid;
   final room = context.read<RoomsManager>().findByMember(sid);
   if (room == null) throw StateError('Room does not exist');
-  final playedCardIndex =
-      room.deck.play((data as CardInfo).cardIndex, room.memberIndex(sid));
-  if (playedCardIndex != null) {
+  final cardIndex = (data as CardInfo).cardIndex;
+  final playedCardId = room.deck.play(cardIndex, room.memberIndex(sid))?.id;
+  if (playedCardId != null) {
     room.broadcast(
       sid,
-      WsDto(PacketType.cardPlayed, CardWithPlayer(sid, playedCardIndex))
-          .encode(),
+      WsDto(
+        PacketType.cardPlayed,
+        CardInfoWithPlayer(sid, cardIndex, playedCardId),
+      ).encode(),
     );
   }
 }

@@ -70,7 +70,7 @@ class Deck {
     return cardIndex;
   }
 
-  int? play(int cardIndex, int playerIndex) {
+  Card? play(int cardIndex, int playerIndex) {
     if (!_isCardInHand(cardIndex, playerIndex) ||
         !cardAt(cardIndex).previewing) {
       return null;
@@ -78,7 +78,7 @@ class Deck {
     cardAt(cardIndex).previewing = false;
     _inHandCardIndexes[playerIndex].remove(cardIndex);
     _playedCardIndexes[playerIndex].add(cardIndex);
-    return cardIndex;
+    return cardAt(cardIndex);
   }
 
   bool _isCardInHand(int cardIndex, int playerIndex) {

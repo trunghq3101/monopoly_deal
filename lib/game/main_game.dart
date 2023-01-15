@@ -120,6 +120,7 @@ class MainGame extends FlameGame
     final togglePreviewingForOpponentBehavior =
         TogglePreviewingForOpponentBehavior();
     final toTableBehavior = ToTableBehavior();
+    final toTableForOpponentBehavior = ToTableForOpponentBehavior();
     final repositionInHand = RepositionInHandBehavior();
     final revealCardBehavior = RevealCardBehavior();
     card
@@ -132,6 +133,7 @@ class MainGame extends FlameGame
       ..add(togglePreviewingBehavior)
       ..add(togglePreviewingForOpponentBehavior)
       ..add(toTableBehavior)
+      ..add(toTableForOpponentBehavior)
       ..add(repositionInHand)
       ..add(revealCardBehavior);
 
@@ -156,6 +158,8 @@ class MainGame extends FlameGame
         );
       }
       togglePreviewingForOpponentBehavior
+          .onNewEvent(Event(event.event)..payload = event.data);
+      toTableForOpponentBehavior
           .onNewEvent(Event(event.event)..payload = event.data);
     });
 
