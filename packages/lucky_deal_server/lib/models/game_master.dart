@@ -77,7 +77,7 @@ class GameMaster {
   Card? play(int cardIndex, int playerIndex) {
     if (!_isCardInHand(cardIndex, playerIndex) ||
         !cardAt(cardIndex).previewing ||
-        !_isMyTurn(playerIndex) ||
+        !isMyTurn(playerIndex) ||
         _remainingInTurn == 0) {
       return null;
     }
@@ -102,7 +102,7 @@ class GameMaster {
   int? _previewingOf(int playerIndex) => _inHandCardIndexes[playerIndex]
       .firstWhereOrNull((index) => cardAt(index).previewing);
 
-  bool _isMyTurn(int playerIndex) {
+  bool isMyTurn(int playerIndex) {
     return _turnPlayerIndex == playerIndex;
   }
 }

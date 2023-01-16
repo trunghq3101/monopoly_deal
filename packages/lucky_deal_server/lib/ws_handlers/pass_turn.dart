@@ -12,6 +12,7 @@ Future<void> passTurnHandler(
   final sid = context.read<ConnectionInfoProvider>().sid;
   final room = context.read<RoomsManager>().findByMember(sid);
   if (room == null) throw StateError('Room does not exist');
+  if (!room.gameMaster.isMyTurn(room.memberIndex(sid))) return;
   room.gameMaster.nextTurn();
   room.broadcast(
     sid,

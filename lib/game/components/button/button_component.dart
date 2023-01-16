@@ -12,7 +12,11 @@ class ButtonComponent extends PositionComponent {
       ..pushStyle(TextStyle(color: const Color(0xFF000000)))
       ..addText(text);
     _paragraph = builder.build()..layout(ParagraphConstraints(width: size.x));
-    offsetX = textAlign == TextAlign.right ? -size.x * 0.1 : 0;
+    offsetX = textAlign == TextAlign.right
+        ? -size.x * 0.1
+        : textAlign == TextAlign.left
+            ? size.x * 0.1
+            : 0;
   }
 
   final String text;

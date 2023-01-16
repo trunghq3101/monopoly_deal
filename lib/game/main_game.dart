@@ -30,6 +30,7 @@ class MainGame extends FlameGame
   late SelectToReArrange _selectToReArrange;
   late HandToggleButton _handToggleButton;
   late PlaceCardButton _placeCardButton;
+  late PassTurnButton _passTurnButton;
   late GameMaster _gameMaster;
 
   @override
@@ -73,13 +74,16 @@ class MainGame extends FlameGame
       ..position =
           Vector2(MainGame.gameMap.overviewGameVisibleSize.x * 0.5, 400);
     _placeCardButton = PlaceCardButton()
-      ..position = Vector2(MainGame.gameMap.overviewGameVisibleSize.x * 0.5, 0);
-    _placeCardButton
+      ..position = Vector2(MainGame.gameMap.overviewGameVisibleSize.x * 0.5, 0)
       ..addSubscriber(_handToggleButton)
       ..addSubscriber(_selectToReArrange);
+    _passTurnButton = PassTurnButton()
+      ..position =
+          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * -0.5, 400);
     world
       ..add(_handToggleButton)
-      ..add(_placeCardButton);
+      ..add(_placeCardButton)
+      ..add(_passTurnButton);
 
     final zoomOverviewBehavior = ZoomOverviewBehavior();
     cameraComponent.add(zoomOverviewBehavior);
@@ -95,6 +99,7 @@ class MainGame extends FlameGame
       _selectToPickUpForOpponent
           .onNewEvent(Event(event.event)..payload = event.data);
       _placeCardButton.onNewEvent(Event(event.event)..payload = event.data);
+      _passTurnButton.onNewEvent(Event(event.event)..payload = event.data);
     });
   }
 
@@ -178,7 +183,8 @@ class MainGame extends FlameGame
       ..addSubscriber(togglePreviewingBehavior)
       ..addSubscriber(_placeCardButton)
       ..addSubscriber(toTableBehavior)
-      ..addSubscriber(repositionInHand);
+      ..addSubscriber(repositionInHand)
+      ..addSubscriber(_passTurnButton);
     _selectToPickUpForOpponent.addSubscriber(pickUpForOpponentBehavior);
   }
 }

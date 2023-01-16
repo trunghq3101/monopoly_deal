@@ -129,4 +129,8 @@ class RoomGateway extends ChangeNotifier {
   Future<void> sendCardEvent(PacketType type, int cardIndex) async {
     (await socket).send(WsDto(type, CardInfo(cardIndex)).encode());
   }
+
+  Future<void> endTurn() async {
+    (await socket).send(WsDto(PacketType.passTurn, EmptyPacket()).encode());
+  }
 }
