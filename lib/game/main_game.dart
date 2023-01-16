@@ -30,6 +30,7 @@ class MainGame extends FlameGame
   late SelectToReArrange _selectToReArrange;
   late HandToggleButton _handToggleButton;
   late PlaceCardButton _placeCardButton;
+  late GameMaster _gameMaster;
 
   @override
   backgroundColor() => const Color.fromARGB(255, 192, 50, 50);
@@ -59,13 +60,14 @@ class MainGame extends FlameGame
     _selectToPreviewing =
         SelectToPreviewing(cardTracker: cardTracker, roomGateway: _roomGateway);
     _selectToReArrange = SelectToReArrange(cardTracker: cardTracker);
+    _gameMaster = GameMaster(_roomGateway);
 
     add(world);
     add(cameraComponent);
     add(cardDeckPublisher);
     add(cardTracker);
     add(_selectToReArrange);
-    add(RoomGatewayComponent(_roomGateway));
+    add(_gameMaster);
 
     _handToggleButton = HandToggleButton()
       ..position =
@@ -87,6 +89,9 @@ class MainGame extends FlameGame
       ..addSubscriber(zoomOverviewBehavior);
 
     _roomGateway.gameEvents.listen((event) {
+      if (event.event == PacketType.turnPassed && _roomGateway.isMyTurn) {
+        _gameMaster.takeTurn();
+      }
       _selectToPickUpForOpponent
           .onNewEvent(Event(event.event)..payload = event.data);
       _placeCardButton.onNewEvent(Event(event.event)..payload = event.data);

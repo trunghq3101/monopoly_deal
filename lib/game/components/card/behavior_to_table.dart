@@ -3,7 +3,6 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
-import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
@@ -13,11 +12,7 @@ class ToTableBehavior extends Component
   void onNewEvent(Event event) {
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.toTable:
-        game.children
-            .query<RoomGatewayComponent>()
-            .firstOrNull
-            ?.roomGateway
-            .sendCardEvent(PacketType.playCard, parent.cardIndex);
+        game.children.query<GameMaster>().firstOrNull?.play(parent.cardIndex);
         add(TimerComponent(
           period: 0.2,
           onTick: () {

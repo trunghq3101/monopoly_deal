@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:lucky_deal_server/models/models.dart';
 
@@ -11,6 +13,8 @@ class GameMaster {
   late final _playedCardIndexes =
       List.generate(_playersAmount, (index) => <int>[]);
   int _nextDealedIndex = 0;
+  late int _turnPlayerIndex = Random().nextInt(_playersAmount);
+  int _remainingInTurn = 3;
 
   int at(int index) => _cards[index].id;
 
@@ -72,14 +76,24 @@ class GameMaster {
 
   Card? play(int cardIndex, int playerIndex) {
     if (!_isCardInHand(cardIndex, playerIndex) ||
-        !cardAt(cardIndex).previewing) {
+        !cardAt(cardIndex).previewing ||
+        !_isMyTurn(playerIndex) ||
+        _remainingInTurn == 0) {
       return null;
     }
     cardAt(cardIndex).previewing = false;
     _inHandCardIndexes[playerIndex].remove(cardIndex);
     _playedCardIndexes[playerIndex].add(cardIndex);
+    _remainingInTurn--;
     return cardAt(cardIndex);
   }
+
+  void nextTurn() {
+    _turnPlayerIndex = (_turnPlayerIndex + 1) % _playersAmount;
+    _remainingInTurn = 3;
+  }
+
+  int get turnPlayerIndex => _turnPlayerIndex;
 
   bool _isCardInHand(int cardIndex, int playerIndex) {
     return _inHandCardIndexes[playerIndex].contains(cardIndex);
@@ -87,6 +101,10 @@ class GameMaster {
 
   int? _previewingOf(int playerIndex) => _inHandCardIndexes[playerIndex]
       .firstWhereOrNull((index) => cardAt(index).previewing);
+
+  bool _isMyTurn(int playerIndex) {
+    return _turnPlayerIndex == playerIndex;
+  }
 }
 
 class PreviewResult {

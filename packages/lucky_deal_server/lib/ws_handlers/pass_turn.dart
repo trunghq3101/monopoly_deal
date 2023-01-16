@@ -4,7 +4,7 @@ import 'package:lucky_deal_server/models/models.dart';
 import 'package:lucky_deal_server/providers/providers.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 
-Future<void> startGameHandler(
+Future<void> passTurnHandler(
   WebSocketChannel channel,
   RequestContext context,
   PacketData data,
@@ -12,14 +12,6 @@ Future<void> startGameHandler(
   final sid = context.read<ConnectionInfoProvider>().sid;
   final room = context.read<RoomsManager>().findByMember(sid);
   if (room == null) throw StateError('Room does not exist');
-  room.gameMaster.onStart();
-  room.broadcast(
-    sid,
-    WsDto(
-      PacketType.gameStarted,
-      EmptyPacket(),
-    ).encode(),
-  );
   room.gameMaster.nextTurn();
   room.broadcast(
     sid,

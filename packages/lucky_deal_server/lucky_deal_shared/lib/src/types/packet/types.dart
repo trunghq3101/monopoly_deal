@@ -23,7 +23,8 @@ enum PacketType {
   cardUnpreviewed(CardWithPlayer.from),
   turnPassed(PlayerId.from),
   playCard(CardInfo.from),
-  cardPlayed(CardInfoWithPlayer.from);
+  cardPlayed(CardInfoWithPlayer.from),
+  passTurn(EmptyPacket.from);
 
   const PacketType(this.decode);
 

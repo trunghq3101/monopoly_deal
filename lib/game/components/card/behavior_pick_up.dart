@@ -26,7 +26,7 @@ class PickUpBehavior extends Component
             removeOnFinish: true,
             onTick: () {
               game.children
-                  .query<RoomGatewayComponent>()
+                  .query<GameMaster>()
                   .firstOrNull
                   ?.roomGateway
                   .revealCard(payload.cardIndex);

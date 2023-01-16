@@ -37,6 +37,10 @@ class RoomMembersManager {
     return _membersList.indexOf(sid);
   }
 
+  String memberId(int index) {
+    return _membersList[index];
+  }
+
   void broadcast(String sender, String message) {
     if (!_membersList.contains(sender)) {
       throw ArgumentError('$sender is not a member of this room');

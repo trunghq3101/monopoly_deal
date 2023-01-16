@@ -24,13 +24,16 @@ class PlaceCardButton extends PositionComponent
 
   @override
   void onNewEvent(Event event) {
+    final gameMaster = game.children.query<GameMaster>().firstOrNull;
     final roomGateway =
-        game.children.query<RoomGatewayComponent>().firstOrNull?.roomGateway;
+        game.children.query<GameMaster>().firstOrNull?.roomGateway;
     final cardTracker = game.children.query<CardTracker>().firstOrNull;
     final isMyTurn = roomGateway?.isMyTurn ?? false;
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.toPreviewing:
-        if (isMyTurn && state == PlaceCardButtonState.invisible) {
+        if (gameMaster?.isPlayable == true &&
+            isMyTurn &&
+            state == PlaceCardButtonState.invisible) {
           _changeState(PlaceCardButtonState.visible);
         }
         break;
@@ -40,7 +43,9 @@ class PlaceCardButton extends PositionComponent
         }
         break;
       case PacketType.turnPassed:
-        if (isMyTurn && cardTracker?.cardInPreviewingState() != null) {
+        if (gameMaster?.isPlayable == true &&
+            isMyTurn &&
+            cardTracker?.cardInPreviewingState() != null) {
           _changeState(PlaceCardButtonState.visible);
         }
         break;
