@@ -12,8 +12,9 @@ class RoomGateway extends ChangeNotifier {
   String? roomId;
   List<String>? members;
   String? turnId;
+  int? playerAmount;
   late Stream<WsDto> gameEvents = _gameEvents.stream;
-  bool get isFull => members?.length == 2;
+  bool get isFull => members?.length == playerAmount;
   final WsManager _wsManager;
   bool _bound = false;
   final StreamController<WsDto> _gameEvents = StreamController.broadcast();
@@ -41,11 +42,13 @@ class RoomGateway extends ChangeNotifier {
               notifyListeners();
               break;
             case PacketType.roomCreated:
-              roomId = (data as RoomCreated).roomId;
+              roomId = (data as RoomInfo).roomId;
+              playerAmount = data.playerAmount;
               notifyListeners();
               break;
             case PacketType.joinedRoom:
-              roomId = (data as JoinedRoom).roomId;
+              roomId = (data as RoomInfo).roomId;
+              playerAmount = data.playerAmount;
               notifyListeners();
               break;
             case PacketType.membersUpdated:

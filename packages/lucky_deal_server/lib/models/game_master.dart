@@ -4,16 +4,16 @@ import 'package:collection/collection.dart';
 import 'package:lucky_deal_server/models/models.dart';
 
 class GameMaster {
-  GameMaster({int? playersAmount}) : _playersAmount = playersAmount ?? 2;
+  GameMaster({int? playersAmount}) : playerAmount = playersAmount ?? 2;
 
-  final int _playersAmount;
+  final int playerAmount;
   final List<Card> _cards = List.generate(100, (index) => Card(id: index));
   late final _inHandCardIndexes =
-      List.generate(_playersAmount, (index) => <int>[]);
+      List.generate(playerAmount, (index) => <int>[]);
   late final _playedCardIndexes =
-      List.generate(_playersAmount, (index) => <int>[]);
+      List.generate(playerAmount, (index) => <int>[]);
   int _nextDealedIndex = 0;
-  late int _turnPlayerIndex = Random().nextInt(_playersAmount);
+  late int _turnPlayerIndex = Random().nextInt(playerAmount);
   int _remainingInTurn = 3;
 
   int at(int index) => _cards[index].id;
@@ -42,9 +42,9 @@ class GameMaster {
 
   void onStart() {
     var playerIndex = 0;
-    for (var i = 0; i < _playersAmount * 5; i++) {
+    for (var i = 0; i < playerAmount * 5; i++) {
       _dealNextCardTo(playerIndex);
-      playerIndex = (playerIndex + 1) % _playersAmount;
+      playerIndex = (playerIndex + 1) % playerAmount;
     }
   }
 
@@ -89,7 +89,7 @@ class GameMaster {
   }
 
   void nextTurn() {
-    _turnPlayerIndex = (_turnPlayerIndex + 1) % _playersAmount;
+    _turnPlayerIndex = (_turnPlayerIndex + 1) % playerAmount;
     _remainingInTurn = 3;
   }
 

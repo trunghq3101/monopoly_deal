@@ -158,16 +158,14 @@ class WaitingRoomContent extends StatelessWidget {
             child: Column(
               children: [
                 Builder(builder: (context) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Member(
-                        id: RoomModel.of(context).members?.elementAtOrNull(0),
-                      ),
-                      Member(
-                        id: RoomModel.of(context).members?.elementAtOrNull(1),
-                      ),
-                    ],
+                  return Wrap(
+                    children: List.generate(
+                        RoomModel.of(context).playerAmount!,
+                        (index) => Member(
+                              id: RoomModel.of(context)
+                                  .members
+                                  ?.elementAtOrNull(index),
+                            )).toList(),
                   );
                 }),
                 const SizedBox(height: Insets.medium),

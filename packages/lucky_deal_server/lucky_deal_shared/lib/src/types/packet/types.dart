@@ -2,11 +2,11 @@ import 'package:lucky_deal_shared/src/types/packet/packet.dart';
 
 enum PacketType {
   createRoom(EmptyPacket.from),
-  roomCreated(RoomCreated.from),
+  roomCreated(RoomInfo.from),
   memberJoined(PlayerId.from),
   membersUpdated(MembersUpdated.from),
   joinRoom(JoinRoom.from),
-  joinedRoom(JoinedRoom.from),
+  joinedRoom(RoomInfo.from),
   error(ErrorPacket.from),
   startGame(EmptyPacket.from),
   gameStarted(EmptyPacket.from),

@@ -18,6 +18,8 @@ class RoomMembersManager {
   late final List<String> _membersList;
   late final GameMaster gameMaster;
 
+  bool get isFull => _membersList.length == gameMaster.playerAmount;
+
   void join(String sid) {
     _newJoinedController.add(sid);
     _membersList.add(sid);

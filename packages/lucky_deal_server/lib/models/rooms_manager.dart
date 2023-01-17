@@ -11,16 +11,17 @@ class RoomsManager {
     return _rooms.putIfAbsent(roomId, RoomMembersManager.new);
   }
 
-  RoomMembersManager create(String roomId) {
+  RoomMembersManager create(String roomId, {int? playerAmount}) {
     if (_rooms.containsKey(roomId)) throw StateError('Room $roomId existed');
-    final newRoom = RoomMembersManager()
-      ..newJoined.listen((sid) {
-        if (_memberToRoom.containsKey(sid)) {
-          throw StateError('$sid is already in room ${_memberToRoom[sid]}');
-        }
-        _memberToRoom.putIfAbsent(sid, () => roomId);
-      })
-      ..newLeft.listen(_memberToRoom.remove);
+    final newRoom =
+        RoomMembersManager(gameMaster: GameMaster(playersAmount: playerAmount))
+          ..newJoined.listen((sid) {
+            if (_memberToRoom.containsKey(sid)) {
+              throw StateError('$sid is already in room ${_memberToRoom[sid]}');
+            }
+            _memberToRoom.putIfAbsent(sid, () => roomId);
+          })
+          ..newLeft.listen(_memberToRoom.remove);
     return _rooms.putIfAbsent(roomId, () => newRoom);
   }
 

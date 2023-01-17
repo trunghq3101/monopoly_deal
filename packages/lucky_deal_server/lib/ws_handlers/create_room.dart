@@ -11,7 +11,8 @@ Future<void> createRoomHandler(
 ) async {
   final sid = context.read<ConnectionInfoProvider>().sid;
   final roomId = context.read<RandomProvider>().roomIdGenerator();
-  context.read<RoomsManager>().create(roomId)
+  const playerAmount = 5;
+  context.read<RoomsManager>().create(roomId, playerAmount: playerAmount)
     ..members.listen((members) {
       channel.sink.add(
         WsDto(PacketType.membersUpdated, MembersUpdated(members)).encode(),
@@ -31,5 +32,13 @@ Future<void> createRoomHandler(
       channel.sink.add(msg);
     })
     ..join(sid);
-  channel.sink.add(WsDto(PacketType.roomCreated, RoomCreated(roomId)).encode());
+  channel.sink.add(
+    WsDto(
+      PacketType.roomCreated,
+      RoomInfo(
+        roomId,
+        playerAmount,
+      ),
+    ).encode(),
+  );
 }

@@ -11,13 +11,11 @@ Future<void> joinRoomHandler(
 ) async {
   final sid = context.read<ConnectionInfoProvider>().sid;
   final roomId = (data as JoinRoom).roomId;
-  channel.sink.add(
-    WsDto(
-      PacketType.joinedRoom,
-      JoinRoom(roomId),
-    ).encode(),
-  );
-  context.read<RoomsManager>().findById(roomId)
+  final room = context.read<RoomsManager>().findById(roomId);
+  if (room.isFull) {
+    throw StateError('Room is full');
+  }
+  room
     ..members.listen((members) {
       channel.sink.add(
         WsDto(PacketType.membersUpdated, MembersUpdated(members)).encode(),
@@ -37,4 +35,10 @@ Future<void> joinRoomHandler(
       channel.sink.add(msg);
     })
     ..join(sid);
+  channel.sink.add(
+    WsDto(
+      PacketType.joinedRoom,
+      RoomInfo(roomId, room.gameMaster.playerAmount),
+    ).encode(),
+  );
 }

@@ -9,7 +9,7 @@ class GameMap {
   final List<Vector2> playerPositions;
   final Vector2 intialGameVisibleSize;
   final Vector2 overviewGameVisibleSize;
-  late final Vector2 overviewGameVisibleSize2 = overviewGameVisibleSize * 0.5;
+  late final Vector2 overviewGameVisibleSize2 = Vector2(3000, 4500);
   final int myIndex;
   late final _ratio = deckSpacing / cardSize.distanceTo(Vector2.zero());
   final Map<int, Vector2> _indexToPosition = {};
@@ -27,7 +27,7 @@ class GameMap {
         cardSizeInHand = Vector2(750, 1100) * 1.5,
         intialGameVisibleSize = intialGameVisibleSize ?? Vector2(600, 600),
         overviewGameVisibleSize =
-            overviewGameVisibleSize ?? Vector2(2500, 6000) {
+            overviewGameVisibleSize ?? Vector2(4000, 8000) {
     final playerAmount = playerPositions.length;
     for (var i = 0; i < playerAmount; i++) {
       _indexToPosition[(myIndex + i) % playerAmount] = playerPositions[i];

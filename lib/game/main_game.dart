@@ -8,28 +8,6 @@ import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class Placeholder extends PositionComponent {
-  final _p = Paint()..color = const Color.fromARGB(255, 180, 255, 183);
-
-  @override
-  Future<void>? onLoad() {
-    size = MainGame.gameMap.overviewGameVisibleSize;
-    anchor = Anchor.center;
-    return null;
-  }
-
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-    canvas.drawRect(
-        Rect.fromCenter(
-            center: Offset(size.x / 2, size.y / 2),
-            width: size.x,
-            height: size.y),
-        _p);
-  }
-}
-
 class MainGame extends FlameGame
     with HasHoverableComponents, HasTappableComponents {
   MainGame({this.isFake = false, RoomGateway? roomGateway})
@@ -65,14 +43,23 @@ class MainGame extends FlameGame
 
     gameMap = GameMap(
         myIndex: isFake ? 0 : _roomGateway.myIndex,
-        deckCenter: Vector2.zero(),
+        deckCenter: Vector2(0, 500),
         deckSpacing: 0.7,
         cardSize: Vector2(300, 440),
-        playerPositions: [Vector2(0, 1000), Vector2(0, -1000)]);
+        playerPositions: [
+          Vector2(0, 1400),
+          ...List.generate(
+              (_roomGateway.playerAmount ?? 2) - 1,
+              (index) => Vector2(
+                  (3000 / (_roomGateway.playerAmount ?? 2)) * (index + 1) -
+                      3000 * 0.5,
+                  -500))
+        ]);
 
     final world = World();
     final cameraComponent = CameraComponent(world: world);
     cameraComponent.viewfinder.visibleGameSize = gameMap.intialGameVisibleSize;
+    cameraComponent.viewfinder.position = gameMap.deckCenter;
 
     final cardDeckPublisher = CardDeckPublisher();
     final cardTracker = CardTracker();
@@ -92,7 +79,20 @@ class MainGame extends FlameGame
     add(cardTracker);
     add(_selectToReArrange);
     add(_gameMaster);
-    world.add(Placeholder()..position = Vector2.zero());
+    final table = RectangleComponent(
+      paint: Paint()..color = const Color.fromARGB(255, 180, 255, 183),
+      size: MainGame.gameMap.overviewGameVisibleSize,
+      anchor: Anchor.center,
+      position: Vector2.zero(),
+    );
+    world.add(table);
+    final playerArea = RectangleComponent(
+      paint: Paint()..color = const Color.fromARGB(255, 244, 255, 142),
+      size: Vector2(640, 2300),
+      anchor: Anchor.center,
+      position: Vector2(0, -1000),
+    );
+    world.add(playerArea);
 
     _handToggleButton = HandToggleButton()
       ..position =
