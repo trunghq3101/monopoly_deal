@@ -16,6 +16,7 @@ class SelectToPickUp with Publisher, Subscriber {
       case CardStateMachineEvent.tapOnMyDealRegion:
         if (_cardTracker.hasCardInAnimationState()) return;
         _roomGateway.pickUp();
+        notify(Event(CardEvent.zoomCardsOut));
         final cardsToPickUp = _cardTracker.cardsInMyDealRegionFromTop();
         int orderIndex = 0;
         for (var c in cardsToPickUp) {

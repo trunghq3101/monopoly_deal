@@ -23,10 +23,10 @@ class TogglePreviewingBehavior extends Component
           },
         ));
         parent.addAll([
-          MoveEffect.to(Vector2(0, -500), LinearEffectController(0.1)),
+          MoveEffect.to(Vector2(0, 0), LinearEffectController(0.1)),
           RotateEffect.to(0, LinearEffectController(0.1)),
           ScaleEffect.by(
-            Vector2.all(1.6),
+            Vector2.all(1.3),
             LinearEffectController(0.1),
             onComplete: () {
               notify(

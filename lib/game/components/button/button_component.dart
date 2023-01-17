@@ -4,10 +4,10 @@ import 'package:flame/components.dart';
 
 class ButtonComponent extends PositionComponent {
   ButtonComponent({this.text = "", TextAlign textAlign = TextAlign.right}) {
-    size = Vector2(380, 200);
+    size = Vector2(570, 300);
     final builder = ParagraphBuilder(ParagraphStyle(
       textAlign: textAlign,
-      fontSize: 80,
+      fontSize: 120,
     ))
       ..pushStyle(TextStyle(color: const Color(0xFF000000)))
       ..addText(text);

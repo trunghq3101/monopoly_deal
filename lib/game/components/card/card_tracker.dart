@@ -30,6 +30,12 @@ class CardTracker extends Component
     return cards;
   }
 
+  List<HasCardIndex> cardsNotInMyDealRegion() {
+    final cards =
+        allCards.where((c) => c.state != CardState.inMyDealRegion).toList();
+    return cards;
+  }
+
   List<HasCardIndex> cardsByIndexFromTop(List<int> indexes) {
     final cards = allCards.where((c) => indexes.contains(c.cardIndex)).toList();
     cards.sort((a, b) => b.priority.compareTo(a.priority));
@@ -60,7 +66,7 @@ class CardTracker extends Component
     final tangent = pathMetrics.getTangentForOffset(index * spacing)!;
     final position = Vector2(tangent.position.dx, tangent.position.dy)
         .scaled(0.2)
-      ..add(Vector2(0, -MainGame.gameMap.overviewGameVisibleSize.y * 0.4));
+      ..add(Vector2(0, -MainGame.gameMap.overviewGameVisibleSize.y * 0.48));
     return InHandPosition(position, tangent.vector.direction);
   }
 
@@ -75,7 +81,8 @@ class CardTracker extends Component
       offset = index * handCurveWidth / (amount - 1);
     }
     final tangent = pathMetrics.getTangentForOffset(offset)!;
-    final position = Vector2(tangent.position.dx, tangent.position.dy + 1000);
+    final position = Vector2(tangent.position.dx,
+        tangent.position.dy + MainGame.gameMap.cardSizeInHand.y * 0.8);
     return InHandPosition(position, tangent.vector.direction);
   }
 
@@ -84,9 +91,9 @@ class CardTracker extends Component
   }
 
   void _setupHandCurve() {
-    handCurveWidth = MainGame.gameMap.overviewGameVisibleSize.x / 2;
+    handCurveWidth = MainGame.gameMap.overviewGameVisibleSize.x * 0.4;
     final handCurveStart = Vector2(
-        -handCurveWidth / 2, MainGame.gameMap.overviewGameVisibleSize.y * 0.35);
+        -handCurveWidth / 2, MainGame.gameMap.overviewGameVisibleSize.y * 0.4);
     final handCurveEnd = handCurveStart + Vector2(handCurveWidth, 0);
     final handCurveRadius =
         Radius.elliptical(handCurveWidth, handCurveWidth / 2);

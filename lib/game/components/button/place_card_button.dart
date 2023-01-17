@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/painting.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
@@ -18,8 +19,8 @@ class PlaceCardButton extends PositionComponent
 
   @override
   Future<void>? onLoad() async {
-    anchor = Anchor.bottomRight;
-    size = Vector2(380, 200);
+    anchor = Anchor.topCenter;
+    size = Vector2(570, 300);
   }
 
   @override
@@ -69,7 +70,7 @@ class PlaceCardButton extends PositionComponent
         children.query<ButtonComponent>().firstOrNull?.removeFromParent();
         break;
       case PlaceCardButtonState.visible:
-        add(ButtonComponent(text: "PLAY"));
+        add(ButtonComponent(text: "PLAY", textAlign: TextAlign.center));
         break;
       default:
     }

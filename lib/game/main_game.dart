@@ -8,6 +8,28 @@ import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
+class Placeholder extends PositionComponent {
+  final _p = Paint()..color = const Color.fromARGB(255, 180, 255, 183);
+
+  @override
+  Future<void>? onLoad() {
+    size = MainGame.gameMap.overviewGameVisibleSize;
+    anchor = Anchor.center;
+    return null;
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    canvas.drawRect(
+        Rect.fromCenter(
+            center: Offset(size.x / 2, size.y / 2),
+            width: size.x,
+            height: size.y),
+        _p);
+  }
+}
+
 class MainGame extends FlameGame
     with HasHoverableComponents, HasTappableComponents {
   MainGame({this.isFake = false, RoomGateway? roomGateway})
@@ -32,6 +54,7 @@ class MainGame extends FlameGame
   late PlaceCardButton _placeCardButton;
   late PassTurnButton _passTurnButton;
   late GameMaster _gameMaster;
+  late ZoomOverviewBehavior _zoomOverviewBehavior;
 
   @override
   backgroundColor() => const Color.fromARGB(255, 192, 50, 50);
@@ -69,28 +92,30 @@ class MainGame extends FlameGame
     add(cardTracker);
     add(_selectToReArrange);
     add(_gameMaster);
+    world.add(Placeholder()..position = Vector2.zero());
 
     _handToggleButton = HandToggleButton()
       ..position =
-          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * 0.5, 400);
+          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * 0.5, 1500);
     _placeCardButton = PlaceCardButton()
-      ..position = Vector2(MainGame.gameMap.overviewGameVisibleSize.x * 0.5, 0)
+      ..position = Vector2(0, MainGame.gameMap.cardSizeInHand.y * 1.3 / 2)
       ..addSubscriber(_handToggleButton)
       ..addSubscriber(_selectToReArrange);
     _passTurnButton = PassTurnButton()
       ..position =
-          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * -0.5, 400);
+          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * -0.5, 1500);
     world
       ..add(_handToggleButton)
       ..add(_placeCardButton)
       ..add(_passTurnButton);
 
-    final zoomOverviewBehavior = ZoomOverviewBehavior();
-    cameraComponent.add(zoomOverviewBehavior);
+    _zoomOverviewBehavior = ZoomOverviewBehavior();
+    cameraComponent.add(_zoomOverviewBehavior);
+    _selectToPickUp.addSubscriber(_zoomOverviewBehavior);
 
     cardDeckPublisher
       ..addSubscriber(_selectToDeal)
-      ..addSubscriber(zoomOverviewBehavior);
+      ..addSubscriber(_zoomOverviewBehavior);
 
     _roomGateway.gameEvents.listen((event) {
       if (event.event == PacketType.turnPassed && _roomGateway.isMyTurn) {
