@@ -96,14 +96,14 @@ class MainGame extends FlameGame
 
     _handToggleButton = HandToggleButton()
       ..position =
-          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * 0.5, 1500);
+          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * 0.5, 2200);
     _placeCardButton = PlaceCardButton()
-      ..position = Vector2(0, MainGame.gameMap.cardSizeInHand.y * 1.3 / 2)
+      ..position = Vector2(0, MainGame.gameMap.cardSizeInHand.y * 1.5 / 2)
       ..addSubscriber(_handToggleButton)
       ..addSubscriber(_selectToReArrange);
     _passTurnButton = PassTurnButton()
       ..position =
-          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * -0.5, 1500);
+          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * -0.5, 2200);
     world
       ..add(_handToggleButton)
       ..add(_placeCardButton)

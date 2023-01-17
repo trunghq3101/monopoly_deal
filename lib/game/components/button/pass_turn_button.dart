@@ -14,7 +14,7 @@ class PassTurnButton extends PositionComponent
   @override
   Future<void>? onLoad() async {
     anchor = Anchor.bottomLeft;
-    size = Vector2(570, 240);
+    size = MainGame.gameMap.buttonSize;
   }
 
   @override

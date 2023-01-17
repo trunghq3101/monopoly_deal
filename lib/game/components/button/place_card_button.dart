@@ -20,7 +20,7 @@ class PlaceCardButton extends PositionComponent
   @override
   Future<void>? onLoad() async {
     anchor = Anchor.topCenter;
-    size = Vector2(570, 300);
+    size = MainGame.gameMap.buttonSize;
   }
 
   @override

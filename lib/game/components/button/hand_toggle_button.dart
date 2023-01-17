@@ -13,7 +13,7 @@ class HandToggleButton extends PositionComponent
   @override
   Future<void>? onLoad() async {
     anchor = Anchor.bottomRight;
-    size = Vector2(570, 240);
+    size = MainGame.gameMap.buttonSize;
     scale = Vector2.zero();
   }
 

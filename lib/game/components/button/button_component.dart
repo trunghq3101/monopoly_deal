@@ -1,13 +1,14 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:monopoly_deal/game/game.dart';
 
 class ButtonComponent extends PositionComponent {
   ButtonComponent({this.text = "", TextAlign textAlign = TextAlign.right}) {
-    size = Vector2(570, 300);
+    size = MainGame.gameMap.buttonSize;
     final builder = ParagraphBuilder(ParagraphStyle(
       textAlign: textAlign,
-      fontSize: 120,
+      fontSize: 180,
     ))
       ..pushStyle(TextStyle(color: const Color(0xFF000000)))
       ..addText(text);

@@ -44,7 +44,8 @@ class PickUpForOpponentBehavior extends Component
           ]),
           SequenceEffect([
             MoveEffect.to(
-              Vector2(0, MainGame.gameMap.overviewGameVisibleSize.y * -1.5),
+              Vector2(payload.inHandPosition.position.x,
+                  MainGame.gameMap.overviewGameVisibleSize.y * -1.5),
               DelayedEffectController(
                 CurvedEffectController(0.3, Curves.easeInCubic),
                 delay: delay,

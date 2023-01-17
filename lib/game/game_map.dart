@@ -10,6 +10,7 @@ class GameMap {
   final Vector2 intialGameVisibleSize;
   final Vector2 overviewGameVisibleSize;
   late final Vector2 overviewGameVisibleSize2 = Vector2(3000, 4500);
+  final Vector2 buttonSize = Vector2(855, 360);
   final int myIndex;
   late final _ratio = deckSpacing / cardSize.distanceTo(Vector2.zero());
   final Map<int, Vector2> _indexToPosition = {};
@@ -24,7 +25,7 @@ class GameMap {
     this.myIndex = 0,
   })  : deckCenter = deckCenter ?? Vector2.zero(),
         cardSize = cardSize ?? Vector2(300, 440),
-        cardSizeInHand = Vector2(750, 1100) * 1.5,
+        cardSizeInHand = Vector2(750, 1100) * 1.8,
         intialGameVisibleSize = intialGameVisibleSize ?? Vector2(600, 600),
         overviewGameVisibleSize =
             overviewGameVisibleSize ?? Vector2(4000, 8000) {
