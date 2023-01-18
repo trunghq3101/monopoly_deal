@@ -51,4 +51,19 @@ class GameMap {
     }
     return position;
   }
+
+  Vector2 handPositionForOpponent(int relativePlayerIndex) {
+    final playerAmount = playerPositions.length;
+    final columnWidth =
+        (MainGame.gameMap.overviewGameVisibleSize.x / (playerAmount - 1));
+    final x = columnWidth * relativePlayerIndex +
+        columnWidth / 2 -
+        MainGame.gameMap.overviewGameVisibleSize.x * 0.5;
+    return Vector2(x, -MainGame.gameMap.overviewGameVisibleSize.y * 0.48);
+  }
+
+  Vector2 playAreaPositionForOpponent(int relativePlayerIndex) {
+    return handPositionForOpponent(relativePlayerIndex) +
+        Vector2(0, MainGame.gameMap.overviewGameVisibleSize.y * 0.15);
+  }
 }

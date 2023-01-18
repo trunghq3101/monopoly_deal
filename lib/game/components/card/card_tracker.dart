@@ -61,20 +61,15 @@ class CardTracker extends Component
   }
 
   InHandPosition getInHandPositionForOpponent(
-      {required int playerIndex,
+      {required int relativePlayerIndex,
       required int playerAmount,
       required int index,
       required int amount}) {
     final spacing = handCurveWidth / (amount - 1);
     final tangent = pathMetrics.getTangentForOffset(index * spacing)!;
-    final columnWidth =
-        (MainGame.gameMap.overviewGameVisibleSize.x / (playerAmount - 1));
-    final x = columnWidth * playerIndex +
-        columnWidth / 2 -
-        MainGame.gameMap.overviewGameVisibleSize.x * 0.5;
     final position = Vector2(tangent.position.dx, tangent.position.dy)
         .scaled(0.2)
-      ..add(Vector2(x, -MainGame.gameMap.overviewGameVisibleSize.y * 0.48));
+      ..add(MainGame.gameMap.handPositionForOpponent(relativePlayerIndex));
     return InHandPosition(position, tangent.vector.direction);
   }
 

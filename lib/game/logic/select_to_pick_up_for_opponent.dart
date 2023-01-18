@@ -24,13 +24,10 @@ class SelectToPickUpForOpponent with Publisher, Subscriber {
         int orderIndex = 0;
         for (var c in cardsToPickUp) {
           final playerIndex = _roomGateway.playerIndexOf(payload.playerId);
-          final playerIndexBasedOnMyIndex = playerIndex > _roomGateway.myIndex
-              ? playerIndex - 1
-              : ((playerIndex - _roomGateway.myIndex) +
-                  _roomGateway.playerAmount! -
-                  1);
+          final relativePlayerIndex =
+              _roomGateway.relativePlayerIndex(playerIndex);
           final inHandPosition = _cardTracker.getInHandPositionForOpponent(
-            playerIndex: playerIndexBasedOnMyIndex,
+            relativePlayerIndex: relativePlayerIndex,
             playerAmount: _roomGateway.playerAmount!,
             index: cardsToPickUp.length - 1 - orderIndex,
             amount: cardsToPickUp.length,

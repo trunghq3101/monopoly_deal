@@ -25,8 +25,17 @@ class GameAsset {
   }
 
   Image frontImageForCardIndex(int index) {
+    final id = _indexToNotNullId(index);
+    return Flame.images.fromCache('${cardSpriteNames[id].trim()}.png');
+  }
+
+  int indexToCardType(int index) {
+    return int.parse(cardSpriteNames[_indexToNotNullId(index)]);
+  }
+
+  int _indexToNotNullId(int index) {
     final id = _indexToId[index];
     if (id == null) throw StateError('Card at $index has not been revealed');
-    return Flame.images.fromCache('${cardSpriteNames[id].trim()}.png');
+    return id;
   }
 }

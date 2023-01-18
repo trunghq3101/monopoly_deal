@@ -95,6 +95,12 @@ class RoomGateway extends ChangeNotifier {
     return members!.indexOf(sid!);
   }
 
+  int relativePlayerIndex(int playerIndex) {
+    return playerIndex > myIndex
+        ? playerIndex - myIndex - 1
+        : ((playerIndex - myIndex) + playerAmount! - 1);
+  }
+
   bool get isMyTurn => turnId != null && turnId == sid;
 
   Future<void> createRoom() async {

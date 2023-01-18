@@ -22,10 +22,28 @@ class ToTableBehavior extends Component
         ));
         parent.addAll([
           ScaleEffect.to(Vector2.all(1), LinearEffectController(0.2)),
-          MoveEffect.to(Vector2(0, 700), LinearEffectController(0.2))
+          MoveEffect.to(_postionToPlaceCard(parent.cardIndex),
+              LinearEffectController(0.2))
         ]);
         break;
       default:
     }
+  }
+
+  Vector2 _postionToPlaceCard(int index) {
+    final cardType = MainGame.gameAsset.indexToCardType(index);
+    final actionCardPosition = (MainGame.gameMap.deckCenter + Vector2(500, 0));
+    if (cardType > 10) return actionCardPosition;
+    final playArea = game.children
+        .query<World>()
+        .firstOrNull
+        ?.children
+        .query<PlayArea>()
+        .elementAtOrNull(0);
+    return playArea?.children
+            .query<RectangleComponent>()
+            .elementAtOrNull(cardType - 1)
+            ?.absolutePosition ??
+        actionCardPosition;
   }
 }

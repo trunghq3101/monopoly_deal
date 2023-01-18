@@ -79,20 +79,11 @@ class MainGame extends FlameGame
     add(cardTracker);
     add(_selectToReArrange);
     add(_gameMaster);
-    final table = RectangleComponent(
-      paint: Paint()..color = const Color.fromARGB(255, 180, 255, 183),
-      size: MainGame.gameMap.overviewGameVisibleSize,
-      anchor: Anchor.center,
-      position: Vector2.zero(),
-    );
-    world.add(table);
-    final playerArea = RectangleComponent(
-      paint: Paint()..color = const Color.fromARGB(255, 244, 255, 142),
-      size: Vector2(640, 2300),
-      anchor: Anchor.center,
-      position: Vector2(0, -1000),
-    );
-    world.add(playerArea);
+    world.add(
+        PlayArea(isOpponent: false)..position = gameMap.deckCenter.scaled(2.5));
+    for (var i = 0; i < (_roomGateway.playerAmount ?? 2) - 1; i++) {
+      world.add(PlayArea()..position = gameMap.playAreaPositionForOpponent(i));
+    }
 
     _handToggleButton = HandToggleButton()
       ..position =

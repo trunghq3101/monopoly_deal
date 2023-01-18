@@ -21,6 +21,7 @@ class PlaceCardButton extends PositionComponent
   Future<void>? onLoad() async {
     anchor = Anchor.topCenter;
     size = MainGame.gameMap.buttonSize;
+    priority = 1;
   }
 
   @override
@@ -70,7 +71,8 @@ class PlaceCardButton extends PositionComponent
         children.query<ButtonComponent>().firstOrNull?.removeFromParent();
         break;
       case PlaceCardButtonState.visible:
-        add(ButtonComponent(text: "PLAY", textAlign: TextAlign.center));
+        add(ButtonComponent(text: "PLAY", textAlign: TextAlign.center)
+          ..priority = 1);
         break;
       default:
     }

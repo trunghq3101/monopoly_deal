@@ -29,7 +29,9 @@ class _WaitingRoomState extends State<WaitingRoom> with RouteAware {
     _gameEventsSub = RoomModel.of(context).gameEvents.listen((event) {
       if (!mounted) return;
       if (event.event == PacketType.gameStarted) {
-        Navigator.of(context).pushReplacementNamed('/game');
+        Navigator.of(context).pushNamedAndRemoveUntil('/game', (route) {
+          return false;
+        });
       }
     });
     routeObserver.subscribe(this, ModalRoute.of(context)!);

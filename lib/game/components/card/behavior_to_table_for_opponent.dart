@@ -1,11 +1,14 @@
+import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame/experimental.dart';
+import 'package:flame/game.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class ToTableForOpponentBehavior extends Component
-    with ParentIsA<Card>, Subscriber {
+    with ParentIsA<Card>, Subscriber, HasGameReference<FlameGame> {
   @override
   void onNewEvent(Event event) {
     switch (event.eventIdentifier) {
@@ -19,12 +22,17 @@ class ToTableForOpponentBehavior extends Component
           },
           removeOnFinish: true,
         ));
-        parent.addAll([
-          ScaleEffect.to(Vector2.all(0.2), LinearEffectController(0.2)),
-          MoveEffect.by(Vector2(0, 700), LinearEffectController(0.2))
-        ]);
 
         MainGame.gameAsset.onCardRevealed(payload.cardIndex, payload.cardId);
+
+        parent.addAll([
+          RotateEffect.to(0, LinearEffectController(0.2)),
+          ScaleEffect.to(Vector2.all(1), LinearEffectController(0.2)),
+          MoveEffect.to(
+              _postionToPlaceCard(payload.playerId, payload.cardIndex),
+              LinearEffectController(0.2))
+        ]);
+
         final frontImg =
             MainGame.gameAsset.frontImageForCardIndex(payload.cardIndex);
         final frontCard = SpriteComponent.fromImage(frontImg);
@@ -34,5 +42,29 @@ class ToTableForOpponentBehavior extends Component
         break;
       default:
     }
+  }
+
+  Vector2 _postionToPlaceCard(String playerId, int cardIndex) {
+    final roomGateway =
+        game.children.query<GameMaster>().firstOrNull?.roomGateway;
+    if (roomGateway == null) {
+      throw StateError('GameMaster not available');
+    }
+    final relativePlayerIndex =
+        roomGateway.relativePlayerIndex(roomGateway.playerIndexOf(playerId));
+    final cardType = MainGame.gameAsset.indexToCardType(cardIndex);
+    final actionCardPosition = (MainGame.gameMap.deckCenter + Vector2(500, 0));
+    if (cardType > 10) return actionCardPosition;
+    final playArea = game.children
+        .query<World>()
+        .firstOrNull
+        ?.children
+        .query<PlayArea>()
+        .elementAtOrNull(relativePlayerIndex + 1);
+    return playArea?.children
+            .query<RectangleComponent>()
+            .elementAtOrNull(cardType - 1)
+            ?.absolutePosition ??
+        actionCardPosition;
   }
 }
