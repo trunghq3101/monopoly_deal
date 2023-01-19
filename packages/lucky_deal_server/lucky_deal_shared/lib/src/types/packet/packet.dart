@@ -3,6 +3,7 @@ export 'card_info_with_player.dart';
 export 'card_with_player.dart';
 export 'cards_revealed.dart';
 export 'connected.dart';
+export 'create_room.dart';
 export 'empty.dart';
 export 'error.dart';
 export 'join_room.dart';

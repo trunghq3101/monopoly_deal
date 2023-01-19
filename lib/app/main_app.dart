@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/app/app.dart';
+import 'package:monopoly_deal/app/ui/config_room.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 final errorDisplayKey = GlobalKey<AppErrorDisplayState>();
@@ -40,10 +41,11 @@ class _MainAppState extends State<MainApp> {
           ),
           navigatorObservers: [routeObserver],
           routes: {
-            '/': (context) => const StartPage(),
+            '/': (_) => const StartPage(),
+            '/configureRoom': (_) => const ConfigRoom(),
             '/waitingRoom': (_) => const WaitingRoom(),
             '/joinRoom': (_) => const JoiningRoom(),
-            '/game': (context) =>
+            '/game': (_) =>
                 GameWidget(game: MainGame(roomGateway: _roomGateway)),
           },
         ),

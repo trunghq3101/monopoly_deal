@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/app/main_app.dart';
+import 'package:monopoly_deal/app/ui/constrained_content_box.dart';
 
 class JoiningRoom extends StatefulWidget {
   const JoiningRoom({super.key});
@@ -44,65 +45,56 @@ class _JoiningRoomState extends State<JoiningRoom> with RouteAware {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ColoredBox(
-      color: theme.colorScheme.surface,
-      child: SafeArea(
-        child: Align(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: Scaffold(
-              backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.05),
-              appBar: AppBar(
-                backgroundColor:
-                    theme.colorScheme.surfaceTint.withOpacity(0.08),
-                leading: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: Icon(Icons.adaptive.arrow_back),
+    return ConstrainedContentBox(
+      child: Scaffold(
+        backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.05),
+        appBar: AppBar(
+          backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.08),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.adaptive.arrow_back),
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(Insets.large),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: Insets.medium),
+              Card(
+                elevation: 0,
+                color: theme.colorScheme.tertiaryContainer,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: Insets.medium,
+                    horizontal: Insets.extraLarge,
+                  ),
+                  child: TextField(
+                    key: const Key('enterCode'),
+                    focusNode: _focusNode,
+                    onChanged: (value) {
+                      setState(() => _enteredRoomId = value);
+                    },
+                    style: theme.textTheme.headline3?.copyWith(
+                        color: theme.colorScheme.onTertiaryContainer),
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter code',
+                      counterText: '',
+                    ),
+                  ),
                 ),
               ),
-              body: Padding(
-                padding: const EdgeInsets.all(Insets.large),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: Insets.medium),
-                    Card(
-                      elevation: 0,
-                      color: theme.colorScheme.tertiaryContainer,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: Insets.medium,
-                          horizontal: Insets.extraLarge,
-                        ),
-                        child: TextField(
-                          key: const Key('enterCode'),
-                          focusNode: _focusNode,
-                          onChanged: (value) {
-                            setState(() => _enteredRoomId = value);
-                          },
-                          style: theme.textTheme.headline3?.copyWith(
-                              color: theme.colorScheme.onTertiaryContainer),
-                          textAlign: TextAlign.center,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter code',
-                            counterText: '',
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: JoinRoomButton(
-                        enteredRoomId: _enteredRoomId,
-                      ),
-                    ),
-                  ],
+              const Spacer(),
+              Align(
+                alignment: Alignment.centerRight,
+                child: JoinRoomButton(
+                  enteredRoomId: _enteredRoomId,
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),

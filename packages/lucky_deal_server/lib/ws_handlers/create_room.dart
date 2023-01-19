@@ -11,7 +11,7 @@ Future<void> createRoomHandler(
 ) async {
   final sid = context.read<ConnectionInfoProvider>().sid;
   final roomId = context.read<RandomProvider>().roomIdGenerator();
-  const playerAmount = 3;
+  final playerAmount = (data as CreateRoom).playersAmount;
   context.read<RoomsManager>().create(roomId, playerAmount: playerAmount)
     ..members.listen((members) {
       channel.sink.add(

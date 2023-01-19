@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/app/main_app.dart';
+import 'package:monopoly_deal/app/ui/constrained_content_box.dart';
 
 class WaitingRoomArgs {
   final Function()? pendingAction;
@@ -66,43 +67,33 @@ class _WaitingRoomState extends State<WaitingRoom> with RouteAware {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ColoredBox(
-      color: theme.colorScheme.surface,
-      child: SafeArea(
-        child: Align(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: Scaffold(
-              backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.05),
-              appBar: AppBar(
-                backgroundColor:
-                    theme.colorScheme.surfaceTint.withOpacity(0.08),
-                leading: Align(
-                  child: Builder(builder: (context) {
-                    return TextButton.icon(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).clearSnackBars();
-                        Navigator.of(context)
-                            .popUntil(ModalRoute.withName('/'));
-                      },
-                      icon: const Icon(Icons.close),
-                      label: const Text("Leave"),
-                    );
-                  }),
-                ),
-                leadingWidth: 100,
-              ),
-              body: Builder(builder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.all(Insets.large),
-                  child: RoomModel.of(context).roomId != null
-                      ? const WaitingRoomContent()
-                      : const Center(child: CircularProgressIndicator()),
-                );
-              }),
-            ),
+    return ConstrainedContentBox(
+      child: Scaffold(
+        backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.05),
+        appBar: AppBar(
+          backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.08),
+          leading: Align(
+            child: Builder(builder: (context) {
+              return TextButton.icon(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                },
+                icon: const Icon(Icons.close),
+                label: const Text("Leave"),
+              );
+            }),
           ),
+          leadingWidth: 100,
         ),
+        body: Builder(builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(Insets.large),
+            child: RoomModel.of(context).roomId != null
+                ? const WaitingRoomContent()
+                : const Center(child: CircularProgressIndicator()),
+          );
+        }),
       ),
     );
   }

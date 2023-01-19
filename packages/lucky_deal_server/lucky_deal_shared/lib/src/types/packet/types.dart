@@ -1,7 +1,7 @@
 import 'package:lucky_deal_shared/src/types/packet/packet.dart';
 
 enum PacketType {
-  createRoom(EmptyPacket.from),
+  createRoom(CreateRoom.from),
   roomCreated(RoomInfo.from),
   memberJoined(PlayerId.from),
   membersUpdated(MembersUpdated.from),

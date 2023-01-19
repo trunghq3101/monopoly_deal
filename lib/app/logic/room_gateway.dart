@@ -103,8 +103,9 @@ class RoomGateway extends ChangeNotifier {
 
   bool get isMyTurn => turnId != null && turnId == sid;
 
-  Future<void> createRoom() async {
-    (await socket).send(WsDto(PacketType.createRoom, EmptyPacket()).encode());
+  Future<void> createRoom([int noPlayers = 2]) async {
+    (await socket)
+        .send(WsDto(PacketType.createRoom, CreateRoom(noPlayers)).encode());
   }
 
   Future<void> joinRoom(String roomId) async {

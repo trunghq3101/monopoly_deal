@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/app/lib/lib.dart';
 import 'package:monopoly_deal/game/game.dart';
 
@@ -87,8 +86,7 @@ class StartMenu extends StatelessWidget {
           Builder(builder: (context) {
             return TextButton(
               onPressed: () {
-                RoomModel.of(context).createRoom();
-                Navigator.of(context).pushNamed('/waitingRoom');
+                Navigator.of(context).pushNamed('/configureRoom');
               },
               child: const Text('Create room'),
             );
