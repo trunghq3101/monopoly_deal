@@ -43,7 +43,7 @@ class MainGame extends FlameGame
 
     gameMap = GameMap(
         myIndex: isFake ? 0 : _roomGateway.myIndex,
-        deckCenter: Vector2(0, 500),
+        deckCenter: Vector2(0, 700),
         deckSpacing: 0.7,
         cardSize: Vector2(300, 440),
         playerPositions: [

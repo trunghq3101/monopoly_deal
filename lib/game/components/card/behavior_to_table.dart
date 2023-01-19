@@ -17,6 +17,7 @@ class ToTableBehavior extends Component
           period: 0.2,
           onTick: () {
             parent.priority = 0;
+            _updateSetCounter(parent.cardIndex);
           },
           removeOnFinish: true,
         ));
@@ -45,5 +46,20 @@ class ToTableBehavior extends Component
             .elementAtOrNull(cardType - 1)
             ?.absolutePosition ??
         actionCardPosition;
+  }
+
+  void _updateSetCounter(int cardIndex) {
+    final cardType = MainGame.gameAsset.indexToCardType(cardIndex);
+    if (cardType > 10) return;
+    final playArea = game.children
+        .query<World>()
+        .firstOrNull
+        ?.children
+        .query<PlayArea>()
+        .elementAtOrNull(0);
+    playArea?.children
+        .query<SetCounter>()
+        .elementAtOrNull(cardType - 1)
+        ?.newPlayedCard();
   }
 }

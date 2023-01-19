@@ -13,6 +13,7 @@ class GameAsset {
         35,35,35,35,35,
         36,36,36,37,37,37,38,38,39'''
           .split(',');
+  static final setAmountOfCardType = [2, 2, 3, 3, 3, 3, 3, 4, 3, 2, 3];
 
   final Map<int, int> _indexToId = {};
 
