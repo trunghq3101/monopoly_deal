@@ -18,9 +18,9 @@ class PickUpBehavior extends Component
     final payload = event.payload;
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.pickUpToHand:
-        assert(payload is CardPickUpPayload);
         payload as CardPickUpPayload;
         final delay = payload.orderIndex * _delayStep;
+        parent.priority = payload.orderIndex;
         add(TimerComponent(
             period: delay,
             removeOnFinish: true,
@@ -36,7 +36,7 @@ class PickUpBehavior extends Component
           period: delay + 0.3,
           removeOnFinish: true,
           onTick: () {
-            parent.priority = parent.priority + 1;
+            parent.priority = parent.cardIndex;
           },
         ));
         parent.addAll([

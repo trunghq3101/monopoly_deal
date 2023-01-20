@@ -18,11 +18,28 @@ class SelectToPickUp with Publisher, Subscriber {
         _roomGateway.pickUp();
         notify(Event(CardEvent.zoomCardsOut));
         final cardsToPickUp = _cardTracker.cardsInMyDealRegionFromTop();
+        final cardsInHand = _cardTracker.cardsInHandFromTop();
+        final totalCards = cardsInHand.length + cardsToPickUp.length;
+        int repositionOrderIndex = cardsToPickUp.length;
+        for (var c in cardsInHand) {
+          final newInHandPosition = _cardTracker.getInHandPosition(
+            index: totalCards - 1 - repositionOrderIndex,
+            amount: totalCards,
+          );
+          repositionOrderIndex++;
+          notify(
+            Event(CardEvent.reposition)
+              ..payload = CardRepositionPayload(
+                c.cardIndex,
+                inHandPosition: newInHandPosition,
+              ),
+          );
+        }
         int orderIndex = 0;
         for (var c in cardsToPickUp) {
           final inHandPosition = _cardTracker.getInHandPosition(
-            index: cardsToPickUp.length - 1 - orderIndex,
-            amount: cardsToPickUp.length,
+            index: totalCards - 1 - orderIndex,
+            amount: totalCards,
           );
           notify(
             Event(CardEvent.pickUp)

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -63,7 +64,8 @@ class MainGame extends FlameGame
 
     final cardDeckPublisher = CardDeckPublisher();
     final cardTracker = CardTracker();
-    _selectToDeal = SelectToDeal(cardTracker: cardTracker);
+    _selectToDeal =
+        SelectToDeal(cardTracker: cardTracker, roomGateway: _roomGateway);
     _selectToPickUp =
         SelectToPickUp(cardTracker: cardTracker, roomGateway: _roomGateway);
     _selectToPickUpForOpponent = SelectToPickUpForOpponent(
@@ -108,15 +110,21 @@ class MainGame extends FlameGame
       ..addSubscriber(_selectToDeal)
       ..addSubscriber(_zoomOverviewBehavior);
 
-    _roomGateway.gameEvents.listen((event) {
-      if (event.event == PacketType.turnPassed && _roomGateway.isMyTurn) {
-        _gameMaster.takeTurn();
-      }
-      _selectToPickUpForOpponent
-          .onNewEvent(Event(event.event)..payload = event.data);
-      _placeCardButton.onNewEvent(Event(event.event)..payload = event.data);
-      _passTurnButton.onNewEvent(Event(event.event)..payload = event.data);
-    });
+    _selectToDeal.addSubscriber(_gameMaster);
+
+    _gameMaster.addGameEventSubscription(
+      _roomGateway.gameEvents.listen((event) {
+        if (event.event == PacketType.turnPassed && _roomGateway.isMyTurn) {
+          _gameMaster.takeTurn();
+        }
+        _selectToPickUpForOpponent
+            .onNewEvent(Event(event.event)..payload = event.data);
+        _selectToDeal.onNewEvent(Event(event.event)..payload = event.data);
+        _placeCardButton.onNewEvent(Event(event.event)..payload = event.data);
+        _passTurnButton.onNewEvent(Event(event.event)..payload = event.data);
+      })
+        ..pause(),
+    );
   }
 
   @override
@@ -164,7 +172,9 @@ class MainGame extends FlameGame
       ..add(revealCardBehavior);
 
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
-    dealToPlayerBehavior.addSubscriber(cardStateMachine);
+    dealToPlayerBehavior
+      ..addSubscriber(cardStateMachine)
+      ..addSubscriber(_gameMaster);
     pickUpBehavior.addSubscriber(cardStateMachine);
     pickUpForOpponentBehavior.addSubscriber(cardStateMachine);
     togglePreviewingBehavior.addSubscriber(cardStateMachine);
@@ -175,19 +185,22 @@ class MainGame extends FlameGame
     _handToggleButton.addSubscriber(cardStateMachine);
     _placeCardButton.addSubscriber(cardStateMachine);
     _selectToReArrange.addSubscriber(cardStateMachine);
-    _roomGateway.gameEvents.listen((event) {
-      if (event.event == PacketType.cardRevealed) {
-        final data = event.data as CardRevealed;
-        gameAsset.onCardRevealed(data.cardIndex, data.cardId);
-        revealCardBehavior.onNewEvent(
-          Event(event.event)..payload = data,
-        );
-      }
-      togglePreviewingForOpponentBehavior
-          .onNewEvent(Event(event.event)..payload = event.data);
-      toTableForOpponentBehavior
-          .onNewEvent(Event(event.event)..payload = event.data);
-    });
+    _gameMaster.addGameEventSubscription(
+      _roomGateway.gameEvents.listen((event) {
+        if (event.event == PacketType.cardRevealed) {
+          final data = event.data as CardRevealed;
+          gameAsset.onCardRevealed(data.cardIndex, data.cardId);
+          revealCardBehavior.onNewEvent(
+            Event(event.event)..payload = data,
+          );
+        }
+        togglePreviewingForOpponentBehavior
+            .onNewEvent(Event(event.event)..payload = event.data);
+        toTableForOpponentBehavior
+            .onNewEvent(Event(event.event)..payload = event.data);
+      })
+        ..pause(),
+    );
 
     cardStateMachine
       ..addSubscriber(dealToPlayerBehavior)

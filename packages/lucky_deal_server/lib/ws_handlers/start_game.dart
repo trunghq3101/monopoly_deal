@@ -12,7 +12,7 @@ Future<void> startGameHandler(
   final sid = context.read<ConnectionInfoProvider>().sid;
   final room = context.read<RoomsManager>().findByMember(sid);
   if (room == null) throw StateError('Room does not exist');
-  room.gameMaster.onStart();
+  if (!room.gameMaster.onStart()) return;
   room.broadcast(
     sid,
     WsDto(

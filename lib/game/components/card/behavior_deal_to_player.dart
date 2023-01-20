@@ -22,7 +22,6 @@ class DealToPlayerBehavior extends Component
     final payload = event.payload;
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.toDealRegion:
-        assert(payload is CardDealPayload);
         payload as CardDealPayload;
         final randomOffset = _randomizeDealOffset.generate();
         final delay = payload.orderIndex * _delayStep;
@@ -45,7 +44,7 @@ class DealToPlayerBehavior extends Component
           ),
           TimerComponent(
             onTick: () {
-              parent.priority = payload.orderIndex;
+              parent.priority = payload.cardIndex;
             },
             period: delay + 0.2,
             removeOnFinish: true,
@@ -55,6 +54,7 @@ class DealToPlayerBehavior extends Component
             onTick: () {
               notify(
                   Event(event.reverseEvent!)..payload = event.reversePayload);
+              notify(Event(CardEvent.cardDealt));
             },
             removeOnFinish: true,
           ),

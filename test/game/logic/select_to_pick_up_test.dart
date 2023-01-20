@@ -11,7 +11,7 @@ class _MockCardTracker extends CardTracker {
   List<HasCardIndex> cardsInMyDealRegionFromTop() => mockCardsInMyDealRegion;
 
   @override
-  bool hasCardInAnimationState() => mockHasCardInAnimationState;
+  bool hasCardInDealingState() => mockHasCardInAnimationState;
 }
 
 class _MockHasCardIndex implements HasCardIndex {

@@ -15,6 +15,7 @@ class GameMaster {
   int _nextDealedIndex = 0;
   late int _turnPlayerIndex = Random().nextInt(playerAmount);
   int _remainingInTurn = 3;
+  bool _started = false;
 
   int at(int index) => _cards[index].id;
 
@@ -40,12 +41,15 @@ class GameMaster {
     _nextDealedIndex++;
   }
 
-  void onStart() {
+  bool onStart() {
+    if (_started) return false;
+    _started = true;
     var playerIndex = 0;
     for (var i = 0; i < playerAmount * 5; i++) {
       _dealNextCardTo(playerIndex);
       playerIndex = (playerIndex + 1) % playerAmount;
     }
+    return true;
   }
 
   void onDraw(int playerIndex) {
@@ -91,6 +95,7 @@ class GameMaster {
   void nextTurn() {
     _turnPlayerIndex = (_turnPlayerIndex + 1) % playerAmount;
     _remainingInTurn = 3;
+    onDraw(_turnPlayerIndex);
   }
 
   int get turnPlayerIndex => _turnPlayerIndex;

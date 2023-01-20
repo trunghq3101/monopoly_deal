@@ -16,11 +16,12 @@ enum CardStateMachineEvent {
   toTable,
 }
 
-enum CardDeckEvent { showUp, dealStartGame }
+enum CardDeckEvent { showUp, dealStartGame, dealing }
 
 enum CardEvent {
   addedToDeck,
   deal,
+  cardDealt,
   pickUp,
   pickUpForOpponent,
   preview,
@@ -87,4 +88,14 @@ class CardIndexPayload with EquatableMixin {
 
   @override
   List<Object?> get props => [cardIndex];
+}
+
+class CardDeckDealingPayload with EquatableMixin {
+  final int amount;
+  final bool isDealStartGame;
+
+  CardDeckDealingPayload({required this.amount, this.isDealStartGame = false});
+
+  @override
+  List<Object?> get props => [amount, isDealStartGame];
 }

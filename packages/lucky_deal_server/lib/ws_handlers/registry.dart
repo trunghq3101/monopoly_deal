@@ -5,6 +5,7 @@ import 'package:dart_frog_web_socket/dart_frog_web_socket.dart';
 import 'package:lucky_deal_server/ws_handlers/ack_connection.dart';
 import 'package:lucky_deal_server/ws_handlers/create_room.dart';
 import 'package:lucky_deal_server/ws_handlers/join_room.dart';
+import 'package:lucky_deal_server/ws_handlers/only_in_turn.dart';
 import 'package:lucky_deal_server/ws_handlers/pass_turn.dart';
 import 'package:lucky_deal_server/ws_handlers/pick_up.dart';
 import 'package:lucky_deal_server/ws_handlers/play_card.dart';
@@ -14,13 +15,12 @@ import 'package:lucky_deal_server/ws_handlers/start_game.dart';
 import 'package:lucky_deal_server/ws_handlers/unpreview_card.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 
-final packetHandlers = <
-    PacketType,
-    FutureOr<void> Function(
+typedef WsHandler = FutureOr<void> Function(
   WebSocketChannel channel,
   RequestContext context,
   PacketData data,
-)>{
+);
+final packetHandlers = <PacketType, WsHandler>{
   PacketType.createRoom: createRoomHandler,
   PacketType.joinRoom: joinRoomHandler,
   PacketType.startGame: startGameHandler,
@@ -29,6 +29,6 @@ final packetHandlers = <
   PacketType.pickUp: pickUpHandler,
   PacketType.previewCard: previewCardHandler,
   PacketType.unpreviewCard: unpreviewCardHandler,
-  PacketType.playCard: playCardHandler,
-  PacketType.passTurn: passTurnHandler
+  PacketType.playCard: onlyInTurn(playCardHandler),
+  PacketType.passTurn: onlyInTurn(passTurnHandler)
 };

@@ -49,6 +49,12 @@ class CardTracker extends Component
     return cards;
   }
 
+  List<HasCardIndex> cardsInHandFromTop() {
+    final cards = allCards.where((c) => c.state == CardState.inHand).toList();
+    cards.sort((a, b) => b.priority.compareTo(a.priority));
+    return cards;
+  }
+
   Card? cardInPreviewingState() {
     return allCards.where((c) => c.state == CardState.inPreviewing).firstOrNull;
   }

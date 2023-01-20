@@ -77,6 +77,11 @@ class CardStateMachine extends PositionComponent
               ..reverseEvent = CardStateMachineEvent.animationCompleted
               ..reversePayload = CardState.inPreviewing);
             break;
+          case CardEvent.reposition:
+            payload as CardRepositionPayload;
+            if (parent.cardIndex != payload.cardIndex) break;
+            notify(event);
+            break;
           default:
         }
         break;
