@@ -1,15 +1,17 @@
+import 'package:flame/components.dart';
 import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class SelectToPickUp with Publisher, Subscriber {
+class SelectToPickUp extends Component with Publisher, Subscriber {
   SelectToPickUp({CardTracker? cardTracker, RoomGateway? roomGateway})
       : _cardTracker = cardTracker ?? CardTracker(),
         _roomGateway = roomGateway ?? RoomGateway();
 
   final CardTracker _cardTracker;
   final RoomGateway _roomGateway;
+  bool _pending = false;
 
   @override
   void onNewEvent(Event event) {
@@ -20,41 +22,60 @@ class SelectToPickUp with Publisher, Subscriber {
         _roomGateway.pickUp();
         notify(Event(CardEvent.zoomCardsOut));
         notify(Event(CardDeckEvent.pickUp));
-        final cardsToPickUp = _cardTracker.cardsInMyDealRegionFromTop();
-        final cardsInHand = _cardTracker.cardsInHandFromTop();
-        final totalCards = cardsInHand.length + cardsToPickUp.length;
-        int repositionOrderIndex = cardsToPickUp.length;
-        for (var c in cardsInHand) {
-          final newInHandPosition = _cardTracker.getInHandPosition(
-            index: totalCards - 1 - repositionOrderIndex,
-            amount: totalCards,
-          );
-          repositionOrderIndex++;
-          notify(
-            Event(CardEvent.reposition)
-              ..payload = CardRepositionPayload(
-                c.cardIndex,
-                inHandPosition: newInHandPosition,
-              ),
-          );
-        }
-        int orderIndex = 0;
-        for (var c in cardsToPickUp) {
-          final inHandPosition = _cardTracker.getInHandPosition(
-            index: totalCards - 1 - orderIndex,
-            amount: totalCards,
-          );
-          notify(
-            Event(CardEvent.pickUp)
-              ..payload = CardPickUpPayload(
-                c.cardIndex,
-                orderIndex: orderIndex++,
-                inHandPosition: inHandPosition,
-              ),
-          );
+        if (_cardTracker.hasCardInAnimationState()) {
+          _pending = true;
+        } else {
+          _pickUp();
         }
         break;
       default:
+    }
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (_pending) {
+      if (!_cardTracker.hasCardInAnimationState()) {
+        _pending = false;
+        _pickUp();
+      }
+    }
+  }
+
+  void _pickUp() {
+    final cardsToPickUp = _cardTracker.cardsInMyDealRegionFromTop();
+    final cardsInHand = _cardTracker.cardsInHandFromTop();
+    final totalCards = cardsInHand.length + cardsToPickUp.length;
+    int repositionOrderIndex = cardsToPickUp.length;
+    for (var c in cardsInHand) {
+      final newInHandPosition = _cardTracker.getInHandPosition(
+        index: totalCards - 1 - repositionOrderIndex,
+        amount: totalCards,
+      );
+      repositionOrderIndex++;
+      notify(
+        Event(CardEvent.reposition)
+          ..payload = CardRepositionPayload(
+            c.cardIndex,
+            inHandPosition: newInHandPosition,
+          ),
+      );
+    }
+    int orderIndex = 0;
+    for (var c in cardsToPickUp) {
+      final inHandPosition = _cardTracker.getInHandPosition(
+        index: totalCards - 1 - orderIndex,
+        amount: totalCards,
+      );
+      notify(
+        Event(CardEvent.pickUp)
+          ..payload = CardPickUpPayload(
+            c.cardIndex,
+            orderIndex: orderIndex++,
+            inHandPosition: inHandPosition,
+          ),
+      );
     }
   }
 }

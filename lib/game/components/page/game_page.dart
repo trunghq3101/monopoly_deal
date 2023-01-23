@@ -53,6 +53,7 @@ class GamePage extends Component with HasGameReference<FlameGame> {
     add(cardDeckPublisher);
     add(cardTracker);
     add(_selectToReArrange);
+    add(_selectToPickUp);
     add(_gameMaster);
     world.add(PlayArea(isOpponent: false)
       ..position = MainGame.gameMap.deckCenter.scaled(2.5));
