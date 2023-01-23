@@ -19,9 +19,14 @@ class SelectToPickUp extends Component with Publisher, Subscriber {
       case CardStateMachineEvent.tapOnMyDealRegion:
       case PacketType.turnPassed:
         if (_cardTracker.hasCardInAnimationState()) return;
-        _roomGateway.pickUp();
         notify(Event(CardEvent.zoomCardsOut));
         notify(Event(CardDeckEvent.pickUp));
+        if (_cardTracker.cardInPreviewingState() != null) {
+          final cardIndex = _cardTracker.cardInPreviewingState()!.cardIndex;
+          notify(Event(CardEvent.previewRevert)
+            ..payload = CardIndexPayload(cardIndex));
+          _roomGateway.sendCardEvent(PacketType.unpreviewCard, cardIndex);
+        }
         if (_cardTracker.hasCardInAnimationState()) {
           _pending = true;
         } else {
@@ -44,6 +49,7 @@ class SelectToPickUp extends Component with Publisher, Subscriber {
   }
 
   void _pickUp() {
+    _roomGateway.pickUp();
     final cardsToPickUp = _cardTracker.cardsInMyDealRegionFromTop();
     final cardsInHand = _cardTracker.cardsInHandFromTop();
     final totalCards = cardsInHand.length + cardsToPickUp.length;

@@ -55,6 +55,24 @@ class CardTracker extends Component
     return cards;
   }
 
+  List<HasCardIndex> cardsInOpponentHandFromTop(int relativePlayerIndex) {
+    final handPosition =
+        MainGame.gameMap.handPositionForOpponent(relativePlayerIndex);
+    final handWidth = handCurveWidth * 0.2 + 20;
+    final handLeft = handPosition.x - handWidth * 0.5 - 10;
+    final handHeigh = handWidth * 2 + 20;
+    final handBot = -MainGame.gameMap.overviewGameVisibleSize.y * 0.48 - 10;
+    final cards = allCards
+        .where((c) =>
+            c.x >= handLeft &&
+            c.x <= handLeft + handWidth &&
+            c.y >= handBot &&
+            c.y <= handBot + handHeigh)
+        .toList();
+    cards.sort((a, b) => b.priority.compareTo(a.priority));
+    return cards;
+  }
+
   Card? cardInPreviewingState() {
     return allCards.where((c) => c.state == CardState.inPreviewing).firstOrNull;
   }

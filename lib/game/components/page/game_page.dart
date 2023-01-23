@@ -166,6 +166,7 @@ class GamePage extends Component with HasGameReference<FlameGame> {
     _cardDeckPublisher.addSubscriber(addToDeckBehavior);
     _selectToDeal.addSubscriber(cardStateMachine);
     _selectToPickUp.addSubscriber(cardStateMachine);
+    _selectToPickUpForOpponent.addSubscriber(repositionInHand);
     _selectToPreviewing.addSubscriber(cardStateMachine);
     _handToggleButton.addSubscriber(cardStateMachine);
     _placeCardButton.addSubscriber(cardStateMachine);

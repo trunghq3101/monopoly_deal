@@ -34,6 +34,7 @@ Future<Response> onRequest(RequestContext context) async {
               packet.data,
             );
           } catch (e, s) {
+            print(e);
             logger.warning('Error', e, s);
             channel.sink.add(
               WsDto(
@@ -48,6 +49,7 @@ Future<Response> onRequest(RequestContext context) async {
           logger.info('disconnected');
         },
         onError: (Object e, StackTrace s) {
+          print(e);
           logger.warning('Error', e, s);
           channel.sink.addError(e, s);
         },

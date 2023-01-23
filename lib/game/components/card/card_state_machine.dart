@@ -124,12 +124,6 @@ class CardStateMachine extends PositionComponent
             changeState(CardState.onTable);
             notify(Event(CardStateMachineEvent.toTable));
             break;
-          case CardDeckEvent.pickUp:
-            changeState(CardState.inAnimation);
-            notify(Event(CardStateMachineEvent.toHand)
-              ..reverseEvent = CardStateMachineEvent.animationCompleted
-              ..reversePayload = CardState.inHand);
-            break;
           default:
         }
         break;

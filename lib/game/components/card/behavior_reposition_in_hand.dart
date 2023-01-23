@@ -4,7 +4,7 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class RepositionInHandBehavior extends Component
-    with ParentIsA<PositionComponent>, Subscriber {
+    with ParentIsA<Card>, Subscriber {
   @override
   void onNewEvent(Event event) {
     final payload = event.payload;
@@ -12,6 +12,7 @@ class RepositionInHandBehavior extends Component
       case CardEvent.reposition:
         assert(payload is CardRepositionPayload);
         payload as CardRepositionPayload;
+        if (payload.cardIndex != parent.cardIndex) return;
         parent.addAll([
           MoveEffect.to(
             payload.inHandPosition.position,
