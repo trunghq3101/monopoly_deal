@@ -7,7 +7,12 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class PickUpForOpponentBehavior extends Component
-    with ParentIsA<Card>, Subscriber, Publisher, HasGameReference<FlameGame> {
+    with
+        ParentIsA<Card>,
+        Subscriber,
+        Publisher,
+        HasGameReference<FlameGame>,
+        HasGamePage {
   PickUpForOpponentBehavior({double delayStep = 0.1}) : _delayStep = delayStep;
 
   final double _delayStep;

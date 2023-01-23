@@ -8,7 +8,7 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class PassTurnButton extends PositionComponent
-    with TapCallbacks, Subscriber, HasGameReference<FlameGame> {
+    with TapCallbacks, Subscriber, HasGameReference<FlameGame>, HasGamePage {
   PassTurnButtonState _state = PassTurnButtonState.invisible;
 
   @override
@@ -19,18 +19,16 @@ class PassTurnButton extends PositionComponent
 
   @override
   void onTapDown(TapDownEvent event) {
-    final gameMaster = game.children.query<GameMaster>().firstOrNull;
-    final roomGateway = gameMaster?.roomGateway;
-    roomGateway?.endTurn();
+    final roomGateway = gameMaster.roomGateway;
+    roomGateway.endTurn();
   }
 
   @override
   void onNewEvent(Event event) {
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.pickUpToHand:
-        final gameMaster = game.children.query<GameMaster>().firstOrNull;
-        final roomGateway = gameMaster?.roomGateway;
-        if (roomGateway?.isMyTurn == true) {
+        final roomGateway = gameMaster.roomGateway;
+        if (roomGateway.isMyTurn == true) {
           if (_state == PassTurnButtonState.invisible) {
             _state = PassTurnButtonState.visible;
             add(TimerComponent(
@@ -43,9 +41,8 @@ class PassTurnButton extends PositionComponent
         }
         break;
       case PacketType.turnPassed:
-        final gameMaster = game.children.query<GameMaster>().firstOrNull;
-        final roomGateway = gameMaster?.roomGateway;
-        if (roomGateway?.isMyTurn == true) {
+        final roomGateway = gameMaster.roomGateway;
+        if (roomGateway.isMyTurn == true) {
           if (_state == PassTurnButtonState.invisible) {
             _state = PassTurnButtonState.visible;
             add(ButtonComponent(text: "END", textAlign: TextAlign.left));

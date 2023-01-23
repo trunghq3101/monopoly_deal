@@ -35,8 +35,8 @@ void main() {
       ];
     });
 
-    test('is $HasWorldRef', () {
-      expect(tracker, isA<HasWorldRef>());
+    test('is $HasGamePage', () {
+      expect(tracker, isA<HasGamePage>());
     });
 
     testWithFlameGame('cardsInDeckFromTop', (game) async {

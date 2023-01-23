@@ -68,6 +68,21 @@ class HandToggleButton extends PositionComponent
           default:
         }
         break;
+      case HandToggleButtonState.show:
+        switch (event.eventIdentifier) {
+          case CardDeckEvent.pickUp:
+            _changeState(HandToggleButtonState.hide);
+            break;
+          case CardStateMachineEvent.toPreviewing:
+            _changeState(HandToggleButtonState.invisible);
+            add(ScaleEffect.to(
+              Vector2.all(0),
+              EffectController(duration: 0.1),
+            ));
+            break;
+          default:
+        }
+        break;
       default:
         switch (event.eventIdentifier) {
           case CardStateMachineEvent.toPreviewing:

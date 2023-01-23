@@ -7,12 +7,12 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class ToTableBehavior extends Component
-    with ParentIsA<Card>, Subscriber, HasGameReference<FlameGame> {
+    with ParentIsA<Card>, Subscriber, HasGameReference<FlameGame>, HasGamePage {
   @override
   void onNewEvent(Event event) {
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.toTable:
-        game.children.query<GameMaster>().firstOrNull?.play(parent.cardIndex);
+        gameMaster.play(parent.cardIndex);
         add(TimerComponent(
           period: 0.2,
           onTick: () {
@@ -35,12 +35,7 @@ class ToTableBehavior extends Component
     final cardType = MainGame.gameAsset.indexToCardType(index);
     final actionCardPosition = (MainGame.gameMap.deckCenter + Vector2(500, 0));
     if (cardType > 10) return actionCardPosition;
-    final playArea = game.children
-        .query<World>()
-        .firstOrNull
-        ?.children
-        .query<PlayArea>()
-        .elementAtOrNull(0);
+    final playArea = world.children.query<PlayArea>().elementAtOrNull(0);
     return playArea?.children
             .query<RectangleComponent>()
             .elementAtOrNull(cardType - 1)
@@ -51,12 +46,7 @@ class ToTableBehavior extends Component
   void _updateSetCounter(int cardIndex) {
     final cardType = MainGame.gameAsset.indexToCardType(cardIndex);
     if (cardType > 10) return;
-    final playArea = game.children
-        .query<World>()
-        .firstOrNull
-        ?.children
-        .query<PlayArea>()
-        .elementAtOrNull(0);
+    final playArea = world.children.query<PlayArea>().elementAtOrNull(0);
     playArea?.children
         .query<SetCounter>()
         .elementAtOrNull(cardType - 1)

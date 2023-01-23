@@ -16,7 +16,7 @@ enum CardStateMachineEvent {
   toTable,
 }
 
-enum CardDeckEvent { showUp, dealStartGame, dealing }
+enum CardDeckEvent { showUp, dealStartGame, dealing, pickUp }
 
 enum CardEvent {
   addedToDeck,

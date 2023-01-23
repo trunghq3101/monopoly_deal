@@ -13,7 +13,12 @@ enum PlaceCardButtonState {
 }
 
 class PlaceCardButton extends PositionComponent
-    with TapCallbacks, Subscriber, Publisher, HasGameReference<FlameGame> {
+    with
+        TapCallbacks,
+        Subscriber,
+        Publisher,
+        HasGameReference<FlameGame>,
+        HasGamePage {
   PlaceCardButtonState _state = PlaceCardButtonState.invisible;
   PlaceCardButtonState get state => _state;
 
@@ -21,18 +26,17 @@ class PlaceCardButton extends PositionComponent
   Future<void>? onLoad() async {
     anchor = Anchor.topCenter;
     size = MainGame.gameMap.buttonSize;
-    priority = 1;
+    priority = 0;
   }
 
   @override
   void onNewEvent(Event event) {
-    final gameMaster = game.children.query<GameMaster>().firstOrNull;
-    final roomGateway = gameMaster?.roomGateway;
-    final cardTracker = game.children.query<CardTracker>().firstOrNull;
-    final isMyTurn = roomGateway?.isMyTurn ?? false;
+    final roomGateway = gameMaster.roomGateway;
+    final cardTracker = gamePage.children.query<CardTracker>().firstOrNull;
+    final isMyTurn = roomGateway.isMyTurn;
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.toPreviewing:
-        if (gameMaster?.isPlayable == true &&
+        if (gameMaster.isPlayable == true &&
             isMyTurn &&
             state == PlaceCardButtonState.invisible) {
           _changeState(PlaceCardButtonState.visible);
@@ -44,7 +48,7 @@ class PlaceCardButton extends PositionComponent
         }
         break;
       case PacketType.turnPassed:
-        if (gameMaster?.isPlayable == true &&
+        if (gameMaster.isPlayable == true &&
             isMyTurn &&
             cardTracker?.cardInPreviewingState() != null) {
           _changeState(PlaceCardButtonState.visible);
@@ -69,8 +73,10 @@ class PlaceCardButton extends PositionComponent
     switch (_state) {
       case PlaceCardButtonState.invisible:
         children.query<ButtonComponent>().firstOrNull?.removeFromParent();
+        priority = 0;
         break;
       case PlaceCardButtonState.visible:
+        priority = 10005;
         add(ButtonComponent(text: "PLAY", textAlign: TextAlign.center)
           ..priority = 1);
         break;

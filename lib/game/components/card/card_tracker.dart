@@ -7,7 +7,7 @@ import 'package:flame/game.dart';
 import 'package:monopoly_deal/game/game.dart';
 
 class CardTracker extends Component
-    with HasGameReference<FlameGame>, HasWorldRef {
+    with HasGameReference<FlameGame>, HasGamePage {
   CardTracker() {
     _setupHandCurve();
   }

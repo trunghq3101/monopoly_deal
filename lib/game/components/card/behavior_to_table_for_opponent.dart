@@ -8,7 +8,7 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class ToTableForOpponentBehavior extends Component
-    with ParentIsA<Card>, Subscriber, HasGameReference<FlameGame> {
+    with ParentIsA<Card>, Subscriber, HasGameReference<FlameGame>, HasGamePage {
   @override
   void onNewEvent(Event event) {
     switch (event.eventIdentifier) {
@@ -46,19 +46,12 @@ class ToTableForOpponentBehavior extends Component
   }
 
   void _updateSetCounter(String playerId, int cardIndex) {
-    final roomGateway =
-        game.children.query<GameMaster>().firstOrNull?.roomGateway;
-    if (roomGateway == null) {
-      throw StateError('GameMaster not available');
-    }
+    final roomGateway = gameMaster.roomGateway;
     final relativePlayerIndex =
         roomGateway.relativePlayerIndex(roomGateway.playerIndexOf(playerId));
     final cardType = MainGame.gameAsset.indexToCardType(cardIndex);
     if (cardType > 10) return;
-    final playArea = game.children
-        .query<World>()
-        .firstOrNull
-        ?.children
+    final playArea = world.children
         .query<PlayArea>()
         .elementAtOrNull(relativePlayerIndex + 1);
     playArea?.children
@@ -68,20 +61,13 @@ class ToTableForOpponentBehavior extends Component
   }
 
   Vector2 _postionToPlaceCard(String playerId, int cardIndex) {
-    final roomGateway =
-        game.children.query<GameMaster>().firstOrNull?.roomGateway;
-    if (roomGateway == null) {
-      throw StateError('GameMaster not available');
-    }
+    final roomGateway = gameMaster.roomGateway;
     final relativePlayerIndex =
         roomGateway.relativePlayerIndex(roomGateway.playerIndexOf(playerId));
     final cardType = MainGame.gameAsset.indexToCardType(cardIndex);
     final actionCardPosition = (MainGame.gameMap.deckCenter + Vector2(500, 0));
     if (cardType > 10) return actionCardPosition;
-    final playArea = game.children
-        .query<World>()
-        .firstOrNull
-        ?.children
+    final playArea = world.children
         .query<PlayArea>()
         .elementAtOrNull(relativePlayerIndex + 1);
     return playArea?.children

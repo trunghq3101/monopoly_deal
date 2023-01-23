@@ -1,3 +1,4 @@
+import 'package:lucky_deal_shared/lucky_deal_shared.dart';
 import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
@@ -14,9 +15,11 @@ class SelectToPickUp with Publisher, Subscriber {
   void onNewEvent(Event event) {
     switch (event.eventIdentifier) {
       case CardStateMachineEvent.tapOnMyDealRegion:
+      case PacketType.turnPassed:
         if (_cardTracker.hasCardInAnimationState()) return;
         _roomGateway.pickUp();
         notify(Event(CardEvent.zoomCardsOut));
+        notify(Event(CardDeckEvent.pickUp));
         final cardsToPickUp = _cardTracker.cardsInMyDealRegionFromTop();
         final cardsInHand = _cardTracker.cardsInHandFromTop();
         final totalCards = cardsInHand.length + cardsToPickUp.length;

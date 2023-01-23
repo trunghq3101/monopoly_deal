@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
@@ -8,7 +7,12 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class PickUpBehavior extends Component
-    with ParentIsA<Card>, Subscriber, Publisher, HasGameReference<FlameGame> {
+    with
+        ParentIsA<Card>,
+        Subscriber,
+        Publisher,
+        HasGameReference<FlameGame>,
+        HasGamePage {
   PickUpBehavior({double delayStep = 0.1}) : _delayStep = delayStep;
 
   final double _delayStep;
@@ -25,11 +29,7 @@ class PickUpBehavior extends Component
             period: delay,
             removeOnFinish: true,
             onTick: () {
-              game.children
-                  .query<GameMaster>()
-                  .firstOrNull
-                  ?.roomGateway
-                  .revealCard(payload.cardIndex);
+              gameMaster.roomGateway.revealCard(payload.cardIndex);
             }));
 
         parent.add(TimerComponent(

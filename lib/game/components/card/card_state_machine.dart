@@ -91,6 +91,9 @@ class CardStateMachine extends PositionComponent
             changeState(CardState.inHand);
             notify(Event(CardStateMachineEvent.pullUp));
             break;
+          case CardDeckEvent.pickUp:
+            changeState(CardState.inHand);
+            break;
           case CardEvent.reposition:
             payload as CardRepositionPayload;
             if (parent.cardIndex != payload.cardIndex) break;
