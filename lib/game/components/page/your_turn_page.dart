@@ -28,22 +28,34 @@ class YourTurnRoute extends ValueRoute<void> {
 
 class PausePage extends Component
     with TapCallbacks, HasGameReference<FlameGame> {
+  bool _tapEnabled = false;
   @override
   Future<void> onLoad() async {
     addAll([
+      TimerComponent(
+        period: 0.5,
+        removeOnFinish: true,
+        onTick: () {
+          _tapEnabled = true;
+        },
+      ),
       TextComponent(
         text: 'YOUR TURN',
         position: game.canvasSize / 2,
         anchor: Anchor.center,
+        scale: Vector2.zero(),
         children: [
-          ScaleEffect.to(
-            Vector2.all(1.1),
-            EffectController(
-              duration: 0.3,
-              alternate: true,
-              infinite: true,
-            ),
-          )
+          SequenceEffect([
+            ScaleEffect.to(Vector2.all(1.1), LinearEffectController(0.5)),
+            ScaleEffect.to(
+              Vector2.all(1),
+              EffectController(
+                duration: 0.3,
+                alternate: true,
+                infinite: true,
+              ),
+            )
+          ])
         ],
       ),
     ]);
@@ -53,6 +65,8 @@ class PausePage extends Component
   bool containsLocalPoint(Vector2 point) => true;
 
   @override
-  void onTapUp(TapUpEvent event) =>
-      game.children.query<RouterComponent>().first.pop();
+  void onTapUp(TapUpEvent event) {
+    if (!_tapEnabled) return;
+    game.children.query<RouterComponent>().first.pop();
+  }
 }
