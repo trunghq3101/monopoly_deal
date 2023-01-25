@@ -63,6 +63,13 @@ class HandToggleButton extends PositionComponent with Subscriber, Publisher {
               EffectController(duration: 0.1),
             ));
             break;
+          case DiscardAreaEvent.cancel:
+            _changeState(HandToggleButtonState.hide);
+            add(ScaleEffect.to(
+              Vector2.all(1),
+              EffectController(duration: 0.1),
+            ));
+            break;
           default:
         }
         break;
@@ -78,12 +85,21 @@ class HandToggleButton extends PositionComponent with Subscriber, Publisher {
               EffectController(duration: 0.1),
             ));
             break;
+          case PassTurnButtonEvent.needDiscard:
+            notify(Event(HandToggleButtonEvent.tapShow));
+            _changeState(HandToggleButtonState.invisible);
+            add(ScaleEffect.to(
+              Vector2.all(0),
+              EffectController(duration: 0.1),
+            ));
+            break;
           default:
         }
         break;
       default:
         switch (event.eventIdentifier) {
           case CardStateMachineEvent.toPreviewing:
+          case PassTurnButtonEvent.needDiscard:
             _changeState(HandToggleButtonState.invisible);
             add(ScaleEffect.to(
               Vector2.all(0),

@@ -142,6 +142,9 @@ class CardStateMachine extends PositionComponent
             if (parent.cardIndex != payload.cardIndex) break;
             changeState(CardState.inWaitingForDiscard);
             break;
+          case DiscardAreaEvent.cancel:
+            changeState(CardState.inHand);
+            break;
         }
         break;
       case CardState.inSelectingForDiscard:

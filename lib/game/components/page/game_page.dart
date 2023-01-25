@@ -74,7 +74,8 @@ class GamePage extends Component with HasGameReference<FlameGame>, Subscriber {
       ..position =
           Vector2(MainGame.gameMap.overviewGameVisibleSize.x * -0.5, 2200)
       ..addSubscriber(this)
-      ..addSubscriber(_selectToPreviewing);
+      ..addSubscriber(_selectToPreviewing)
+      ..addSubscriber(_handToggleButton);
     world
       ..add(_handToggleButton)
       ..add(_placeCardButton)
@@ -217,7 +218,8 @@ class GamePage extends Component with HasGameReference<FlameGame>, Subscriber {
     switch (event.eventIdentifier) {
       case PassTurnButtonEvent.needDiscard:
         _world.add(DiscardArea(cardTracker: _cardTracker)
-          ..addSubscriber(_passTurnButton));
+          ..addSubscriber(_passTurnButton)
+          ..addSubscriber(_handToggleButton));
         break;
       default:
     }
