@@ -49,6 +49,7 @@ class GameMaster {
       _dealNextCardTo(playerIndex);
       playerIndex = (playerIndex + 1) % playerAmount;
     }
+    nextTurn(_turnPlayerIndex);
     return true;
   }
 
@@ -92,10 +93,13 @@ class GameMaster {
     return cardAt(cardIndex);
   }
 
-  void nextTurn() {
+  bool nextTurn(int playerIndex) {
+    if (playerIndex != _turnPlayerIndex) return false;
+    if (_inHandCardIndexes[playerIndex].length > 7) return false;
     _turnPlayerIndex = (_turnPlayerIndex + 1) % playerAmount;
     _remainingInTurn = 3;
     onDraw(_turnPlayerIndex);
+    return true;
   }
 
   int get turnPlayerIndex => _turnPlayerIndex;

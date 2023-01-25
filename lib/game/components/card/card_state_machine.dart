@@ -12,6 +12,9 @@ enum CardState {
   inHandCollapsed,
   inPreviewing,
   onTable,
+  inDiscardToEndTurn,
+  inSelectingForDiscard,
+  inWaitingForDiscard,
 }
 
 class CardStateMachine extends PositionComponent
@@ -82,6 +85,11 @@ class CardStateMachine extends PositionComponent
             if (parent.cardIndex != payload.cardIndex) break;
             notify(event);
             break;
+          case CardEvent.discarding:
+            payload as CardIndexPayload;
+            if (parent.cardIndex != payload.cardIndex) break;
+            changeState(CardState.inDiscardToEndTurn);
+            break;
           default:
         }
         break;
@@ -127,6 +135,15 @@ class CardStateMachine extends PositionComponent
           default:
         }
         break;
+      case CardState.inDiscardToEndTurn:
+        switch (event.eventIdentifier) {
+          case CardEvent.toWaitingForDiscard:
+            payload as CardIndexPayload;
+            if (parent.cardIndex != payload.cardIndex) break;
+            changeState(CardState.inWaitingForDiscard);
+            break;
+        }
+        break;
       default:
     }
   }
@@ -148,6 +165,12 @@ class CardStateMachine extends PositionComponent
           Event(CardStateMachineEvent.tapWhileInPreviewing)
             ..payload = CardIndexPayload(parent.cardIndex),
         );
+        break;
+      case CardState.inDiscardToEndTurn:
+        changeState(CardState.inAnimation);
+        notify(Event(CardStateMachineEvent.toSelectingForDiscard)
+          ..reverseEvent = CardStateMachineEvent.animationCompleted
+          ..reversePayload = CardState.inSelectingForDiscard);
         break;
       default:
     }

@@ -13,19 +13,19 @@ Future<void> startGameHandler(
   final room = context.read<RoomsManager>().findByMember(sid);
   if (room == null) throw StateError('Room does not exist');
   if (!room.gameMaster.onStart()) return;
-  room.broadcast(
-    sid,
-    WsDto(
-      PacketType.gameStarted,
-      EmptyPacket(),
-    ).encode(),
-  );
-  room.gameMaster.nextTurn();
-  room.broadcast(
-    sid,
-    WsDto(
-      PacketType.turnPassed,
-      PlayerId(room.memberId(room.gameMaster.turnPlayerIndex)),
-    ).encode(),
-  );
+  room
+    ..broadcast(
+      sid,
+      WsDto(
+        PacketType.gameStarted,
+        EmptyPacket(),
+      ).encode(),
+    )
+    ..broadcast(
+      sid,
+      WsDto(
+        PacketType.turnPassed,
+        PlayerId(room.memberId(room.gameMaster.turnPlayerIndex)),
+      ).encode(),
+    );
 }

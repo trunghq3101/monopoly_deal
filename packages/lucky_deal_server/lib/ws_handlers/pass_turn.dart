@@ -10,7 +10,7 @@ Future<void> passTurnHandler(
   String sid,
   RoomMembersManager room,
 ) async {
-  room.gameMaster.nextTurn();
+  if (!room.gameMaster.nextTurn(room.memberIndex(sid))) return;
   room.broadcast(
     sid,
     WsDto(

@@ -55,6 +55,16 @@ class CardTracker extends Component
     return cards;
   }
 
+  List<HasCardIndex> myCards() {
+    final cards = allCards
+        .where((c) =>
+            c.state == CardState.inHand ||
+            c.state == CardState.inHandCollapsed ||
+            c.state == CardState.inPreviewing)
+        .toList();
+    return cards;
+  }
+
   List<HasCardIndex> cardsInOpponentHandFromTop(int relativePlayerIndex) {
     final handPosition =
         MainGame.gameMap.handPositionForOpponent(relativePlayerIndex);

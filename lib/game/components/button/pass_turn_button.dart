@@ -8,7 +8,16 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class PassTurnButton extends PositionComponent
-    with TapCallbacks, Subscriber, HasGameReference<FlameGame>, HasGamePage {
+    with
+        TapCallbacks,
+        Publisher,
+        Subscriber,
+        HasGameReference<FlameGame>,
+        HasGamePage {
+  PassTurnButton({CardTracker? cardTracker})
+      : _cardTracker = cardTracker ?? CardTracker();
+
+  late final CardTracker _cardTracker;
   PassTurnButtonState _state = PassTurnButtonState.invisible;
 
   @override
@@ -19,8 +28,26 @@ class PassTurnButton extends PositionComponent
 
   @override
   void onTapDown(TapDownEvent event) {
-    final roomGateway = gameMaster.roomGateway;
-    roomGateway.endTurn();
+    if (_cardTracker.myCards().length > 7) {
+      final cardInPreviewing = _cardTracker.cardInPreviewingState();
+      if (cardInPreviewing != null) {
+        notify(Event(CardEvent.previewRevert)
+          ..payload = CardIndexPayload(cardInPreviewing.cardIndex));
+      }
+      add(TimerComponent(
+        period: 0.1,
+        removeOnFinish: true,
+        onTick: () {
+          for (var c in _cardTracker.cardsInHandFromTop()) {
+            notify(Event(CardEvent.discarding)
+              ..payload = CardIndexPayload(c.cardIndex));
+          }
+        },
+      ));
+      world.add(DiscardArea(cardTracker: _cardTracker));
+      return;
+    }
+    gameMaster.roomGateway.endTurn();
   }
 
   @override

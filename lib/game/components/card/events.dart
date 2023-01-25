@@ -14,6 +14,7 @@ enum CardStateMachineEvent {
   toPreviewing,
   swapBackToHand,
   toTable,
+  toSelectingForDiscard,
 }
 
 enum CardDeckEvent { showUp, dealStartGame, dealing, pickUp }
@@ -30,6 +31,9 @@ enum CardEvent {
   reposition,
   cardRevealed,
   zoomCardsOut,
+  discarding,
+  toWaitingForDiscard,
+  selectToDiscard,
 }
 
 class CardDealPayload with EquatableMixin {

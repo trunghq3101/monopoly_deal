@@ -69,7 +69,7 @@ class GamePage extends Component with HasGameReference<FlameGame> {
       ..position = Vector2(0, MainGame.gameMap.cardSizeInHand.y * 1.5 / 2)
       ..addSubscriber(_handToggleButton)
       ..addSubscriber(_selectToReArrange);
-    _passTurnButton = PassTurnButton()
+    _passTurnButton = PassTurnButton(cardTracker: cardTracker)
       ..position =
           Vector2(MainGame.gameMap.overviewGameVisibleSize.x * -0.5, 2200);
     world
@@ -142,6 +142,8 @@ class GamePage extends Component with HasGameReference<FlameGame> {
     final toTableForOpponentBehavior = ToTableForOpponentBehavior();
     final repositionInHand = RepositionInHandBehavior();
     final revealCardBehavior = RevealCardBehavior();
+    final toggleSelectingForDiscardBehavior =
+        ToggleSelectingForDiscardBehavior();
     card
       ..add(cardStateMachine)
       ..add(addToDeckBehavior)
@@ -154,7 +156,8 @@ class GamePage extends Component with HasGameReference<FlameGame> {
       ..add(toTableBehavior)
       ..add(toTableForOpponentBehavior)
       ..add(repositionInHand)
-      ..add(revealCardBehavior);
+      ..add(revealCardBehavior)
+      ..add(toggleSelectingForDiscardBehavior);
 
     addToDeckBehavior.addSubscriber(_cardDeckPublisher);
     dealToPlayerBehavior
@@ -170,6 +173,7 @@ class GamePage extends Component with HasGameReference<FlameGame> {
     _selectToPreviewing.addSubscriber(cardStateMachine);
     _handToggleButton.addSubscriber(cardStateMachine);
     _placeCardButton.addSubscriber(cardStateMachine);
+    _passTurnButton.addSubscriber(cardStateMachine);
     _selectToReArrange.addSubscriber(cardStateMachine);
     _gameMaster.addGameEventSubscription(
       _roomGateway.gameEvents.listen((event) {
@@ -199,7 +203,8 @@ class GamePage extends Component with HasGameReference<FlameGame> {
       ..addSubscriber(_placeCardButton)
       ..addSubscriber(toTableBehavior)
       ..addSubscriber(repositionInHand)
-      ..addSubscriber(_passTurnButton);
+      ..addSubscriber(_passTurnButton)
+      ..addSubscriber(toggleSelectingForDiscardBehavior);
     _selectToPickUpForOpponent.addSubscriber(pickUpForOpponentBehavior);
   }
 }
