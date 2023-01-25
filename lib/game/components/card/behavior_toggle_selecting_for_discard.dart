@@ -1,10 +1,17 @@
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame/experimental.dart';
+import 'package:flame/game.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class ToggleSelectingForDiscardBehavior extends Component
-    with Publisher, Subscriber, ParentIsA<PositionComponent> {
+    with
+        Publisher,
+        Subscriber,
+        ParentIsA<PositionComponent>,
+        HasGameReference<FlameGame>,
+        HasGamePage {
   PositionComponent? _inHandPlaceholder;
 
   @override
@@ -20,7 +27,11 @@ class ToggleSelectingForDiscardBehavior extends Component
           period: 0.01,
           removeOnFinish: true,
           onTick: () {
-            parent.priority = 10007 + parent.priority;
+            parent.priority = 10007 +
+                world.children
+                    .query<Card>()
+                    .where((e) => e.state == CardState.inSelectingForDiscard)
+                    .length;
           },
         ));
         parent.addAll([
@@ -35,7 +46,7 @@ class ToggleSelectingForDiscardBehavior extends Component
           ),
         ]);
         break;
-      case CardStateMachineEvent.toHand:
+      case CardStateMachineEvent.toHandFromDiscard:
         if (_inHandPlaceholder == null) return;
         add(TimerComponent(
           period: 0.01,

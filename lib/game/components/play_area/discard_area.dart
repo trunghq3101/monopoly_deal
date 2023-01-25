@@ -13,12 +13,20 @@ class DiscardArea extends PositionComponent
 
   @override
   Future<void>? onLoad() async {
-    for (var c in cardTracker.myCards()) {
-      final cardStateMachine =
-          (c as Card).children.query<CardStateMachine>().first;
-      cardStateMachine.addSubscriber(this);
-      addSubscriber(cardStateMachine);
-    }
+    add(TimerComponent(
+      period: 0.2,
+      removeOnFinish: true,
+      onTick: () {
+        final cards = world.children
+            .query<Card>()
+            .where((e) => e.state == CardState.inDiscardToEndTurn);
+        for (var c in cards) {
+          final cardStateMachine = (c).children.query<CardStateMachine>().first;
+          cardStateMachine.addSubscriber(this);
+          addSubscriber(cardStateMachine);
+        }
+      },
+    ));
     size = Vector2(
       MainGame.gameMap.overviewGameVisibleSize.x * 0.8,
       MainGame.gameMap.overviewGameVisibleSize.y * 0.4,
@@ -40,14 +48,25 @@ class DiscardArea extends PositionComponent
           ..color = const Color.fromARGB(255, 87, 87, 87)
           ..style = PaintingStyle.stroke,
       ),
-      ButtonComponent(text: "Discard", textAlign: TextAlign.center)
+      ButtonComponent(
+        text: "Discard",
+        textAlign: TextAlign.center,
+        tapDown: (_) {},
+      )
         ..position = Vector2(
           width * 0.1 * (1 + 3.5 + 1 + 1.75),
           height * 0.9,
         )
         ..anchor = Anchor.center
         ..size = MainGame.gameMap.buttonSize,
-      ButtonComponent(text: "Cancel", textAlign: TextAlign.center)
+      ButtonComponent(
+        text: "Cancel",
+        textAlign: TextAlign.center,
+        tapDown: (_) {
+          notify(Event(DiscardAreaEvent.cancel));
+          removeFromParent();
+        },
+      )
         ..position = Vector2(
           width * 0.1 * (1 + 1.75),
           height * 0.9,

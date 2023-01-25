@@ -6,7 +6,7 @@ import 'package:monopoly_deal/app/app.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class GamePage extends Component with HasGameReference<FlameGame> {
+class GamePage extends Component with HasGameReference<FlameGame>, Subscriber {
   GamePage({this.isFake = false, RoomGateway? roomGateway})
       : _roomGateway = roomGateway ?? RoomGateway();
 
@@ -26,6 +26,7 @@ class GamePage extends Component with HasGameReference<FlameGame> {
   late PassTurnButton _passTurnButton;
   late GameMaster _gameMaster;
   late ZoomOverviewBehavior _zoomOverviewBehavior;
+  late CardTracker _cardTracker;
 
   @override
   Future<void>? onLoad() async {
@@ -36,22 +37,22 @@ class GamePage extends Component with HasGameReference<FlameGame> {
     cameraComponent.viewfinder.position = MainGame.gameMap.deckCenter;
 
     final cardDeckPublisher = CardDeckPublisher();
-    final cardTracker = CardTracker();
+    _cardTracker = CardTracker();
     _selectToDeal =
-        SelectToDeal(cardTracker: cardTracker, roomGateway: _roomGateway);
+        SelectToDeal(cardTracker: _cardTracker, roomGateway: _roomGateway);
     _selectToPickUp =
-        SelectToPickUp(cardTracker: cardTracker, roomGateway: _roomGateway);
+        SelectToPickUp(cardTracker: _cardTracker, roomGateway: _roomGateway);
     _selectToPickUpForOpponent = SelectToPickUpForOpponent(
-        cardTracker: cardTracker, roomGateway: _roomGateway);
-    _selectToPreviewing =
-        SelectToPreviewing(cardTracker: cardTracker, roomGateway: _roomGateway);
-    _selectToReArrange = SelectToReArrange(cardTracker: cardTracker);
+        cardTracker: _cardTracker, roomGateway: _roomGateway);
+    _selectToPreviewing = SelectToPreviewing(
+        cardTracker: _cardTracker, roomGateway: _roomGateway);
+    _selectToReArrange = SelectToReArrange(cardTracker: _cardTracker);
     _gameMaster = GameMaster(_roomGateway);
 
     add(world);
     add(cameraComponent);
     add(cardDeckPublisher);
-    add(cardTracker);
+    add(_cardTracker);
     add(_selectToReArrange);
     add(_selectToPickUp);
     add(_gameMaster);
@@ -69,9 +70,11 @@ class GamePage extends Component with HasGameReference<FlameGame> {
       ..position = Vector2(0, MainGame.gameMap.cardSizeInHand.y * 1.5 / 2)
       ..addSubscriber(_handToggleButton)
       ..addSubscriber(_selectToReArrange);
-    _passTurnButton = PassTurnButton(cardTracker: cardTracker)
+    _passTurnButton = PassTurnButton(cardTracker: _cardTracker)
       ..position =
-          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * -0.5, 2200);
+          Vector2(MainGame.gameMap.overviewGameVisibleSize.x * -0.5, 2200)
+      ..addSubscriber(this)
+      ..addSubscriber(_selectToPreviewing);
     world
       ..add(_handToggleButton)
       ..add(_placeCardButton)
@@ -166,6 +169,7 @@ class GamePage extends Component with HasGameReference<FlameGame> {
     pickUpBehavior.addSubscriber(cardStateMachine);
     pickUpForOpponentBehavior.addSubscriber(cardStateMachine);
     togglePreviewingBehavior.addSubscriber(cardStateMachine);
+    toggleSelectingForDiscardBehavior.addSubscriber(cardStateMachine);
     _cardDeckPublisher.addSubscriber(addToDeckBehavior);
     _selectToDeal.addSubscriber(cardStateMachine);
     _selectToPickUp.addSubscriber(cardStateMachine);
@@ -206,6 +210,17 @@ class GamePage extends Component with HasGameReference<FlameGame> {
       ..addSubscriber(_passTurnButton)
       ..addSubscriber(toggleSelectingForDiscardBehavior);
     _selectToPickUpForOpponent.addSubscriber(pickUpForOpponentBehavior);
+  }
+
+  @override
+  void onNewEvent(Event event) {
+    switch (event.eventIdentifier) {
+      case PassTurnButtonEvent.needDiscard:
+        _world.add(DiscardArea(cardTracker: _cardTracker)
+          ..addSubscriber(_passTurnButton));
+        break;
+      default:
+    }
   }
 }
 

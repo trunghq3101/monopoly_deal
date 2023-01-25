@@ -5,8 +5,7 @@ import 'package:flame/experimental.dart';
 import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
-class HandToggleButton extends PositionComponent
-    with Subscriber, Publisher, TapCallbacks {
+class HandToggleButton extends PositionComponent with Subscriber, Publisher {
   HandToggleButtonState _state = HandToggleButtonState.invisible;
   HandToggleButtonState get state => _state;
 
@@ -17,8 +16,7 @@ class HandToggleButton extends PositionComponent
     scale = Vector2.zero();
   }
 
-  @override
-  void onTapDown(TapDownEvent event) {
+  void _onTapDown(TapDownEvent event) {
     switch (state) {
       case HandToggleButtonState.hide:
         _changeState(HandToggleButtonState.show);
@@ -36,7 +34,7 @@ class HandToggleButton extends PositionComponent
     _state = state;
     children.query<ButtonComponent>().firstOrNull?.removeFromParent();
     if (state == HandToggleButtonState.invisible) return;
-    add(ButtonComponent(text: state.name.toUpperCase()));
+    add(ButtonComponent(text: state.name.toUpperCase(), tapDown: _onTapDown));
   }
 
   @override

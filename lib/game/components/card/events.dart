@@ -15,6 +15,7 @@ enum CardStateMachineEvent {
   swapBackToHand,
   toTable,
   toSelectingForDiscard,
+  toHandFromDiscard,
 }
 
 enum CardDeckEvent { showUp, dealStartGame, dealing, pickUp }

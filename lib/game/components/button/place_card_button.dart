@@ -13,12 +13,7 @@ enum PlaceCardButtonState {
 }
 
 class PlaceCardButton extends PositionComponent
-    with
-        TapCallbacks,
-        Subscriber,
-        Publisher,
-        HasGameReference<FlameGame>,
-        HasGamePage {
+    with Subscriber, Publisher, HasGameReference<FlameGame>, HasGamePage {
   PlaceCardButtonState _state = PlaceCardButtonState.invisible;
   PlaceCardButtonState get state => _state;
 
@@ -60,8 +55,7 @@ class PlaceCardButton extends PositionComponent
     }
   }
 
-  @override
-  void onTapDown(TapDownEvent event) {
+  void _onTapDown(TapDownEvent event) {
     if (state == PlaceCardButtonState.visible) {
       notify(Event(PlaceCardButtonEvent.tap));
       _changeState(PlaceCardButtonState.invisible);
@@ -77,8 +71,11 @@ class PlaceCardButton extends PositionComponent
         break;
       case PlaceCardButtonState.visible:
         priority = 10005;
-        add(ButtonComponent(text: "PLAY", textAlign: TextAlign.center)
-          ..priority = 1);
+        add(ButtonComponent(
+          text: "PLAY",
+          textAlign: TextAlign.center,
+          tapDown: _onTapDown,
+        )..priority = 1);
         break;
       default:
     }

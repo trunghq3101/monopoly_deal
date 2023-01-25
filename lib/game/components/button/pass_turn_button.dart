@@ -8,12 +8,7 @@ import 'package:monopoly_deal/game/game.dart';
 import 'package:monopoly_deal/game/lib/lib.dart';
 
 class PassTurnButton extends PositionComponent
-    with
-        TapCallbacks,
-        Publisher,
-        Subscriber,
-        HasGameReference<FlameGame>,
-        HasGamePage {
+    with Publisher, Subscriber, HasGameReference<FlameGame>, HasGamePage {
   PassTurnButton({CardTracker? cardTracker})
       : _cardTracker = cardTracker ?? CardTracker();
 
@@ -26,16 +21,15 @@ class PassTurnButton extends PositionComponent
     size = MainGame.gameMap.buttonSize;
   }
 
-  @override
-  void onTapDown(TapDownEvent event) {
+  void _onTapDown(TapDownEvent event) {
     if (_cardTracker.myCards().length > 7) {
       final cardInPreviewing = _cardTracker.cardInPreviewingState();
       if (cardInPreviewing != null) {
-        notify(Event(CardEvent.previewRevert)
+        notify(Event(CardStateMachineEvent.tapWhileInPreviewing)
           ..payload = CardIndexPayload(cardInPreviewing.cardIndex));
       }
       add(TimerComponent(
-        period: 0.1,
+        period: 0.2,
         removeOnFinish: true,
         onTick: () {
           for (var c in _cardTracker.cardsInHandFromTop()) {
@@ -44,7 +38,8 @@ class PassTurnButton extends PositionComponent
           }
         },
       ));
-      world.add(DiscardArea(cardTracker: _cardTracker));
+      notify(Event(PassTurnButtonEvent.needDiscard));
+      _changeState(PassTurnButtonState.invisible);
       return;
     }
     gameMaster.roomGateway.endTurn();
@@ -59,11 +54,12 @@ class PassTurnButton extends PositionComponent
           if (_state == PassTurnButtonState.invisible) {
             _state = PassTurnButtonState.visible;
             add(TimerComponent(
-                period: 0.8,
-                removeOnFinish: true,
-                onTick: () {
-                  add(ButtonComponent(text: "END", textAlign: TextAlign.left));
-                }));
+              period: 0.8,
+              removeOnFinish: true,
+              onTick: () {
+                _changeState(PassTurnButtonState.visible);
+              },
+            ));
           }
         }
         break;
@@ -71,16 +67,29 @@ class PassTurnButton extends PositionComponent
         final roomGateway = gameMaster.roomGateway;
         if (roomGateway.isMyTurn == true) {
           if (_state == PassTurnButtonState.invisible) {
-            _state = PassTurnButtonState.visible;
-            add(ButtonComponent(text: "END", textAlign: TextAlign.left));
+            _changeState(PassTurnButtonState.visible);
           }
         } else {
-          _state = PassTurnButtonState.invisible;
-          children.query<ButtonComponent>().firstOrNull?.removeFromParent();
+          _changeState(PassTurnButtonState.invisible);
         }
-
+        break;
+      case DiscardAreaEvent.cancel:
+        _changeState(PassTurnButtonState.visible);
         break;
       default:
+    }
+  }
+
+  void _changeState(PassTurnButtonState state) {
+    _state = state;
+    if (state == PassTurnButtonState.invisible) {
+      children.query<ButtonComponent>().firstOrNull?.removeFromParent();
+    } else {
+      add(ButtonComponent(
+        text: "END",
+        textAlign: TextAlign.left,
+        tapDown: _onTapDown,
+      ));
     }
   }
 }

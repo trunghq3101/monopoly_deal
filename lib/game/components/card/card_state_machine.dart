@@ -144,6 +144,23 @@ class CardStateMachine extends PositionComponent
             break;
         }
         break;
+      case CardState.inSelectingForDiscard:
+        switch (event.eventIdentifier) {
+          case DiscardAreaEvent.cancel:
+            changeState(CardState.inAnimation);
+            notify(Event(CardStateMachineEvent.toHandFromDiscard)
+              ..reverseEvent = CardStateMachineEvent.animationCompleted
+              ..reversePayload = CardState.inHand);
+            break;
+        }
+        break;
+      case CardState.inWaitingForDiscard:
+        switch (event.eventIdentifier) {
+          case DiscardAreaEvent.cancel:
+            changeState(CardState.inHand);
+            break;
+        }
+        break;
       default:
     }
   }
