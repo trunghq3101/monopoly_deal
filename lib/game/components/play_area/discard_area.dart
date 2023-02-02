@@ -51,7 +51,29 @@ class DiscardArea extends PositionComponent
       ButtonComponent(
         text: "Discard",
         textAlign: TextAlign.center,
-        tapDown: (_) {},
+        tapDown: (_) {
+          notify(Event(DiscardAreaEvent.discard));
+          final cardsInHand = cardTracker.allCards
+              .where((e) => e.state == CardState.inWaitingForDiscard)
+              .toList();
+          int orderIndex = 0;
+          for (var c in cardsInHand) {
+            final newInHandPosition = cardTracker.getInHandPosition(
+              index: orderIndex,
+              amount: cardsInHand.length,
+            );
+            orderIndex++;
+            notify(
+              Event(CardEvent.reposition)
+                ..payload = CardRepositionPayload(
+                  c.cardIndex,
+                  inHandPosition: newInHandPosition,
+                ),
+            );
+          }
+          removeFromParent();
+          gameMaster.roomGateway.endTurn();
+        },
       )
         ..position = Vector2(
           width * 0.1 * (1 + 3.5 + 1 + 1.75),

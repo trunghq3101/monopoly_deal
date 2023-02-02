@@ -73,6 +73,7 @@ class RoomGateway extends ChangeNotifier {
               notifyListeners();
               break;
             case PacketType.cardPlayed:
+            case PacketType.discarded:
               if ((wsDto.data as CardInfoWithPlayer).playerId == sid) return;
               _gameEvents.add(wsDto);
               notifyListeners();

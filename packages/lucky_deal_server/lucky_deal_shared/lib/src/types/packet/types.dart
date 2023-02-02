@@ -24,7 +24,9 @@ enum PacketType {
   turnPassed(PlayerId.from),
   playCard(CardInfo.from),
   cardPlayed(CardInfoWithPlayer.from),
-  passTurn(EmptyPacket.from);
+  passTurn(EmptyPacket.from),
+  discard(CardInfo.from),
+  discarded(CardInfoWithPlayer.from);
 
   const PacketType(this.decode);
 

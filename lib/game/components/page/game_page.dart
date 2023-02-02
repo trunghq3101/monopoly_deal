@@ -143,7 +143,9 @@ class GamePage extends Component with HasGameReference<FlameGame>, Subscriber {
     final togglePreviewingForOpponentBehavior =
         TogglePreviewingForOpponentBehavior();
     final toTableBehavior = ToTableBehavior();
+    final toDiscardBehavior = ToDiscardBehavior();
     final toTableForOpponentBehavior = ToTableForOpponentBehavior();
+    final toDiscardForOpponentBehavior = ToDiscardForOpponentBehavior();
     final repositionInHand = RepositionInHandBehavior();
     final revealCardBehavior = RevealCardBehavior();
     final toggleSelectingForDiscardBehavior =
@@ -158,7 +160,9 @@ class GamePage extends Component with HasGameReference<FlameGame>, Subscriber {
       ..add(togglePreviewingBehavior)
       ..add(togglePreviewingForOpponentBehavior)
       ..add(toTableBehavior)
+      ..add(toDiscardBehavior)
       ..add(toTableForOpponentBehavior)
+      ..add(toDiscardForOpponentBehavior)
       ..add(repositionInHand)
       ..add(revealCardBehavior)
       ..add(toggleSelectingForDiscardBehavior);
@@ -193,6 +197,8 @@ class GamePage extends Component with HasGameReference<FlameGame>, Subscriber {
             .onNewEvent(Event(event.event)..payload = event.data);
         toTableForOpponentBehavior
             .onNewEvent(Event(event.event)..payload = event.data);
+        toDiscardForOpponentBehavior
+            .onNewEvent(Event(event.event)..payload = event.data);
       })
         ..pause(),
     );
@@ -207,6 +213,7 @@ class GamePage extends Component with HasGameReference<FlameGame>, Subscriber {
       ..addSubscriber(togglePreviewingBehavior)
       ..addSubscriber(_placeCardButton)
       ..addSubscriber(toTableBehavior)
+      ..addSubscriber(toDiscardBehavior)
       ..addSubscriber(repositionInHand)
       ..addSubscriber(_passTurnButton)
       ..addSubscriber(toggleSelectingForDiscardBehavior);

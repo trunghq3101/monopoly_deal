@@ -155,11 +155,21 @@ class CardStateMachine extends PositionComponent
               ..reverseEvent = CardStateMachineEvent.animationCompleted
               ..reversePayload = CardState.inHand);
             break;
+          case DiscardAreaEvent.discard:
+            changeState(CardState.onTable);
+            notify(Event(CardStateMachineEvent.toDiscard));
+            break;
         }
         break;
       case CardState.inWaitingForDiscard:
         switch (event.eventIdentifier) {
           case DiscardAreaEvent.cancel:
+            changeState(CardState.inHand);
+            break;
+          case CardEvent.reposition:
+            payload as CardRepositionPayload;
+            if (parent.cardIndex != payload.cardIndex) break;
+            notify(event);
             changeState(CardState.inHand);
             break;
         }
@@ -203,10 +213,12 @@ class CardStateMachine extends PositionComponent
       case CardState.inHandCollapsed:
       case CardState.inDealRegion:
       case CardState.onTable:
+      case CardState.inSelectingForDiscard:
         handCursor = false;
         break;
       case CardState.inMyDealRegion:
       case CardState.inHand:
+      case CardState.inDiscardToEndTurn:
         handCursor = true;
         break;
       default:

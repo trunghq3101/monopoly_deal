@@ -41,13 +41,13 @@ class GameMaster extends Component with Subscriber {
     remainingInTurn--;
   }
 
+  void discard(int cardIndex) {
+    roomGateway.sendCardEvent(PacketType.discard, cardIndex);
+  }
+
   bool get isPlayable => remainingInTurn > 0;
 
   void takeTurn() {
-    remainingInTurn = 3;
-  }
-
-  void passTurn() {
     remainingInTurn = 3;
   }
 

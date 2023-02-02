@@ -93,6 +93,15 @@ class GameMaster {
     return cardAt(cardIndex);
   }
 
+  Card? discard(int cardIndex, int playerIndex) {
+    if (!_isCardInHand(cardIndex, playerIndex) || !isMyTurn(playerIndex)) {
+      return null;
+    }
+    _inHandCardIndexes[playerIndex].remove(cardIndex);
+    _playedCardIndexes[playerIndex].add(cardIndex);
+    return cardAt(cardIndex);
+  }
+
   bool nextTurn(int playerIndex) {
     if (playerIndex != _turnPlayerIndex) return false;
     if (_inHandCardIndexes[playerIndex].length > 7) return false;

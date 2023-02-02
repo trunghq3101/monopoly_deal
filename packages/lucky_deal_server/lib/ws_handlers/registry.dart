@@ -4,6 +4,7 @@ import 'package:dart_frog/dart_frog.dart';
 import 'package:dart_frog_web_socket/dart_frog_web_socket.dart';
 import 'package:lucky_deal_server/ws_handlers/ack_connection.dart';
 import 'package:lucky_deal_server/ws_handlers/create_room.dart';
+import 'package:lucky_deal_server/ws_handlers/discard.dart';
 import 'package:lucky_deal_server/ws_handlers/join_room.dart';
 import 'package:lucky_deal_server/ws_handlers/only_in_turn.dart';
 import 'package:lucky_deal_server/ws_handlers/pass_turn.dart';
@@ -30,5 +31,6 @@ final packetHandlers = <PacketType, WsHandler>{
   PacketType.previewCard: previewCardHandler,
   PacketType.unpreviewCard: unpreviewCardHandler,
   PacketType.playCard: onlyInTurn(playCardHandler),
-  PacketType.passTurn: onlyInTurn(passTurnHandler)
+  PacketType.passTurn: onlyInTurn(passTurnHandler),
+  PacketType.discard: onlyInTurn(discardHandler),
 };

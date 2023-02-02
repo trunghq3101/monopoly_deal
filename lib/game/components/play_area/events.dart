@@ -1,1 +1,1 @@
-enum DiscardAreaEvent { cancel }
+enum DiscardAreaEvent { cancel, discard }
